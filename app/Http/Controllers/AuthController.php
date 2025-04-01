@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\PesertaPpdb as Peserta;
-use App\Http\Resources\PesertaResource;
-use App\Http\Resources\UserResource;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Resources\UserResource;
+use App\Models\PesertaPpdb as Peserta;
+use App\Http\Resources\RegisterResource;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -25,9 +25,9 @@ class AuthController extends Controller
         if (!$user) {
             return $this->error('Pengguna tidak ditemukan', 404);
         }
-        
+
         $token = JWTAuth::fromUser($user);
-        
+
         return $this->success([
             'token' => $token,
             'type' => 'bearer',
@@ -44,10 +44,13 @@ class AuthController extends Controller
                 'jenjang_sekolah' => 'required|string',
             ]);
 
+            $existingUser = User::where('no_telp', $credentials['no_telp'])->first();
+            if ($existingUser) {
+                return $this->error('Nomor telepon sudah digunakan', 422);
+           }
             $user = User::create([
                 'no_telp' => $credentials['no_telp']
             ]);
-
             $peserta = Peserta::create([
                 'user_id' => $user->id,
                 'nama' => $credentials['nama'],
@@ -55,9 +58,9 @@ class AuthController extends Controller
                 'jenis_kelamin' => $credentials['jenis_kelamin'],
                 'jenjang_sekolah' => $credentials['jenjang_sekolah']
             ]);
-            
+            // dd($peserta);
             return $this->success([
-                'peserta' => new PesertaResource($peserta)
+                'peserta' => new RegisterResource($peserta)
             ], 'Pendaftaran berhasil', 201);
         } catch (ValidationException $e) {
             return $this->error('Data tidak valid', 422, $e->errors());
