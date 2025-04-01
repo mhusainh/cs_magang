@@ -56,7 +56,7 @@ class AuthController extends Controller
                 'nama' => $credentials['nama'],
                 'no_telp' => $credentials['no_telp'],
                 'jenis_kelamin' => $credentials['jenis_kelamin'],
-                'jenjang_sekolah' => $credentials['jenjang_sekolah']
+                'jenjang_sekolah' => $credentials['jenjang_sekolah'],
             ]);
             // dd($peserta);
             return $this->success([
