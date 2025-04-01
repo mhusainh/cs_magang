@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Api\Auth;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\PesertaPpdb as Peserta;
 use App\Http\Resources\PesertaResource;
@@ -31,7 +30,7 @@ class AuthController extends Controller
         
         return $this->success([
             'token' => $token,
-            'user' => new UserResource($user)
+            'type' => 'bearer',
         ], 'Login berhasil');
     }
 
