@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('nama_ayah')->nullable();
             $table->string('nama_ibu')->nullable();
             $table->string('no_telp', 15)->nullable();
-            $table->foreignId('pekerjaan_ayah_id')->constrained('pekerjaans')->nullable();
-            $table->foreignId('pekerjaan_ibu_id')->constrained('pekerjaans')->nullable();
-            $table->foreignId('penghasilan_ortu_id')->constrained('penghasilans')->nullable();
+            $table->foreignId('pekerjaan_ayah_id')->constrained('pekerjaan_ortus')->nullable();
+            $table->foreignId('pekerjaan_ibu_id')->constrained('pekerjaan_ortus')->nullable();
+            $table->foreignId('penghasilan_ortu_id')->constrained('penghasilan_ortus')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
