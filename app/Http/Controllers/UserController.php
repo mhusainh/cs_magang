@@ -3,23 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\DTO\UserDTO;
-use App\Models\User;
 use App\Services\UserService;
 use App\Traits\ApiResponse;
 use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\RegisterRequest;
 use App\Http\Requests\User\UpdateRequest;
-use App\Http\Requests\User\ResetPasswordRequest;
-use App\Http\Requests\User\RequestResetPasswordRequest;
-use App\Http\Requests\User\VerifyEmailRequest;
+use App\Http\Requests\User\GetByIdRequest;
 
 class UserController extends Controller
 {
     use ApiResponse;
 
-    public function __construct(private UserService $userService)
-    {
-    }
+    public function __construct(private UserService $userService) {}
 
     public function login(LoginRequest $request)
     {
@@ -28,7 +23,7 @@ class UserController extends Controller
         );
 
         $result = $this->userService->login($data);
-        
+
         if (!$result['success']) {
             return $this->error($result['message'], 404);
         }
@@ -46,7 +41,7 @@ class UserController extends Controller
         );
 
         $result = $this->userService->register($data);
-        
+
         if (!$result['success']) {
             return $this->error($result['message'], 422);
         }
@@ -62,7 +57,7 @@ class UserController extends Controller
         );
 
         $result = $this->userService->update($data);
-        
+
         if (!$result['success']) {
             return $this->error($result['message'], 404);
         }
@@ -73,7 +68,7 @@ class UserController extends Controller
     public function delete(int $id)
     {
         $result = $this->userService->delete($id);
-        
+
         if (!$result['success']) {
             return $this->error($result['message'], 404);
         }
@@ -84,7 +79,7 @@ class UserController extends Controller
     public function getAll()
     {
         $result = $this->userService->getAll();
-        
+
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
@@ -95,11 +90,11 @@ class UserController extends Controller
     public function getById(int $id)
     {
         $result = $this->userService->getById($id);
-        
+
         if (!$result['success']) {
             return $this->error($result['message'], 404);
         }
 
         return $this->success($result['data']);
     }
-} 
+}

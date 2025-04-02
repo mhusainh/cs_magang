@@ -37,21 +37,4 @@ class UserDTO
             'no_telp' => $no_telp,
         ];
     }
-
-    // Delete 
-    public static function UserDeleteRequest(int $id): array
-    {
-        return [
-            'id' => $id
-        ];
-    }
-
-    // Get User By ID DTO
-    public static function UserGetByIdRequest(int $id): array
-    {
-        return [
-            'id' => $id
-        ];
-    }
-
 } 

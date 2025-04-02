@@ -9,9 +9,7 @@ use App\Http\Resources\RegisterResource;
 
 class PesertaService
 {
-    public function __construct(private PesertaRepository $pesertaRepository)
-    {
-    }
+    public function __construct(private PesertaRepository $pesertaRepository) {}
 
     public function create(array $data): array
     {
@@ -34,7 +32,7 @@ class PesertaService
     public function getById(int $id): array
     {
         $peserta = $this->pesertaRepository->findById($id);
-        
+
         if (!$peserta) {
             return [
                 'success' => false,
@@ -51,7 +49,7 @@ class PesertaService
     public function getByUserId(int $userId): array
     {
         $peserta = $this->pesertaRepository->findByUserId($userId);
-        
+
         if (!$peserta) {
             return [
                 'success' => false,
@@ -68,7 +66,7 @@ class PesertaService
     public function update(int $id, array $data): array
     {
         $peserta = $this->pesertaRepository->findById($id);
-        
+
         if (!$peserta) {
             return [
                 'success' => false,
@@ -95,7 +93,7 @@ class PesertaService
     public function delete(int $id): array
     {
         $peserta = $this->pesertaRepository->findById($id);
-        
+
         if (!$peserta) {
             return [
                 'success' => false,
@@ -134,4 +132,4 @@ class PesertaService
             ];
         }
     }
-} 
+}

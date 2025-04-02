@@ -24,7 +24,7 @@ Route::prefix('auth')->group(function () {
 });
 
 // Protected routes (memerlukan login)
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:api')->group(function () {
     // Routes yang bisa diakses user dan admin
     Route::get('/user', function (Request $request) {
         return $request->user();
