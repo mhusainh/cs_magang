@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class UserRepository
 {
-    public function __construct(private User $model)
-    {
-    }
+    public function __construct(private User $model) {}
 
     public function create(array $data): User
     {
@@ -41,5 +39,4 @@ class UserRepository
     {
         return $user->delete();
     }
-
-} 
+}

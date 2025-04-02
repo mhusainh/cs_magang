@@ -34,7 +34,8 @@ Route::middleware('auth:api')->group(function () {
     Route::middleware('role:user')->group(function () {
         Route::get('/peserta/user/{userId}', [PesertaController::class, 'getByUserId']);
         Route::post('/peserta', [PesertaController::class, 'create']);
-        Route::put('/peserta/{id}', [PesertaController::class, 'update']);
+        Route::put('/peserta', [PesertaController::class, 'updateByUser']); //coba
+        Route::put('/peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']); //coba
     });
 
     // Routes khusus admin

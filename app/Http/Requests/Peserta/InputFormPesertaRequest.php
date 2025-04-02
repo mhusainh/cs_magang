@@ -4,7 +4,7 @@ namespace App\Http\Requests\Peserta;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePesertaRequest extends FormRequest
+class InputFormPesertaRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,10 +14,6 @@ class UpdatePesertaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => 'required|string|max:255',
-            'no_telp' => 'required|string|max:15',
-            'jenis_kelamin' => 'required|string|in:Laki-laki,Perempuan',
-            'jenjang_sekolah' => 'required|string|in:SD,SMP,SMA',
             'nisn' =>'required|string|max:10',
             'tempat_lahir' =>'required|string|max:255',
             'tanggal_lahir' =>'required|date',
@@ -30,18 +26,6 @@ class UpdatePesertaRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nama.required' => 'Nama harus diisi',
-            'nama.string' => 'Nama harus berupa teks',
-            'nama.max' => 'Nama maksimal 255 karakter',
-            'no_telp.required' => 'Nomor telepon harus diisi',
-            'no_telp.string' => 'Nomor telepon harus berupa teks',
-            'no_telp.max' => 'Nomor telepon maksimal 15 karakter',
-            'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
-            'jenis_kelamin.string' => 'Jenis kelamin harus berupa teks',
-            'jenis_kelamin.in' => 'Jenis kelamin harus Laki-laki atau Perempuan',
-            'jenjang_sekolah.required' => 'Jenjang sekolah harus diisi',
-            'jenjang_sekolah.string' => 'Jenjang sekolah harus berupa teks',
-            'jenjang_sekolah.in' => 'Jenjang sekolah harus SD, SMP, atau SMA',
             'nisn.required' => 'NISN harus diisi',
             'nisn.string' => 'NISN harus berupa teks',
             'nisn.max' => 'NISN maksimal 10 karakter',

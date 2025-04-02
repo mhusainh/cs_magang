@@ -2,37 +2,38 @@
 
 namespace App\Repositories;
 
-use App\Models\PesertaPpdb;
+use App\Models\PesertaPpdb as Peserta;
 
 class PesertaRepository
 {
-    public function create(array $data): PesertaPpdb
+    public function __construct(private Peserta $model) {}
+    public function create(array $data): Peserta
     {
-        return PesertaPpdb::create($data);
+        return $this->model->create($data);
     }
 
-    public function findById(int $id): ?PesertaPpdb
+    public function findById(int $id): ?Peserta
     {
-        return PesertaPpdb::where('id', $id)->first();
+        return $this->model->where('id', $id)->first();
     }
 
-    public function findByUserId(int $userId): ?PesertaPpdb
+    public function findByUserId(int $userId): ?Peserta
     {
-        return PesertaPpdb::where('user_id', $userId)->first();
+        return $this->model->where('user_id', $userId)->first();
     }
 
-    public function update(PesertaPpdb $peserta, array $data): bool
+    public function update(Peserta $peserta, array $data): bool
     {
         return $peserta->update($data);
     }
 
-    public function delete(PesertaPpdb $peserta): bool
+    public function delete(Peserta $peserta): bool
     {
         return $peserta->delete();
     }
 
     public function getAll(): array
     {
-        return PesertaPpdb::all()->toArray();
+        return Peserta::all()->toArray();
     }
 } 

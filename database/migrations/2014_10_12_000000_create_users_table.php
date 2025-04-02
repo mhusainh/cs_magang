@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('no_telp', 15)->unique();
             $table->enum('role', ['admin', 'user'])->default('user');
+            $table->tinyInteger('status')->default(0);
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

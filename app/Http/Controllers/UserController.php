@@ -28,7 +28,7 @@ class UserController extends Controller
             return $this->error($result['message'], 404);
         }
 
-        return $this->success($result['data'], $result['message']);
+        return $this->success($result ['data'], $result['message']);
     }
 
     public function register(RegisterRequest $request)
@@ -46,7 +46,7 @@ class UserController extends Controller
             return $this->error($result['message'], 422);
         }
 
-        return $this->success($result['data'], $result['message'], 201);
+        return $this->success(null, $result['message'], 201);
     }
 
     public function update(UpdateRequest $request)
@@ -95,6 +95,6 @@ class UserController extends Controller
             return $this->error($result['message'], 404);
         }
 
-        return $this->success($result['data']);
+        return $this->success($result['data'], $result['message'], 201);
     }
 }

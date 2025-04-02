@@ -2,13 +2,7 @@
 
 namespace App\Services;
 
-use App\DTO\UserDTO;
-use App\DTO\RegisterDTO;
-use App\Models\User;
-use App\Models\PesertaPpdb;
 use App\Repositories\UserRepository;
-use App\Http\Resources\RegisterResource;
-use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Repositories\PesertaRepository;
 
@@ -27,6 +21,13 @@ class UserService
             return [
                 'success' => false,
                 'message' => 'Pengguna tidak ditemukan'
+            ];
+        }
+
+        if($user->status == 0){
+            return [
+               'success' => false,
+               'message' => 'Pengguna belum membayar uang pendaftaran'
             ];
         }
 
@@ -57,7 +58,7 @@ class UserService
                 'no_telp' => $data['no_telp']
             ]);
 
-            $peserta = $this->pesertaRepository->create([
+            $this->pesertaRepository->create([
                 'user_id' => $user->id,
                 'nama' => $data['nama'],
                 'no_telp' => $data['no_telp'],
@@ -67,7 +68,6 @@ class UserService
 
             return [
                 'success' => true,
-                'data' => new RegisterResource($peserta),
                 'message' => 'Pendaftaran berhasil'
             ];
         } catch (\Exception $e) {
@@ -102,7 +102,6 @@ class UserService
 
         return [
             'success' => true,
-            'data' => $user->fresh(),
             'message' => 'User berhasil diperbarui'
         ];
     }
@@ -131,7 +130,8 @@ class UserService
         
         return [
             'success' => true,
-            'data' => $users
+            'data' => $users,
+            'message' => 'User berhasil diambil'
         ];
     }
 
@@ -148,7 +148,8 @@ class UserService
 
         return [
             'success' => true,
-            'data' => $user
+            'data' => $user,
+           'message' => 'User berhasil diambil'
         ];
     }
 

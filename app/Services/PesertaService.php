@@ -2,10 +2,9 @@
 
 namespace App\Services;
 
-use App\DTO\PesertaDTO;
-use App\Models\PesertaPpdb;
+
 use App\Repositories\PesertaRepository;
-use App\Http\Resources\RegisterResource;
+use App\Http\Resources\Peserta\GetDetailResource;
 
 class PesertaService
 {
@@ -18,7 +17,6 @@ class PesertaService
 
             return [
                 'success' => true,
-                'data' => new RegisterResource($peserta),
                 'message' => 'Peserta berhasil ditambahkan'
             ];
         } catch (\Exception $e) {
@@ -42,7 +40,8 @@ class PesertaService
 
         return [
             'success' => true,
-            'data' => new RegisterResource($peserta)
+            'data' => new GetDetailResource($peserta),
+            'message' => 'Peserta berhasil diambil'
         ];
     }
 
@@ -59,7 +58,8 @@ class PesertaService
 
         return [
             'success' => true,
-            'data' => new RegisterResource($peserta)
+            'data' => new GetDetailResource($peserta),
+           'message' => 'Peserta berhasil diambil'
         ];
     }
 
@@ -79,7 +79,32 @@ class PesertaService
 
             return [
                 'success' => true,
-                'data' => new RegisterResource($peserta->fresh()),
+                'message' => 'Peserta berhasil diperbarui'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memperbarui peserta'
+            ];
+        }
+    }
+
+    public function updateByUser(int $userid, array $data): array
+    {
+        $peserta = $this->pesertaRepository->findByUserId($userid);
+
+        if (!$peserta) {
+            return [
+                'success' => false,
+                'message' => 'Peserta tidak ditemukan'
+            ];
+        }
+
+        try {
+            $this->pesertaRepository->update($peserta, $data);
+
+            return [
+                'success' => true,
                 'message' => 'Peserta berhasil diperbarui'
             ];
         } catch (\Exception $e) {
@@ -123,7 +148,8 @@ class PesertaService
 
             return [
                 'success' => true,
-                'data' => RegisterResource::collection($peserta)
+                // 'data' => RegisterResource::collection($peserta),
+               'message' => 'Data peserta berhasil diambil'
             ];
         } catch (\Exception $e) {
             return [
