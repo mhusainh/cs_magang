@@ -16,39 +16,6 @@ class UserController extends Controller
 
     public function __construct(private UserService $userService) {}
 
-    public function login(LoginRequest $request)
-    {
-        $data = UserDTO::UserLoginRequest(
-            $request->validated('no_telp')
-        );
-
-        $result = $this->userService->login($data);
-
-        if (!$result['success']) {
-            return $this->error($result['message'], 404);
-        }
-
-        return $this->success($result ['data'], $result['message']);
-    }
-
-    public function register(RegisterRequest $request)
-    {
-        $data = UserDTO::UserRegisterRequest(
-            $request->validated('nama'),
-            $request->validated('jenis_kelamin'),
-            $request->validated('no_telp'),
-            $request->validated('jenjang_sekolah')
-        );
-
-        $result = $this->userService->register($data);
-
-        if (!$result['success']) {
-            return $this->error($result['message'], 422);
-        }
-
-        return $this->success(null, $result['message'], 201);
-    }
-
     public function update(UpdateRequest $request)
     {
         $data = UserDTO::UserUpdateRequest(

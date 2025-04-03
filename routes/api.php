@@ -19,8 +19,8 @@ use App\Http\Controllers\PesertaController;
 
 // Public routes (bisa diakses tanpa login)
 Route::prefix('auth')->group(function () {
-    Route::post('login', [UserController::class, 'login']);
-    Route::post('register', [UserController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
 });
 
 // Protected routes (memerlukan login)
