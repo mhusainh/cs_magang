@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('peserta_id')->constrained('peserta_ppdbs')->onDelete('cascade');
             $table->string('hasil');
-            $table->foreignId('jurusan_id')->nullable()->constrained('jurusans');
+            $table->foreignId('jurusan_id')->nullable()->constrained('jurusan');
             $table->timestamps();
         });
     }
