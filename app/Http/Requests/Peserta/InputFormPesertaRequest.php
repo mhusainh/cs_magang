@@ -3,9 +3,11 @@
 namespace App\Http\Requests\Peserta;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Traits\FormRequestTrait;
 
 class InputFormPesertaRequest extends FormRequest
 {
+    use FormRequestTrait;
     public function authorize(): bool
     {
         return true;
@@ -14,12 +16,12 @@ class InputFormPesertaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nisn' =>'required|string|max:10',
-            'tempat_lahir' =>'required|string|max:255',
-            'tanggal_lahir' =>'required|date',
-            'alamat' =>'required|string|max:255',
-            'jurusan1_id' =>'nullable|integer|exists:jurusan,id',
-            'jurusan2_id' =>'nullable|integer|exists:jurusan,id'
+            'nisn' => 'required|string|max:10',
+            'tempat_lahir' => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
+            'alamat' => 'required|string|max:255',
+            'jurusan1_id' => 'nullable|integer|exists:jurusan,id',
+            'jurusan2_id' => 'nullable|integer|exists:jurusan,id'
         ];
     }
 
@@ -43,4 +45,4 @@ class InputFormPesertaRequest extends FormRequest
             'jurusan2_id.exists' => 'jurusan tidak ditemukan'
         ];
     }
-} 
+}

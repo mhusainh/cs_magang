@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\PesertaPpdb as Peserta;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Jurusan extends Model
 {
@@ -20,13 +21,12 @@ class Jurusan extends Model
         'jenjang_sekolah',
     ];
 
-
-    public function pesertas1(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function pesertas1(): HasMany
     {
         return $this->hasMany(Peserta::class, 'jurusan1_id');
     }
 
-    public function pesertas2(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function pesertas2(): HasMany
     {
         return $this->hasMany(Peserta::class, 'jurusan2_id');
     }

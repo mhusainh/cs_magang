@@ -3,9 +3,11 @@
 namespace App\Http\Requests\Peserta;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Traits\FormRequestTrait;
 
 class CreatePesertaRequest extends FormRequest
 {
+    use FormRequestTrait;
     public function authorize(): bool
     {
         return true;
@@ -42,4 +44,4 @@ class CreatePesertaRequest extends FormRequest
             'jenjang_sekolah.in' => 'Jenjang sekolah harus SD, SMP, atau SMA'
         ];
     }
-} 
+}
