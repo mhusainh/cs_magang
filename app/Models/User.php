@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Models\PesertaPpdb as Peserta;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -66,4 +67,8 @@ class User extends Authenticatable implements JWTSubject
             'role' => $this->role,
         ];
     }
+    public function peserta()
+    {
+        return $this->hasOne(Peserta::class);
+   }
 }

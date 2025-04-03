@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\PesertaPpdb as Peserta;
+
+class Jurusan extends Model
+{
+    use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'jurusan',
+        'jenjang_sekolah',
+    ];
+
+
+    public function pesertas1(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Peserta::class, 'jurusan1_id');
+    }
+
+    public function pesertas2(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Peserta::class, 'jurusan2_id');
+    }
+}
