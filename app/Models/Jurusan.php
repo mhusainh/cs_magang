@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\PesertaPpdb as Peserta;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Jurusan extends Model
 {
@@ -29,5 +30,10 @@ class Jurusan extends Model
     public function pesertas2(): HasMany
     {
         return $this->hasMany(Peserta::class, 'jurusan2_id');
+    }
+
+    public function hasil(): HasOne
+    {
+        return $this->hasOne(Hasil::class);
     }
 }

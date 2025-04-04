@@ -21,6 +21,7 @@ use App\Http\Controllers\PesertaController;
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
+    Route::middleware('auth:api')->post('refresh', [AuthController::class, 'refresh']);
 });
 
 // Protected routes (memerlukan login)
@@ -32,23 +33,29 @@ Route::middleware('auth:api')->group(function () {
 
     // Routes khusus user
     Route::middleware('role:user')->group(function () {
-        Route::get('/peserta/user/{userId}', [PesertaController::class, 'getByUserId']);
-        Route::post('/peserta', [PesertaController::class, 'create']);
-        Route::put('/peserta', [PesertaController::class, 'updateByUser']); //coba
-        Route::put('/peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']); //coba
+        route::prefix('user')->group(function () {
+            Route::get('/peserta/user/{userId}', [PesertaController::class, 'getByUserId']);
+            Route::post('/peserta', [PesertaController::class, 'create']);
+
+            Route::get('peserta', [PesertaController::class, 'getByUser']); //done
+            Route::put('peserta', [PesertaController::class, 'updateByUser']); //done
+            Route::put('peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']); //done
+        });
     });
 
     // Routes khusus admin
     Route::middleware('role:admin')->group(function () {
         // User management
-        Route::get('/users', [UserController::class, 'getAll']);
-        Route::get('/users/{id}', [UserController::class, 'getById']);
-        Route::put('/users/{id}', [UserController::class, 'update']);
-        Route::delete('/users/{id}', [UserController::class, 'delete']);
+        Route::prefix('admin')->group(function () {
+            Route::get('/users', [UserController::class, 'getAll']);
+            Route::get('/user/{id}', [UserController::class, 'getById']);
+            Route::put('/user/{id}', [UserController::class, 'update']);
+            Route::delete('/user/{id}', [UserController::class, 'delete']);
 
-        // Peserta management
-        Route::get('/peserta', [PesertaController::class, 'getAll']);
-        Route::get('/peserta/{id}', [PesertaController::class, 'getById']);
-        Route::delete('/peserta/{id}', [PesertaController::class, 'delete']);
+            // Peserta management
+            Route::get('/pesertas', [PesertaController::class, 'getAll']);
+            Route::get('/peserta/{id}', [PesertaController::class, 'getById']);
+            Route::delete('/peserta/{id}', [PesertaController::class, 'delete']);
+        });
     });
 });

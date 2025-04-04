@@ -5,7 +5,7 @@ namespace App\DTO;
 class UserDTO
 {
     // Login DTO
-    public static function UserLoginRequest(string $no_telp): array
+    public static function UserLoginDTO(string $no_telp): array
     {
         return [
             'no_telp' => $no_telp,
@@ -13,7 +13,7 @@ class UserDTO
     }
 
     // Register 
-    public static function UserRegisterRequest(
+    public static function UserRegisterDTO(
         string $nama,
         string $jenis_kelamin,
         string $no_telp,
@@ -28,7 +28,7 @@ class UserDTO
     }
 
     // Update 
-    public static function UserUpdateRequest(
+    public static function UserUpdateDTO(
         int $id,
         string $no_telp,
     ): array {

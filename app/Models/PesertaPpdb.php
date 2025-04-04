@@ -53,4 +53,9 @@ class PesertaPpdb extends Model
     {
         return $this->hasOne(BiodataOrtu::class, 'peserta_id');
     }
+
+    public function hasil(): HasOne
+    {
+        return $this->hasOne(Hasil::class, 'peserta_id');
+    }
 }

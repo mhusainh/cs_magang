@@ -18,7 +18,7 @@ class UserController extends Controller
 
     public function update(UpdateRequest $request)
     {
-        $data = UserDTO::UserUpdateRequest(
+        $data = UserDTO::UserUpdateDTO(
             $request->validated('id'),
             $request->validated('no_telp'),
         );
@@ -29,7 +29,7 @@ class UserController extends Controller
             return $this->error($result['message'], 404);
         }
 
-        return $this->success($result['data'], $result['message']);
+        return $this->success($data, $result['message'], 201);
     }
 
     public function delete(int $id)
@@ -40,7 +40,7 @@ class UserController extends Controller
             return $this->error($result['message'], 404);
         }
 
-        return $this->success(null, $result['message']);
+        return $this->success(null, $result['message'], 201);
     }
 
     public function getAll()

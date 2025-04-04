@@ -3,13 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laravel\Sanctum\HasApiTokens;
+use App\Models\PesertaPpdb as Peserta;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use App\Models\PesertaPpdb as Peserta;
+
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -67,8 +70,25 @@ class User extends Authenticatable implements JWTSubject
             'role' => $this->role,
         ];
     }
-    public function peserta()
+    public function peserta(): HasOne
     {
         return $this->hasOne(Peserta::class);
-   }
+    }
+    public function tagihan(): HasMany
+    {
+        return $this->hasMany(Tagihan::class);
+    }
+    public function progressUser(): HasOne
+    {
+        return $this->hasOne(ProgressUser::class);
+    }
+    /**
+     * Get the berkas associated with the berkas
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function berkas(): HasOne
+    {
+        return $this->hasOne(Berkas::class);
+    }
 }
