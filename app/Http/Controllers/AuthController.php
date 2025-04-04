@@ -34,9 +34,9 @@ class AuthController extends Controller
         } catch (ValidationException $e) {
             return $this->error('Data tidak valid', 422, $e->errors());
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-            return $this->error('Gagal membuat token', 500);
+            return $this->error('Gagal membuat token', 500, null);
         } catch (\Exception $e) {
-            return $this->error('Terjadi kesalahan saat login', 500);
+            return $this->error('Terjadi kesalahan saat login', 500, null);
         }
     }
 
@@ -52,7 +52,7 @@ class AuthController extends Controller
 
             $existingUser = User::where('no_telp', $data['no_telp'])->first();
             if ($existingUser) {
-                return $this->error('Nomor telepon sudah digunakan', 422);
+                return $this->error('Nomor telepon sudah digunakan', 422, null);
             }
 
             $user = User::create([
@@ -72,7 +72,7 @@ class AuthController extends Controller
         } catch (ValidationException $e) {
             return $this->error('Data tidak valid', 422, $e->errors());
         } catch (\Exception $e) {
-            return $this->error('Terjadi kesalahan saat pendaftaran', 500);
+            return $this->error('Terjadi kesalahan saat pendaftaran', 500, null);
         }
     }
 
@@ -87,5 +87,25 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return $this->error('Error refreshing token', 401, null);
         }
+    }
+
+    public function logout()
+    {
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
+            return $this->success(null, 'Logout successful', 204);
+        } catch (\Exception $e) {
+            return $this->error('Error logging out', 401, null);
+        }
+    }
+
+    public function me()
+    {
+        $user = auth()->user();
+        $userData = [
+            'id' => $user->id,
+            'no_telp' => $user->no_telp,
+        ];
+        return $this->success($userData, 'User retrieved successfully', 200);
     }
 }

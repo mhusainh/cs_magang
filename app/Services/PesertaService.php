@@ -41,10 +41,7 @@ class PesertaService
                     'message' => 'Peserta tidak ditemukan'
                 ];
             }
-
-            // Load jurusan relationships
-            $peserta->load(['jurusan1', 'jurusan2']);
-
+            
             return [
                 'success' => true,
                 'data' => new GetDetailResource($peserta),
@@ -68,8 +65,6 @@ class PesertaService
                 'message' => 'Peserta tidak ditemukan'
             ];
         }
-
-        $peserta->load(['jurusan1', 'jurusan2']);
 
         return [
             'success' => true,
@@ -133,11 +128,16 @@ class PesertaService
     public function getAll(): array
     {
         try {
-            $peserta = $this->pesertaRepository->getAll();
-
+            $peserta = $this->pesertaRepository->getAllWithRelationsAndPagination();
+            if ($peserta->isEmpty()) {
+                return [
+                    'success' => false,
+                    'message' => 'Tidak ada data peserta'
+                ];
+            }
             return [
                 'success' => true,
-                'data' => $peserta,
+                'data' => GetDetailResource::collection($peserta),
                 'message' => 'Data peserta berhasil diambil'
             ];
         } catch (\Exception $e) {
