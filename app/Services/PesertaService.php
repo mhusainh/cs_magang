@@ -148,8 +148,8 @@ class PesertaService
 
             return [
                 'success' => true,
-                // 'data' => RegisterResource::collection($peserta),
-               'message' => 'Data peserta berhasil diambil'
+                'data' => $peserta,
+                'message' => 'Data peserta berhasil diambil'
             ];
         } catch (\Exception $e) {
             return [
