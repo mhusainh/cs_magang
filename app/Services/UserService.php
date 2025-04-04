@@ -80,30 +80,51 @@ class UserService
 
     public function update(array $data): array
     {
-        $user = $this->userRepository->findById($data['id']);
-        if (!$user) {
+        try {
+            $user = $this->userRepository->findById($data['id']);
+            if (!$user) {
+                return [
+                    'success' => false,
+                    'message' => 'User tidak ditemukan'
+                ];
+            }
+            if ($user->no_telp !== $data['no_telp']) {
+                $existingUser = $this->userRepository->findByPhone($data['no_telp']);
+                if ($existingUser && $existingUser->id !== $user->id) {
+                    return [
+                        'success' => false,
+                        'message' => 'Nomor telepon sudah digunakan'
+                    ];
+                }
+            }
+
+            $updated = $this->userRepository->update($user, [
+                'no_telp' => $data['no_telp'],
+            ]);
+            
+            if (!$updated) {
+                return [
+                    'success' => false,
+                    'message' => 'Gagal memperbarui user'
+                ];
+            }
+
+            return [
+                'success' => true,
+                'message' => 'User berhasil diperbarui'
+            ];
+        } catch (\Exception $e) {
+            \Log::error('Error updating user: ' . $e->getMessage(), [
+                'user_id' => $data['id'],
+                'data' => $data,
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return [
                 'success' => false,
-                'message' => 'User tidak ditemukan'
+                'message' => 'Terjadi kesalahan saat memperbarui user: ' . $e->getMessage()
             ];
         }
-
-        $existingUser = $this->userRepository->findByPhone($data['no_telp']);
-        if ($existingUser && $existingUser->id !== $user->id) {
-            return [
-                'success' => false,
-                'message' => 'Nomor telepon sudah digunakan'
-            ];
-        }
-
-        $this->userRepository->update($user, [
-            'no_telp' => $data['no_telp'],
-        ]);
-
-        return [
-            'success' => true,
-            'message' => 'User berhasil diperbarui'
-        ];
     }
 
     public function delete(int $id): array
