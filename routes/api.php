@@ -49,7 +49,7 @@ Route::middleware('auth:api')->group(function () {
         Route::prefix('admin')->group(function () {
             Route::get('/users', [UserController::class, 'getAll']);
             Route::get('/user/{id}', [UserController::class, 'getById']);
-            Route::put('/user/{id}', [UserController::class, 'update']);
+            Route::put('/user', [UserController::class, 'update']);
             Route::delete('/user/{id}', [UserController::class, 'delete']);
 
             // Peserta management

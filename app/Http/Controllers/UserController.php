@@ -20,7 +20,7 @@ class UserController extends Controller
     public function update(UpdateRequest $request)
     {
         try {
-            $data = UserDTO::UserUpdateRequest(
+            $data = UserDTO::UserUpdateDTO(
                 $request->validated('id'),
                 $request->validated('no_telp')
             );
