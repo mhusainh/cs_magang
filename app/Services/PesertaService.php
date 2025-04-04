@@ -5,15 +5,19 @@ namespace App\Services;
 
 use App\Repositories\PesertaRepository;
 use App\Http\Resources\Peserta\GetDetailResource;
+use App\Repositories\JurusanRepository;
 
 class PesertaService
 {
-    public function __construct(private PesertaRepository $pesertaRepository) {}
+    public function __construct(
+        private PesertaRepository $pesertaRepository,
+        private JurusanRepository $jurusanRepository
+    ) {}
 
     public function create(array $data): array
     {
         try {
-            $peserta = $this->pesertaRepository->create($data);
+            $this->pesertaRepository->create($data);
 
             return [
                 'success' => true,
@@ -29,20 +33,33 @@ class PesertaService
 
     public function getById(int $id): array
     {
-        $peserta = $this->pesertaRepository->findById($id);
+        try {
+            $peserta = $this->pesertaRepository->findById($id);
+            if (!$peserta) {
+                return [
+                    'success' => false,
+                    'message' => 'Peserta tidak ditemukan'
+                ];
+            }
 
-        if (!$peserta) {
+            // Get jurusan data and handle potential null cases
+            $jurusan1 = $peserta->jurusan1_id ? $this->jurusanRepository->findById($peserta->jurusan1_id) : null;
+            $jurusan2 = $peserta->jurusan2_id ? $this->jurusanRepository->findById($peserta->jurusan2_id) : null;
+
+            $peserta->jurusan1_id = $jurusan1 ? $jurusan1->jurusan : null;
+            $peserta->jurusan2_id = $jurusan2 ? $jurusan2->jurusan : null;
+
+            return [
+                'success' => true,
+                'data' => new GetDetailResource($peserta),
+                'message' => 'Peserta berhasil diambil'
+            ];
+        } catch (\Exception $e) {
             return [
                 'success' => false,
-                'message' => 'Peserta tidak ditemukan'
+                'message' => 'Terjadi kesalahan saat mengambil data peserta'
             ];
         }
-
-        return [
-            'success' => true,
-            'data' => new GetDetailResource($peserta),
-            'message' => 'Peserta berhasil diambil'
-        ];
     }
 
     public function getByUserId(int $userId): array
@@ -59,39 +76,13 @@ class PesertaService
         return [
             'success' => true,
             'data' => new GetDetailResource($peserta),
-           'message' => 'Peserta berhasil diambil'
+            'message' => 'Peserta berhasil diambil'
         ];
     }
 
     public function update(int $id, array $data): array
     {
         $peserta = $this->pesertaRepository->findById($id);
-
-        if (!$peserta) {
-            return [
-                'success' => false,
-                'message' => 'Peserta tidak ditemukan'
-            ];
-        }
-
-        try {
-            $this->pesertaRepository->update($peserta, $data);
-
-            return [
-                'success' => true,
-                'message' => 'Peserta berhasil diperbarui'
-            ];
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'message' => 'Terjadi kesalahan saat memperbarui peserta'
-            ];
-        }
-    }
-
-    public function updateByUser(int $userid, array $data): array
-    {
-        $peserta = $this->pesertaRepository->findByUserId($userid);
 
         if (!$peserta) {
             return [

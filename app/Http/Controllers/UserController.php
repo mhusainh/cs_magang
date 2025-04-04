@@ -47,7 +47,7 @@ class UserController extends Controller
             return $this->error($result['message'], 404);
         }
 
-        return $this->success(null, $result['message']);
+        return $this->success(null, $result['message'], 201);
     }
 
     public function getAll()

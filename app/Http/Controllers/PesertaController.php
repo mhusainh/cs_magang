@@ -17,24 +17,24 @@ class PesertaController extends Controller
 
     public function __construct(private PesertaService $pesertaService) {}
 
-    public function create(CreatePesertaRequest $request)
-    {
-        $data = PesertaDTO::createPesertaDTO(
-            $request->validated('user_id'),
-            $request->validated('nama'),
-            $request->validated('no_telp'),
-            $request->validated('jenis_kelamin'),
-            $request->validated('jenjang_sekolah')
-        );
+    // public function create(CreatePesertaRequest $request)
+    // {
+    //     $data = PesertaDTO::createPesertaDTO(
+    //         $request->validated('user_id'),
+    //         $request->validated('nama'),
+    //         $request->validated('no_telp'),
+    //         $request->validated('jenis_kelamin'),
+    //         $request->validated('jenjang_sekolah')
+    //     );
 
-        $result = $this->pesertaService->create($data);
+    //     $result = $this->pesertaService->create($data);
 
-        if (!$result['success']) {
-            return $this->error($result['message'], 422);
-        }
+    //     if (!$result['success']) {
+    //         return $this->error($result['message'], 422);
+    //     }
 
-        return $this->success($result['data'], $result['message'], 201);
-    }
+    //     return $this->success($result['data'], $result['message'], 201);
+    // }
 
     public function getById(int $id)
     {
@@ -58,6 +58,17 @@ class PesertaController extends Controller
         return $this->success($result['data'], $result['message'], 200);
     }
 
+    public function getByUser()
+    {
+        $result = $this->pesertaService->getByUserId(Auth::user()->id);
+
+        if (!$result['success']) {
+            return $this->error($result['message'], 404);
+        }
+
+        return $this->success($result['data'], $result['message'], 200);
+    }
+
     public function updateByUser(UpdatePesertaRequest $request)
     {
         $data = PesertaDTO::updatePesertaByUserDTO(
@@ -73,13 +84,19 @@ class PesertaController extends Controller
             $request->validated('jurusan2_id')
         );
 
-        $result = $this->pesertaService->updateByUser(Auth::user()->id, $data);
+        $peserta = $this->pesertaService->getByUserId(Auth::user()->id);
+
+        if (!$peserta['success']) {
+            return $this->error($peserta['message'], 404);
+        }
+        
+        $result = $this->pesertaService->update($peserta['data']->id, $data);
 
         if (!$result['success']) {
             return $this->error($result['message'], 404);
         }
 
-        return $this->success(null, $result['message'], 201);
+        return $this->success($data, $result['message'], 201);
     }
 
     public function inputFormPeserta(InputFormPesertaRequest $request)
@@ -93,13 +110,19 @@ class PesertaController extends Controller
             $request->validated('jurusan2_id')
         );
 
-        $result = $this->pesertaService->updateByUser(Auth::user()->id, $data);
+        $peserta = $this->pesertaService->getByUserId(Auth::user()->id);
+
+        if (!$peserta['success']) {
+            return $this->error($peserta['message'], 404);
+        }
+        
+        $result = $this->pesertaService->update($peserta['data']->id, $data);
 
         if (!$result['success']) {
             return $this->error($result['message'], 404);
         }
 
-        return $this->success(null, $result['message'], 201);
+        return $this->success($data, $result['message'], 201);
     }
 
     public function delete(int $id)
