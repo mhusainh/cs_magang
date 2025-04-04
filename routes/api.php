@@ -37,9 +37,9 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/peserta/user/{userId}', [PesertaController::class, 'getByUserId']);
             Route::post('/peserta', [PesertaController::class, 'create']);
 
-            Route::get('peserta', [PesertaController::class, 'getByUser']); //done
-            Route::put('peserta', [PesertaController::class, 'updateByUser']); //done
-            Route::put('peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']); //done
+            Route::get('peserta', [PesertaController::class, 'getByUser']);
+            Route::put('peserta', [PesertaController::class, 'updateByUser']);
+            Route::put('peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']);
         });
     });
 
@@ -54,7 +54,7 @@ Route::middleware('auth:api')->group(function () {
 
             // Peserta management
             Route::get('/pesertas', [PesertaController::class, 'getAll']);
-            Route::get('/peserta/{id}', [PesertaController::class, 'getById']);
+            Route::get('peserta/{id}', [PesertaController::class, 'getById']);
             Route::delete('/peserta/{id}', [PesertaController::class, 'delete']);
         });
     });

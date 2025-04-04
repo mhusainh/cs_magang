@@ -20,10 +20,18 @@ class GetDetailResource extends JsonResource
             'tempat_lahir' => $this->tempat_lahir,
             'tanggal_lahir' => $this->tanggal_lahir,
             'alamat' => $this->alamat,
-            'jurusan1_id' => $this->jurusan1_id,
-            'jurusan2_id' => $this->jurusan2_id,
+            'jurusan1' => $this->jurusan1 ? [
+                'id' => $this->jurusan1->id,
+                'jurusan' => $this->jurusan1->jurusan,
+                'jenjang_sekolah' => $this->jurusan1->jenjang_sekolah,
+            ] : null,
+            'jurusan2' => $this->jurusan2 ? [
+                'id' => $this->jurusan2->id,
+                'jurusan' => $this->jurusan2->jurusan,
+                'jenjang_sekolah' => $this->jurusan2->jenjang_sekolah,
+            ] : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
     }
-} 
+}

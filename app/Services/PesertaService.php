@@ -42,12 +42,8 @@ class PesertaService
                 ];
             }
 
-            // Get jurusan data and handle potential null cases
-            $jurusan1 = $peserta->jurusan1_id ? $this->jurusanRepository->findById($peserta->jurusan1_id) : null;
-            $jurusan2 = $peserta->jurusan2_id ? $this->jurusanRepository->findById($peserta->jurusan2_id) : null;
-
-            $peserta->jurusan1_id = $jurusan1 ? $jurusan1->jurusan : null;
-            $peserta->jurusan2_id = $jurusan2 ? $jurusan2->jurusan : null;
+            // Load jurusan relationships
+            $peserta->load(['jurusan1', 'jurusan2']);
 
             return [
                 'success' => true,
@@ -72,6 +68,8 @@ class PesertaService
                 'message' => 'Peserta tidak ditemukan'
             ];
         }
+
+        $peserta->load(['jurusan1', 'jurusan2']);
 
         return [
             'success' => true,

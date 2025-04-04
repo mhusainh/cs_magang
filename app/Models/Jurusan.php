@@ -12,6 +12,7 @@ class Jurusan extends Model
 {
     use HasFactory;
 
+    protected $table = 'jurusan';
     /**
      * The attributes that are mass assignable.
      *
