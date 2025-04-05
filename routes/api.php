@@ -67,6 +67,9 @@ Route::middleware('auth:api')->group(function () {
             Route::get('peserta/{id}', [PesertaController::class, 'getById']);
             Route::delete('/peserta/{id}', [PesertaController::class, 'delete']);
 
+            Route::get('/peserta/user/{userId}', [PesertaController::class, 'getByUserId']);
+            Route::post('/peserta', [PesertaController::class, 'create']);
+
             Route::post('tagihan', [TagihanController::class, 'create']);
             Route::put('tagihan/{id}', [TagihanController::class, 'update']);
             Route::delete('tagihan/{id}', [TagihanController::class, 'delete']);

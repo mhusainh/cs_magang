@@ -17,7 +17,12 @@ class GetDetailResource extends JsonResource
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'tagihan_id' => $this->tagihan_id,
+            'tagihan_id' => $this->tagihan_id ? [
+                'id' => $this->tagihan->id,
+                'nama_tagihan' => $this->tagihan->nama_tagihan,
+                'total' => $this->tagihan->total,
+                'status' => $this->tagihan->status,
+            ] : null,
             'status' => $this->status,
             'total' => $this->total,
             'created_time' => $this->created_time,
