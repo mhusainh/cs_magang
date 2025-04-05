@@ -3,14 +3,11 @@
 namespace App\Repositories;
 
 use App\Models\Jurusan;
+use Illuminate\Database\Eloquent\Collection;
 
 class JurusanRepository
 {
     public function __construct(private Jurusan $model) {}
-    public function create(array $data): Jurusan
-    {
-        return $this->model->create($data);
-    }
 
     public function findById(int $id): ?Jurusan
     {
@@ -19,7 +16,12 @@ class JurusanRepository
 
     public function findbyJenjangSekolah(string $jenjang_sekolah):?Jurusan
     {
-        return $this->model->where('jenjang_sekolah', $jenjang_sekolah);
+        return $this->model->where('jenjang_sekolah', $jenjang_sekolah)->first();
+    }
+
+    public function create(array $data): Jurusan
+    {
+        return $this->model->create($data);
     }
 
     public function update(Jurusan $jurusan, array $data): bool
@@ -32,8 +34,9 @@ class JurusanRepository
         return $jurusan->delete();
     }
 
-    public function getAll(): array
+    public function getAll(): Collection
     {
-        return Jurusan::all()->toArray();
+        return $this->model->all();
     }
+
 } 

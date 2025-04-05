@@ -8,6 +8,7 @@ class TransaksiDTO
      * Membuat DTO untuk transaksi baru
      */
     public static function createTransaksiDTO(
+        int $user_id,
         int $total,
         string $va_number,
         string $transaction_qr_id,
@@ -15,6 +16,7 @@ class TransaksiDTO
         string $ref_no
     ): array {
         return [
+            'user_id' => $user_id,
             'total' => $total,
             'va_number' => $va_number,
             'transaction_qr_id' => $transaction_qr_id,

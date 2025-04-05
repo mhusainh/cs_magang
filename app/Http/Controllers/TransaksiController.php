@@ -33,7 +33,6 @@ class TransaksiController extends Controller
         $userId = Auth::user()->id;
         $data = TransaksiDTO::createTransaksiDTO(
             $userId,
-            $request->validated('tagihan_id'),
             $request->validated('total'),
             $request->validated('va_number'),
             $request->validated('transaction_qr_id'),

@@ -7,6 +7,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\TagihanController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\JurusanController;
+use App\Http\Controllers\PekerjaanOrtuController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,6 +26,11 @@ Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::middleware('auth:api')->post('refresh', [AuthController::class, 'refresh']);
 });
+// Public routes (bisa diakses tanpa login)
+Route::get('jurusan', [JurusanController::class, 'getAll']);
+Route::get('jurusan/{id}', [JurusanController::class, 'getById']);
+Route::get('pekerjaan-ortu', [PekerjaanOrtuController::class, 'getAll']);
+Route::get('pekerjaan-ortu/{id}', [PekerjaanOrtuController::class, 'getById']);
 
 // Protected routes (memerlukan login)
 Route::middleware('auth:api')->group(function () {
@@ -82,6 +89,15 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('transaksi/{id}', [TransaksiController::class,'delete']);
             Route::put('transaksi/{id}', [TransaksiController::class,'update']);
 
+            // Jurusan Management            
+            Route::post('jurusan', [JurusanController::class, 'create']);
+            Route::put('jurusan/{id}', [JurusanController::class, 'update']);
+            Route::delete('jurusan/{id}', [JurusanController::class, 'delete']);
+
+            // Pekerjaan Ortu Management
+            Route::post('pekerjaan-ortu', [PekerjaanOrtuController::class, 'create']);
+            Route::put('pekerjaan-ortu/{id}', [PekerjaanOrtuController::class, 'update']);
+            Route::delete('pekerjaan-ortu/{id}', [PekerjaanOrtuController::class, 'delete']);
         });
     });
 });
