@@ -44,11 +44,14 @@ Route::middleware('auth:api')->group(function () {
             Route::put('peserta', [PesertaController::class, 'updateByUser']);
             Route::put('peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']);
 
+            // Tagihan Management
             Route::get('tagihan', [TagihanController::class, 'getAll']);
             Route::get('tagihan/{id}', [TagihanController::class, 'getById']);
 
+            // Transaksi Management
             Route::get('transaksi', [TransaksiController::class, 'getAll']);
             Route::get('transaksi/{id}', [TransaksiController::class, 'getById']);
+            Route::post('transaksi', [TransaksiController::class, 'create']);
             
         });
     });
@@ -57,6 +60,7 @@ Route::middleware('auth:api')->group(function () {
     Route::middleware('role:admin')->group(function () {
         // User management
         Route::prefix('admin')->group(function () {
+            // User management
             Route::get('/users', [UserController::class, 'getAll']);
             Route::get('/user/{id}', [UserController::class, 'getById']);
             Route::put('/user', [UserController::class, 'update']);
@@ -66,13 +70,18 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/pesertas', [PesertaController::class, 'getAll']);
             Route::get('peserta/{id}', [PesertaController::class, 'getById']);
             Route::delete('/peserta/{id}', [PesertaController::class, 'delete']);
-
             Route::get('/peserta/user/{userId}', [PesertaController::class, 'getByUserId']);
             Route::post('/peserta', [PesertaController::class, 'create']);
 
+            // Tagihan Management
             Route::post('tagihan', [TagihanController::class, 'create']);
             Route::put('tagihan/{id}', [TagihanController::class, 'update']);
             Route::delete('tagihan/{id}', [TagihanController::class, 'delete']);
+
+            // Transaksi Management
+            Route::delete('transaksi/{id}', [TransaksiController::class,'delete']);
+            Route::put('transaksi/{id}', [TransaksiController::class,'update']);
+
         });
     });
 });

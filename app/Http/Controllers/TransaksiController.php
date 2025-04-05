@@ -28,6 +28,40 @@ class TransaksiController extends Controller
         return $this->response($result);
     }
 
+    public function create(CreateRequest $request): JsonResponse
+    {
+        $userId = Auth::user()->id;
+        $data = TransaksiDTO::createTransaksiDTO(
+            $userId,
+            $request->validated('tagihan_id'),
+            $request->validated('total'),
+            $request->validated('va_number'),
+            $request->validated('transaction_qr_id'),
+            $request->validated('method'),
+            $request->validated('ref_no')
+        );
+
+        $result = $this->transaksiService->create($data);
+        return $this->response($result, 201);
+    }
+
+    public function update(UpdateRequest $request): JsonResponse
+    {
+        $data = TransaksiDTO::updateTransaksiDTO(
+            $request->validated('id'),
+            $request->validated('user_id'),
+            $request->validated('tagihan_id'),
+            $request->validated('status'),
+            $request->validated('total'),
+            $request->validated('va_number'),
+            $request->validated('transaction_qr_id'),
+            $request->validated('method'),
+            $request->validated('ref_no')
+        );
+
+        $result = $this->transaksiService->update($data);
+        return $this->response($result);
+    }
     
     public function delete(int $id): JsonResponse
     {
@@ -35,33 +69,3 @@ class TransaksiController extends Controller
         return $this->response($result);
     }
 } 
-        // public function create(CreateRequest $request): JsonResponse
-        // {
-        //     $userId = Auth::user()->id;
-        //     $data = TransaksiDTO::createTransaksiDTO(
-        //         $userId,
-        //         $request->validated('tagihan_id'),
-        //         $request->validated('total'),
-        //         $request->validated('va_number'),
-        //         $request->validated('transaction_qr_id'),
-        //         $request->validated('method'),
-        //         $request->validated('ref_no')
-        //     );
-    
-        //     $result = $this->transaksiService->create($data);
-        //     return $this->response($result, 201);
-        // }
-    
-        // public function update(UpdateRequest $request, int $id): JsonResponse
-        // {
-        //     $data = TransaksiDTO::updateTransaksiDTO(
-        //         $id,
-        //         $request->validated('jumlah'),
-        //         $request->validated('metode_pembayaran'),
-        //         $request->validated('status'),
-        //         $request->validated('waktu_transaksi')
-        //     );
-    
-        //     $result = $this->transaksiService->update($data);
-        //     return $this->response($result);
-        // }

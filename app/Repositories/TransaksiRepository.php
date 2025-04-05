@@ -15,13 +15,16 @@ class TransaksiRepository
         return $this->model->where('user_id', $userId)->get();
     }
 
-    public function findById(int $id, int $userId)
+    public function findUserById(int $id, int $userId)
     {
         return $this->model->where('id', $id)
                            ->where('user_id', $userId)
                            ->first();
     }
-
+    public function findById(int $id)
+    {
+        return $this->model->where('id', $id)->first();
+    }
     public function create(array $data)
     {
         return $this->model->create($data);

@@ -31,7 +31,7 @@ class TransaksiService
     public function getById(int $id, int $userId): array
     {
         try {
-            $transaksi = $this->transaksiRepository->findById($id, $userId);
+            $transaksi = $this->transaksiRepository->findUserById($id, $userId);
             
             if (!$transaksi) {
                 return [
@@ -70,6 +70,33 @@ class TransaksiService
         }
     }
 
+    public function update(array $data): array
+    {
+        try {
+            $transaksi = $this->transaksiRepository->findById($data['id']);
+            
+            if (!$transaksi) {
+                return [
+                    'success' => false,
+                    'message' => 'Transaksi tidak ditemukan'
+                ];
+            }
+
+            $updated = $this->transaksiRepository->update($transaksi, $data);
+            
+            return [
+                'success' => true,
+                'data' => $updated,
+                'message' => 'Transaksi berhasil diperbarui'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal memperbarui transaksi: ' . $e->getMessage()
+            ];
+        }
+    }
+
     public function delete(int $id): array
     {
         try {
@@ -88,29 +115,3 @@ class TransaksiService
     }
 } 
 
-  // public function update(array $data): array
-    // {
-    //     try {
-    //         $transaksi = $this->transaksiRepository->findById($data['id']);
-            
-    //         if (!$transaksi) {
-    //             return [
-    //                 'success' => false,
-    //                 'message' => 'Transaksi tidak ditemukan'
-    //             ];
-    //         }
-
-    //         $updated = $this->transaksiRepository->update($transaksi, $data);
-            
-    //         return [
-    //             'success' => true,
-    //             'data' => $updated,
-    //             'message' => 'Transaksi berhasil diperbarui'
-    //         ];
-    //     } catch (\Exception $e) {
-    //         return [
-    //             'success' => false,
-    //             'message' => 'Gagal memperbarui transaksi: ' . $e->getMessage()
-    //         ];
-    //     }
-    // }
