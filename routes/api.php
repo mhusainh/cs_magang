@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PesertaController;
-
+use App\Http\Controllers\TagihanController;
+use App\Http\Controllers\TransaksiController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -40,6 +41,13 @@ Route::middleware('auth:api')->group(function () {
             Route::get('peserta', [PesertaController::class, 'getByUser']);
             Route::put('peserta', [PesertaController::class, 'updateByUser']);
             Route::put('peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']);
+
+            Route::get('tagihan', [TagihanController::class, 'getAll']);
+            Route::get('tagihan/{id}', [TagihanController::class, 'getById']);
+
+            Route::get('transaksi', [TransaksiController::class, 'getAll']);
+            Route::get('transaksi/{id}', [TransaksiController::class, 'getById']);
+            
         });
     });
 
@@ -56,6 +64,10 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/pesertas', [PesertaController::class, 'getAll']);
             Route::get('peserta/{id}', [PesertaController::class, 'getById']);
             Route::delete('/peserta/{id}', [PesertaController::class, 'delete']);
+
+            Route::post('tagihan', [TagihanController::class, 'create']);
+            Route::put('tagihan/{id}', [TagihanController::class, 'update']);
+            Route::delete('tagihan/{id}', [TagihanController::class, 'delete']);
         });
     });
 });
