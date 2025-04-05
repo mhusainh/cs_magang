@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('pekerjaan_ortus', function (Blueprint $table) {
             $table->id();
             $table->string('nama_pekerjaan');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

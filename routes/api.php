@@ -35,9 +35,11 @@ Route::middleware('auth:api')->group(function () {
     // Routes khusus user
     Route::middleware('role:user')->group(function () {
         route::prefix('user')->group(function () {
-            Route::get('/peserta/user/{userId}', [PesertaController::class, 'getByUserId']);
-            Route::post('/peserta', [PesertaController::class, 'create']);
+            // User profile
+            Route::get('/profile', [AuthController::class, 'me']);
+            Route::put('/profile', [UserController::class, 'updateProfile']);
 
+            // Peserta Management
             Route::get('peserta', [PesertaController::class, 'getByUser']);
             Route::put('peserta', [PesertaController::class, 'updateByUser']);
             Route::put('peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']);
@@ -50,7 +52,7 @@ Route::middleware('auth:api')->group(function () {
             
         });
     });
-
+    
     // Routes khusus admin
     Route::middleware('role:admin')->group(function () {
         // User management
@@ -59,7 +61,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/user/{id}', [UserController::class, 'getById']);
             Route::put('/user', [UserController::class, 'update']);
             Route::delete('/user/{id}', [UserController::class, 'delete']);
-
+            
             // Peserta management
             Route::get('/pesertas', [PesertaController::class, 'getAll']);
             Route::get('peserta/{id}', [PesertaController::class, 'getById']);

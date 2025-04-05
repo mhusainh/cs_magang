@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\User\CardResource;
 use App\Repositories\UserRepository;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Repositories\PesertaRepository;
@@ -173,5 +174,20 @@ class UserService
            'message' => 'User berhasil diambil'
         ];
     }
+    public function cardUser(int $userId): array
+    {
+        $user = $this->userRepository->findByIdCard($userId);
+        if (!$user) {
+            return [
+               'success' => false,
+               'message' => 'User tidak ditemukan'
+            ];
+        }
 
+        return [
+           'success' => true,
+            'data' => new CardResource($user),
+          'message' => 'User berhasil diambil'
+        ];
+    }
 } 

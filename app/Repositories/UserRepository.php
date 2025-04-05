@@ -39,4 +39,11 @@ class UserRepository
     {
         return $user->delete();
     }
+    public function findByIdCard(int $id):?user
+    {
+        return $this->model->with(
+            'peserta'
+        )->where('id_card', $id)->first();
+    }
+
 }
