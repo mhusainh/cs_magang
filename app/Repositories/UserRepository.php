@@ -44,7 +44,7 @@ class UserRepository
         return $this->model->with(
             'peserta',
             'progressUser'
-        )->where('id_card', $id)->first();
+        )->where('id', $id)->first();
     }
 
 }

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\TagihanController;
@@ -42,6 +43,9 @@ Route::middleware('auth:api')->group(function () {
     // Routes khusus user
     Route::middleware('role:user')->group(function () {
         route::prefix('user')->group(function () {
+            // Home
+            Route::get('/home', [HomeController::class, 'index']);
+
             // User profile
             Route::get('/profile', [AuthController::class, 'me']);
             Route::put('/profile', [UserController::class, 'updateProfile']);

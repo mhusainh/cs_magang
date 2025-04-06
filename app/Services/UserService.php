@@ -172,9 +172,9 @@ class UserService
             'message' => 'User berhasil diambil'
         ];
     }
-    public function cardUser(int $userId): array
+    public function cardUser(int $Id): array
     {
-        $user = $this->userRepository->findByIdCard($userId);
+        $user = $this->userRepository->findByIdCard($Id);
         if (!$user) {
             return [
                 'success' => false,

@@ -9,13 +9,17 @@ use App\Http\Requests\Peserta\CreatePesertaRequest;
 use App\Http\Requests\Peserta\InputFormPesertaRequest;
 use App\Http\Requests\Peserta\UpdatePesertaRequest;
 use Illuminate\Http\Request;
+use App\Services\ProgressUserService;
 use Illuminate\Support\Facades\Auth;
 
 class PesertaController extends Controller
 {
     use ApiResponse;
 
-    public function __construct(private PesertaService $pesertaService) {}
+    public function __construct(
+        private PesertaService $pesertaService,
+        private ProgressUserService $progressUserService
+    ) {}
 
     // public function create(CreatePesertaRequest $request)
     // {
@@ -89,7 +93,7 @@ class PesertaController extends Controller
         if (!$peserta['success']) {
             return $this->error($peserta['message'], 404);
         }
-        
+
         $result = $this->pesertaService->update($peserta['data']->id, $data);
 
         if (!$result['success']) {
@@ -109,19 +113,29 @@ class PesertaController extends Controller
             $request->validated('jurusan1_id'),
             $request->validated('jurusan2_id')
         );
-
+        $progressData = [
+            'user_id' => Auth::user()->id,
+            'progress' => 1,
+        ];
+        
         $peserta = $this->pesertaService->getByUserId(Auth::user()->id);
-
+        
         if (!$peserta['success']) {
             return $this->error($peserta['message'], 404);
         }
         
         $result = $this->pesertaService->update($peserta['data']->id, $data);
-
+        
         if (!$result['success']) {
             return $this->error($result['message'], 404);
         }
+        
+        $progress = $this->progressUserService->create($progressData);
 
+        if (!$progress['success']) {
+            return $this->error($progress['message'], 404);
+        }
+        
         return $this->success($data, $result['message'], 201);
     }
 

@@ -20,6 +20,6 @@ class HomeController extends Controller
         if (!$card['success']) {
             return $this->error($card['message'], 404, null);
         }
-        return $this->success('Success', 200, $card['data']);
+        return $this->success($card['data'], 'Success' , 200);
     }
 }
