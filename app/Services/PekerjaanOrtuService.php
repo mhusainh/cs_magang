@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Http\Resources\PekerjaanOrtu\GetResource;
 use App\Repositories\PekerjaanOrtuRepository;
+
 
 class PekerjaanOrtuService
 {
@@ -16,7 +18,7 @@ class PekerjaanOrtuService
             $data = $this->pekerjaanOrtuRepository->getAll();
             return [
                 'success' => true,
-                'data' => $data,
+                'data' => GetResource::collection($data),
                 'message' => 'Daftar pekerjaan ortu berhasil diambil'
             ];
         } catch (\Exception $e) {
@@ -41,7 +43,7 @@ class PekerjaanOrtuService
 
             return [
                 'success' => true,
-                'data' => $data,
+                'data' => new GetResource($data),
                 'message' => 'Detail pekerjaan ortu berhasil diambil'
             ];
         } catch (\Exception $e) {

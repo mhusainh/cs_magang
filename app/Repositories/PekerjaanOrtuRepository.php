@@ -29,8 +29,9 @@ class PekerjaanOrtuRepository
         return $pekerjaanOrtu->update($data);
     }
 
-    public function delete(int $id): bool
+
+    public function delete(PekerjaanOrtu $pekerjaanOrtu): bool
     {
-        return $this->model->where('id', $id)->delete();
+        return $pekerjaanOrtu->delete();
     }
 } 

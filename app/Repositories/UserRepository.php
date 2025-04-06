@@ -42,7 +42,8 @@ class UserRepository
     public function findByIdCard(int $id):?user
     {
         return $this->model->with(
-            'peserta'
+            'peserta',
+            'progressUser'
         )->where('id_card', $id)->first();
     }
 

@@ -16,11 +16,10 @@ class HomeController extends Controller
     public function index()
     {
         $card = $this->userService->cardUser(Auth::user()->id);
-        
+
         if (!$card['success']) {
             return $this->error($card['message'], 404, null);
         }
-
-        
+        return $this->success('Success', 200, $card['data']);
     }
 }

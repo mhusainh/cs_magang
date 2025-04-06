@@ -5,7 +5,7 @@ namespace App\Http\Resources\Jurusan;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class getDetailResource extends JsonResource
+class GetDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,9 +18,6 @@ class getDetailResource extends JsonResource
             'id' => $this->id,
             'jurusan' => $this->jurusan,
             'jenjang_sekolah' => $this->jenjang_sekolah,
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-            'deleted_at' => $this->deleted_at?->format('Y-m-d H:i:s')
         ];
     }
 }

@@ -7,25 +7,30 @@ use App\Http\Requests\Jurusan\CreateRequest;
 use App\Http\Requests\Jurusan\UpdateRequest;
 use App\Services\JurusanService;
 use Illuminate\Http\JsonResponse;
-use App\Http\Resources\Jurusan\GetAllResource;
-use App\Http\Resources\Jurusan\getDetailResource;
+use App\Traits\ApiResponse;
 
 class JurusanController extends Controller
 {
-    public function __construct(private JurusanService $jurusanService)
-    {
-    }
+    use ApiResponse;
+
+    public function __construct(private JurusanService $jurusanService) {}
 
     public function getAll(): JsonResponse
     {
         $result = $this->jurusanService->getAll();
-        return new GetAllResource($result['data']);
+        if (!$result['success']) {
+            return $this->error($result['message'], 404, null);
+        }
+        return $this->success($result, $result['message'], 200);
     }
 
     public function getById(int $id): JsonResponse
     {
         $result = $this->jurusanService->getById($id);
-        return new getDetailResource($result['data']);
+        if (!$result['success']) {
+            return $this->error($result['message'], 404, null);
+        }
+        return $this->success($result, $result['message'], 200);
     }
 
     public function create(CreateRequest $request): JsonResponse
@@ -36,7 +41,10 @@ class JurusanController extends Controller
         );
 
         $result = $this->jurusanService->create($data);
-        return $this->response($result, 201);
+        if (!$result['success']) {
+            return $this->error($result['message'], 422, null);
+        }
+        return $this->success($result, $result['message'], 201);
     }
 
     public function update(UpdateRequest $request, int $id): JsonResponse
@@ -48,12 +56,19 @@ class JurusanController extends Controller
         );
 
         $result = $this->jurusanService->update($data);
-        return $this->response($result);
+        if (!$result['success']) {
+            return $this->error($result['message'], 422, null);
+        }
+
+        return $this->success($result, $result['message'], 201);
     }
 
     public function delete(int $id): JsonResponse
     {
         $result = $this->jurusanService->delete($id);
-        return $this->response($result);
+        if  (!$result['success']) {
+            return $this->error($result['message'], 404, null);
+        }
+        return $this->success($result, $result['message'], 204);
     }
-} 
+}

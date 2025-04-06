@@ -9,15 +9,13 @@ use App\Repositories\PesertaRepository;
 
 class UserService
 {
-    public function __construct(private UserRepository $userRepository, private PesertaRepository $pesertaRepository)
-    {
-    }
+    public function __construct(private UserRepository $userRepository, private PesertaRepository $pesertaRepository) {}
 
 
     public function login(array $data): array
     {
         $user = $this->userRepository->findByPhone($data['no_telp']);
-        
+
         if (!$user) {
             return [
                 'success' => false,
@@ -25,10 +23,10 @@ class UserService
             ];
         }
 
-        if($user->status == 0){
+        if ($user->status == 0) {
             return [
-               'success' => false,
-               'message' => 'Pengguna belum membayar uang pendaftaran'
+                'success' => false,
+                'message' => 'Pengguna belum membayar uang pendaftaran'
             ];
         }
 
@@ -102,7 +100,7 @@ class UserService
             $updated = $this->userRepository->update($user, [
                 'no_telp' => $data['no_telp'],
             ]);
-            
+
             if (!$updated) {
                 return [
                     'success' => false,
@@ -120,7 +118,7 @@ class UserService
                 'data' => $data,
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             return [
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat memperbarui user: ' . $e->getMessage()
@@ -139,7 +137,7 @@ class UserService
         }
 
         $this->userRepository->delete($user);
-        
+
         return [
             'success' => true,
             'message' => 'User berhasil dihapus'
@@ -149,7 +147,7 @@ class UserService
     public function getAll(): array
     {
         $users = $this->userRepository->getAll();
-        
+
         return [
             'success' => true,
             'data' => $users,
@@ -160,7 +158,7 @@ class UserService
     public function getById(int $id): array
     {
         $user = $this->userRepository->findById($id);
-        
+
         if (!$user) {
             return [
                 'success' => false,
@@ -171,7 +169,7 @@ class UserService
         return [
             'success' => true,
             'data' => $user,
-           'message' => 'User berhasil diambil'
+            'message' => 'User berhasil diambil'
         ];
     }
     public function cardUser(int $userId): array
@@ -179,15 +177,15 @@ class UserService
         $user = $this->userRepository->findByIdCard($userId);
         if (!$user) {
             return [
-               'success' => false,
-               'message' => 'User tidak ditemukan'
+                'success' => false,
+                'message' => 'User tidak ditemukan'
             ];
         }
 
         return [
-           'success' => true,
+            'success' => true,
             'data' => new CardResource($user),
-          'message' => 'User berhasil diambil'
+            'message' => 'User berhasil diambil'
         ];
     }
-} 
+}

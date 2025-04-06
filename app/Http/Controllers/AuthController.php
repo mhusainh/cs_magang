@@ -10,10 +10,13 @@ use App\Models\PesertaPpdb as Peserta;
 use App\Http\Requests\Peserta\CreatePesertaRequest;
 use App\Http\Requests\User\LoginRequest;
 use Illuminate\Validation\ValidationException;
+use App\Services\UserService;
 
 class AuthController extends Controller
 {
     use ApiResponse;
+
+    public function __construct(private UserService $userService) {}
 
     public function login(LoginRequest $request)
     {
@@ -31,8 +34,6 @@ class AuthController extends Controller
                 'token' => $token,
                 'type' => 'bearer',
             ], 'Login berhasil');
-        } catch (ValidationException $e) {
-            return $this->error('Data tidak valid', 422, $e->errors());
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
             return $this->error('Gagal membuat token', 500, null);
         } catch (\Exception $e) {
@@ -42,38 +43,20 @@ class AuthController extends Controller
 
     public function register(CreatePesertaRequest $request)
     {
-        try {
-            $data = UserDTO::UserRegisterDTO(
-                $request->validated('nama'),
-                $request->validated('jenis_kelamin'),
-                $request->validated('no_telp'),
-                $request->validated('jenjang_sekolah')
-            );
+        $data = UserDTO::UserRegisterDTO(
+            $request->validated('nama'),
+            $request->validated('jenis_kelamin'),
+            $request->validated('no_telp'),
+            $request->validated('jenjang_sekolah')
+        );
 
-            $existingUser = User::where('no_telp', $data['no_telp'])->first();
-            if ($existingUser) {
-                return $this->error('Nomor telepon sudah digunakan', 422, null);
-            }
+        $result = $this->userService->register($data);
 
-            $user = User::create([
-                'no_telp' => $data['no_telp']
-            ]);
-
-            Peserta::create([
-                'user_id' => $user->id,
-                'nama' => $data['nama'],
-                'no_telp' => $data['no_telp'],
-                'jenis_kelamin' => $data['jenis_kelamin'],
-                'jenjang_sekolah' => $data['jenjang_sekolah'],
-            ]);
-
-            // dd($peserta);
-            return $this->success($data, 'Pendaftaran berhasil', 201);
-        } catch (ValidationException $e) {
-            return $this->error('Data tidak valid', 422, $e->errors());
-        } catch (\Exception $e) {
-            return $this->error('Terjadi kesalahan saat pendaftaran', 500, null);
+        if (!$result['success']) {
+            return $this->error($result['message'], 422, null);
         }
+
+        return $this->success($data, $result['message'], 201);
     }
 
     public function refresh()
@@ -106,6 +89,10 @@ class AuthController extends Controller
             'id' => $user->id,
             'no_telp' => $user->no_telp,
         ];
-        return $this->success($userData, 'User retrieved successfully', 200);
+        if ($userData['success'] == false) {
+            return $this->error($userData['message'], 404, null);
+        }
+
+        return $this->success($userData, $userData['message'], 200);
     }
 }

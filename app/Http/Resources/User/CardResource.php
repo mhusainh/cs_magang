@@ -24,7 +24,11 @@ class CardResource extends JsonResource
                 'nisn' => $this->peserta->nisn,
                 'jenis_kelamin' => $this->peserta->jenis_kelamin,
                 'jenjang_sekolah' => $this->peserta->jenjang_sekolah,
-            ] : null
+            ] : null,
+            'progressUser' => $this->progressUser ? [
+                'id' => $this->progressUser->id,
+                'progress' => $this->progressUser->progress,
+            ] : null,
         ];
     }
 }

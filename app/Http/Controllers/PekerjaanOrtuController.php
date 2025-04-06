@@ -7,23 +7,31 @@ use App\Http\Requests\PekerjaanOrtu\CreateRequest;
 use App\Http\Requests\PekerjaanOrtu\UpdateRequest;
 use App\Services\PekerjaanOrtuService;
 use Illuminate\Http\JsonResponse;
+use App\Traits\ApiResponse;
 
 class PekerjaanOrtuController extends Controller
 {
-    public function __construct(private PekerjaanOrtuService $service)
-    {
-    }
+    use ApiResponse;
+
+    public function __construct(private PekerjaanOrtuService $service) {}
 
     public function getAll(): JsonResponse
     {
         $result = $this->service->getAll();
-        return $this->response($result);
+        if (!$result['success']) {
+            return $this->error($result['message'], 404, null);
+        }
+        return $this->success($result, $result['message'], 200);
     }
 
     public function getById(int $id): JsonResponse
     {
         $result = $this->service->getById($id);
-        return $this->response($result);
+
+        if (!$result['success']) {
+            return $this->error($result['message'], 404, null);
+        }
+        return $this->success($result, $result['message'], 200);
     }
 
     public function create(CreateRequest $request): JsonResponse
@@ -33,7 +41,10 @@ class PekerjaanOrtuController extends Controller
         );
 
         $result = $this->service->create($data);
-        return $this->response($result, 201);
+        if (!$result['success']) {
+            return $this->error($result['message'], 422, null);
+        }
+        return $this->success($result, $result['message'], 201);
     }
 
     public function update(UpdateRequest $request, int $id): JsonResponse
@@ -44,12 +55,19 @@ class PekerjaanOrtuController extends Controller
         );
 
         $result = $this->service->update($data);
-        return $this->response($result);
+
+        if (!$result['success']) {
+            return $this->error($result['message'], 422, null);  
+        }
+        return $this->success($result, $result['message'], 201);
     }
 
     public function delete(int $id): JsonResponse
     {
         $result = $this->service->delete($id);
-        return $this->response($result);
+        if (!$result['success']) {
+            return $this->error($result['message'], 404, null); 
+        }
+        return $this->success($result, $result['message'], 204);
     }
-} 
+}

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\Jurusan\GetDetailResource;
 use App\Repositories\JurusanRepository;
 
 class JurusanService
@@ -17,7 +18,7 @@ class JurusanService
             $jurusan = $this->jurusanRepository->getAll();
             return [
                 'success' => true,
-                'data' => $jurusan,
+                'data' => GetDetailResource::collection($jurusan),
                 'message' => 'Daftar jurusan berhasil diambil'
             ];
         } catch (\Exception $e) {
@@ -42,7 +43,7 @@ class JurusanService
 
             return [
                 'success' => true,
-                'data' => $jurusan,
+                'data' => new GetDetailResource($jurusan),
                 'message' => 'Detail jurusan berhasil diambil'
             ];
         } catch (\Exception $e) {
