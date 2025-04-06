@@ -20,12 +20,13 @@ class CreateRequest extends FormRequest
             'nama_pekerjaan' => 'required|string|max:255|unique:pekerjaan_ortus,nama_pekerjaan'
         ];
     }
-    public function messages(): array
+    public function messages()
     {
         return [
-            'nama_pekerjaan.required' => 'Nama pekerjaan wajib diisi',
+            'nama_pekerjaan.required' => 'Nama pekerjaan harus diisi',
+            'nama_pekerjaan.string' => 'Nama pekerjaan harus berupa string',
             'nama_pekerjaan.max' => 'Nama pekerjaan maksimal 255 karakter',
-            'nama_pekerjaan.unique' => 'Pekerjaan sudah terdaftar'
+            'nama_pekerjaan.unique' => 'Nama pekerjaan sudah ada' 
         ];
     }
 } 
