@@ -44,14 +44,6 @@ class UserService
 
     public function register(array $data): array
     {
-        $existingUser = $this->userRepository->findByPhone($data['no_telp']);
-        if ($existingUser) {
-            return [
-                'success' => false,
-                'message' => 'Nomor telepon sudah digunakan'
-            ];
-        }
-
         try {
             $user = $this->userRepository->create([
                 'no_telp' => $data['no_telp']
@@ -86,15 +78,6 @@ class UserService
                     'success' => false,
                     'message' => 'User tidak ditemukan'
                 ];
-            }
-            if ($user->no_telp !== $data['no_telp']) {
-                $existingUser = $this->userRepository->findByPhone($data['no_telp']);
-                if ($existingUser && $existingUser->id !== $user->id) {
-                    return [
-                        'success' => false,
-                        'message' => 'Nomor telepon sudah digunakan'
-                    ];
-                }
             }
 
             $updated = $this->userRepository->update($user, [

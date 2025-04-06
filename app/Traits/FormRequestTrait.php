@@ -14,9 +14,7 @@ trait FormRequestTrait
                 'code' => 422,
                 'message' => 'Validation Error'
             ],
-            'data' => [
                 'errors' => $validator->errors()
-            ]
         ], 422));
     }
 }

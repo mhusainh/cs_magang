@@ -17,7 +17,7 @@ class CreatePesertaRequest extends FormRequest
     {
         return [
             'nama' => 'required|string|max:255',
-            'no_telp' => 'required|string|max:15',
+            'no_telp' => 'required|string|max:15|unique:users,no_telp',
             'jenis_kelamin' => 'required|string|in:Laki-laki,Perempuan',
             'jenjang_sekolah' => 'required|string|in:SD,SMP,SMA'
         ];
@@ -31,6 +31,7 @@ class CreatePesertaRequest extends FormRequest
             'nama.max' => 'Nama maksimal 255 karakter',
             'no_telp.required' => 'Nomor telepon harus diisi',
             'no_telp.string' => 'Nomor telepon harus berupa teks',
+            'no_telp.unique' => 'Nomor telepon sudah digunakan',
             'no_telp.max' => 'Nomor telepon maksimal 15 karakter',
             'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
             'jenis_kelamin.string' => 'Jenis kelamin harus berupa teks',

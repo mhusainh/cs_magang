@@ -15,7 +15,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'id' => 'required|integer',
-            'no_telp' => 'required|string|max:15',
+            'no_telp' => 'required|string|max:15|unique:users,no_telp,'.$this->id.',id',
         ];
     }
 
@@ -26,6 +26,7 @@ class UpdateRequest extends FormRequest
             'id.integer' => 'ID harus berupa angka',
             'no_telp.required' => 'Nomor telepon harus diisi',
             'no_telp.max' => 'Nomor telepon maksimal 15 karakter',
+            'no_telp.unique' => 'Nomor telepon sudah di gunakan',
         ];
     }
 } 
