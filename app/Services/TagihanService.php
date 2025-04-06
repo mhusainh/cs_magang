@@ -15,7 +15,7 @@ class TagihanService
     public function getById(int $id, int $userId): array
     {
         try {
-            $tagihan = $this->tagihanRepository->findById($id, $userId);
+            $tagihan = $this->tagihanRepository->findUserById($id, $userId);
             
             if (!$tagihan) {
                 return [

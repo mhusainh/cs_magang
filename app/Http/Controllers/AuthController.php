@@ -25,7 +25,7 @@ class AuthController extends Controller
 
             $user = User::where('no_telp', $data['no_telp'])->first();
             if (!$user) {
-                return $this->error('Pengguna tidak ditemukan', 404);
+                return $this->error('Pengguna tidak ditemukan', 409);
             }
 
             $token = JWTAuth::fromUser($user);
@@ -33,7 +33,7 @@ class AuthController extends Controller
             return $this->success([
                 'token' => $token,
                 'type' => 'bearer',
-            ], 'Login berhasil');
+            ], 'Login berhasil', 200);
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
             return $this->error('Gagal membuat token', 500, null);
         } catch (\Exception $e) {
@@ -53,7 +53,7 @@ class AuthController extends Controller
         $result = $this->userService->register($data);
 
         if (!$result['success']) {
-            return $this->error($result['message'], 422, null);
+            return $this->error($result['message'], 400, null);
         }
 
         return $this->success($data, $result['message'], 201);
@@ -68,7 +68,7 @@ class AuthController extends Controller
                 'type' => 'bearer'
             ], 'Token refreshed successfully');
         } catch (\Exception $e) {
-            return $this->error('Error refreshing token', 401, null);
+            return $this->error('Error refreshing token', 400, null);
         }
     }
 
@@ -78,7 +78,7 @@ class AuthController extends Controller
             JWTAuth::invalidate(JWTAuth::getToken());
             return $this->success(null, 'Logout successful', 204);
         } catch (\Exception $e) {
-            return $this->error('Error logging out', 401, null);
+            return $this->error('Error logging out', 400, null);
         }
     }
 
@@ -90,7 +90,7 @@ class AuthController extends Controller
             'no_telp' => $user->no_telp,
         ];
         if ($userData['success'] == false) {
-            return $this->error($userData['message'], 404, null);
+            return $this->error($userData['message'], 400, null);
         }
 
         return $this->success($userData, $userData['message'], 200);

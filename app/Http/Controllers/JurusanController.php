@@ -19,7 +19,7 @@ class JurusanController extends Controller
     {
         $result = $this->jurusanService->getAll();
         if (!$result['success']) {
-            return $this->error($result['message'], 404, null);
+            return $this->error($result['message'], 400, null);
         }
         return $this->success($result, $result['message'], 200);
     }
@@ -28,7 +28,7 @@ class JurusanController extends Controller
     {
         $result = $this->jurusanService->getById($id);
         if (!$result['success']) {
-            return $this->error($result['message'], 404, null);
+            return $this->error($result['message'], 400, null);
         }
         return $this->success($result, $result['message'], 200);
     }
@@ -42,7 +42,7 @@ class JurusanController extends Controller
 
         $result = $this->jurusanService->create($data);
         if (!$result['success']) {
-            return $this->error($result['message'], 422, null);
+            return $this->error($result['message'], 400, null);
         }
         return $this->success($result, $result['message'], 201);
     }
@@ -57,18 +57,18 @@ class JurusanController extends Controller
 
         $result = $this->jurusanService->update($data);
         if (!$result['success']) {
-            return $this->error($result['message'], 422, null);
+            return $this->error($result['message'], 400, null);
         }
 
-        return $this->success($result, $result['message'], 201);
+        return $this->success($result, $result['message'], 200);
     }
 
     public function delete(int $id): JsonResponse
     {
         $result = $this->jurusanService->delete($id);
         if  (!$result['success']) {
-            return $this->error($result['message'], 404, null);
+            return $this->error($result['message'], 400, null);
         }
-        return $this->success($result, $result['message'], 204);
+        return $this->success(null, $result['message'], 204);
     }
 }

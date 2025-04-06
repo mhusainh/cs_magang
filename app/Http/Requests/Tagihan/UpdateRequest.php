@@ -22,4 +22,17 @@ class UpdateRequest extends FormRequest
             'created_time' => 'sometimes|date'
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'nama_tagihan.string' => 'Nama tagihan harus berupa teks',
+            'nama_tagihan.max' => 'Nama tagihan maksimal 255 karakter',
+            'total.numeric' => 'Total harus berupa angka',
+            'total.min' => 'Total tidak boleh kurang dari 0',
+            'status.in' => 'Status harus berupa pending, paid, atau expired',
+            'va_number.unique' => 'Nomor VA sudah digunakan',
+            'created_time.date' => 'Format waktu tidak valid'
+        ];
+    }
 } 

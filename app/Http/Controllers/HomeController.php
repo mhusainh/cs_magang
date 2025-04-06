@@ -18,7 +18,7 @@ class HomeController extends Controller
         $card = $this->userService->cardUser(Auth::user()->id);
 
         if (!$card['success']) {
-            return $this->error($card['message'], 404, null);
+            return $this->error($card['message'], 400, null);
         }
         return $this->success($card['data'], 'Success' , 200);
     }

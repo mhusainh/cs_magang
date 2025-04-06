@@ -91,16 +91,16 @@ class PesertaController extends Controller
         $peserta = $this->pesertaService->getByUserId(Auth::user()->id);
 
         if (!$peserta['success']) {
-            return $this->error($peserta['message'], 404);
+            return $this->error($peserta['message'], 400);
         }
 
         $result = $this->pesertaService->update($peserta['data']->id, $data);
 
         if (!$result['success']) {
-            return $this->error($result['message'], 404);
+            return $this->error($result['message'], 400);
         }
 
-        return $this->success($data, $result['message'], 201);
+        return $this->success($data, $result['message'], 200);
     }
 
     public function inputFormPeserta(InputFormPesertaRequest $request)
@@ -121,22 +121,22 @@ class PesertaController extends Controller
         $peserta = $this->pesertaService->getByUserId(Auth::user()->id);
         
         if (!$peserta['success']) {
-            return $this->error($peserta['message'], 404);
+            return $this->error($peserta['message'], 400);
         }
         
         $result = $this->pesertaService->update($peserta['data']->id, $data);
         
         if (!$result['success']) {
-            return $this->error($result['message'], 404);
+            return $this->error($result['message'], 400);
         }
         
         $progress = $this->progressUserService->create($progressData);
 
         if (!$progress['success']) {
-            return $this->error($progress['message'], 404);
+            return $this->error($progress['message'], 400);
         }
         
-        return $this->success($data, $result['message'], 201);
+        return $this->success($data, $result['message'], 200);
     }
 
     public function delete(int $id)
@@ -144,7 +144,7 @@ class PesertaController extends Controller
         $result = $this->pesertaService->delete($id);
 
         if (!$result['success']) {
-            return $this->error($result['message'], 404);
+            return $this->error($result['message'], 400);
         }
 
         return $this->success(null, $result['message'], 204);

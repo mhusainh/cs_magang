@@ -17,13 +17,12 @@ class UpdateRequest extends FormRequest
             'nama_pekerjaan' => 'sometimes|string|max:255|unique:pekerjaan_ortus,nama_pekerjaan,' . $this->route('id')
         ];
     }
-    public function messages()
+    public function messages(): array
     {
         return [
-            'nama_pekerjaan.unique' => 'Pekerjaan sudah ada',
-            'nama_pekerjaan.required' => 'Pekerjaan tidak boleh kosong',
-            'nama_pekerjaan.string' => 'Pekerjaan harus berupa string',
-            'nama_pekerjaan.max' => 'Pekerjaan maksimal 255 karakter'
+            'nama_pekerjaan.unique' => 'Pekerjaan sudah terdaftar',
+            'nama_pekerjaan.max' => 'Nama pekerjaan maksimal 255 karakter',
+            'nama_pekerjaan.string' => 'Nama pekerjaan harus berupa teks'
         ];
     }
 }

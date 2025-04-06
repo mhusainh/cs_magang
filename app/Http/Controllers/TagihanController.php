@@ -19,14 +19,24 @@ class TagihanController extends Controller
     public function getAll(): JsonResponse
     {
         $result = $this->tagihanService->getAll(Auth::user()->id);
-        return $this->response($result);
+
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+
+        return $this->success($result['data'], $result['message'], 200);
     }
 
     public function getById(int $id): JsonResponse
     {
         $userId = Auth::user()->id;
         $result = $this->tagihanService->getById($id, $userId);
-        return $this->response($result);
+
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+
+        return $this->success($result['data'], $result['message'], 200);
     }
 
     public function create(CreateRequest $request): JsonResponse
@@ -38,7 +48,11 @@ class TagihanController extends Controller
         );
 
         $result = $this->tagihanService->create($data);
-        return $this->response($result, 201);
+
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success($result['data'], $result['message'], 201);
     }
 
     public function update(UpdateRequest $request, int $id): JsonResponse
@@ -54,12 +68,18 @@ class TagihanController extends Controller
         );
 
         $result = $this->tagihanService->update($data);
-        return $this->response($result);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success($result['data'], $result['message'], 200);
     }
 
     public function delete(int $id): JsonResponse
     {
         $result = $this->tagihanService->delete($id);
-        return $this->response($result);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success(null, $result['message'], 204);
     }
 } 

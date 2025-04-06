@@ -20,4 +20,15 @@ class UpdateRequest extends FormRequest
             'waktu_transaksi' => 'sometimes|date'
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'jumlah.numeric' => 'Jumlah harus berupa angka',
+            'jumlah.min' => 'Jumlah tidak boleh kurang dari 0',
+            'metode_pembayaran.in' => 'Metode pembayaran tidak valid',
+            'status.in' => 'Status harus berupa pending, success, atau failed',
+            'waktu_transaksi.date' => 'Format waktu transaksi tidak valid'
+        ];
+    }
 } 

@@ -18,7 +18,10 @@ class TransaksiController extends Controller
     public function getAll(): JsonResponse
     {
         $result = $this->transaksiService->getAll(Auth::user()->id);
-        return $this->response($result);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success($result, $result['message'], 200);
     }
 
     public function getById(int $id): JsonResponse
@@ -59,7 +62,10 @@ class TransaksiController extends Controller
         );
 
         $result = $this->transaksiService->update($data);
-        return $this->response($result);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success($result, $result['message'], 200);
     }
     
     public function delete(int $id): JsonResponse

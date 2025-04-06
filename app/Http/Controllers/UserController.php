@@ -31,7 +31,7 @@ class UserController extends Controller
                 return $this->error($result['message'], 404);
             }
 
-            return $this->success($result['data'] ?? null, $result['message']);
+            return $this->success($result['data'] ?? null, $result['message'], 200);
         } catch (ValidationException $e) {
             return $this->error('Terjadi kesalahan saat mempengisi data user', 500);
         } catch (\Exception $e) {
@@ -44,10 +44,10 @@ class UserController extends Controller
         $result = $this->userService->delete($id);
 
         if (!$result['success']) {
-            return $this->error($result['message'], 404);
+            return $this->error($result['message'], 400);
         }
 
-        return $this->success(null, $result['message'], 201);
+        return $this->success(null, $result['message'], 204);
     }
 
     public function getAll()
@@ -66,9 +66,9 @@ class UserController extends Controller
         $result = $this->userService->getById($id);
 
         if (!$result['success']) {
-            return $this->error($result['message'], 404);
+            return $this->error($result['message'], 400);
         }
 
-        return $this->success($result['data'], $result['message'], 201);
+        return $this->success($result['data'], $result['message'], 200);
     }
 }

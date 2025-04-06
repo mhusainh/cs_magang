@@ -25,12 +25,10 @@ class UpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'jurusan.unique' => 'Jurusan sudah ada',
-            'jurusan.max' => 'Jurusan maksimal 255 karakter',
-            'jurusan.string' => 'Jurusan harus string',
-            'jurusan.required' => 'Jurusan tidak boleh kosong',
+            'jurusan.unique' => 'Jurusan sudah terdaftar',
+            'jurusan.max' => 'Nama jurusan maksimal 255 karakter',
             'jenjang_sekolah.max' => 'Jenjang sekolah maksimal 50 karakter',
-            'jenjang_sekolah.string' => 'Jenjang sekolah harus string',
+            'jenjang_sekolah.string' => 'Jenjang sekolah harus berupa teks'
         ];
     }
 } 

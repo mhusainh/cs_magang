@@ -21,14 +21,14 @@ class CreateRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'jurusan.required' => 'Jurusan harus diisi',
-            'jurusan.max' => 'Jurusan maksimal 255 karakter',
-            'jurusan.unique' => 'Jurusan sudah ada',
+            'jurusan.required' => 'Nama jurusan wajib diisi',
+            'jurusan.max' => 'Nama jurusan maksimal 255 karakter',
+            'jurusan.unique' => 'Jurusan sudah terdaftar',
             'jenjang_sekolah.max' => 'Jenjang sekolah maksimal 50 karakter',
-            'jenjang_sekolah.string' => 'Jenjang sekolah harus berupa string'
+            'jenjang_sekolah.string' => 'Jenjang sekolah harus berupa teks'
         ];
     }
 } 
