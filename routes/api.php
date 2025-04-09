@@ -10,6 +10,7 @@ use App\Http\Controllers\TagihanController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\PekerjaanOrtuController;
+use App\Http\Controllers\ImageController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,6 +33,7 @@ Route::get('jurusan', [JurusanController::class, 'getAll']);
 Route::get('jurusan/{id}', [JurusanController::class, 'getById']);
 Route::get('pekerjaan-ortu', [PekerjaanOrtuController::class, 'getAll']);
 Route::get('pekerjaan-ortu/{id}', [PekerjaanOrtuController::class, 'getById']);
+Route::post('/upload-image', [ImageController::class, 'store']);
 
 // Protected routes (memerlukan login)
 Route::middleware('auth:api')->group(function () {
