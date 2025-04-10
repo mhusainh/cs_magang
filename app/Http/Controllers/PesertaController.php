@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTO\PesertaDTO;
+use App\DTO\ProgressUserDTO;
 use App\Services\PesertaService;
 use App\Traits\ApiResponse;
 use App\Http\Requests\Peserta\CreatePesertaRequest;
@@ -113,10 +114,10 @@ class PesertaController extends Controller
             $request->validated('jurusan1_id'),
             $request->validated('jurusan2_id')
         );
-        $progressData = [
-            'user_id' => Auth::user()->id,
-            'progress' => 1,
-        ];
+        $progressData = ProgressUserDTO::createProgressUserDTO(
+            user_id: Auth::user()->id,
+            progress: 1
+        );
         
         $peserta = $this->pesertaService->getByUserId(Auth::user()->id);
         

@@ -22,7 +22,7 @@ class CreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
         ];
     }
 
@@ -34,14 +34,10 @@ class CreateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'image.required' => 'Please select an image to upload.',
-            'image.image' => 'The file must be an image.',
-            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif.',
-            'image.max' => 'The image size must not exceed 5MB.',
-            'imageable_id.required' => 'The imageable_id field is required.',
-            'imageable_id.integer' => 'The imageable_id field must be an integer.',
-            'imageable_type.required' => 'The imageable_type field is required.',
-            'imageable_type.string' => 'The imageable_type field must be a string.',
+            'image.required' => 'Gambar wajib diunggah',
+            'image.image' => 'File yang diunggah harus berupa gambar',
+            'image.mimes' => 'Format gambar tidak didukung. Hanya file JPEG, PNG, JPG, dan GIF yang diizinkan.',
+            'image.max' => 'Ukuran gambar tidak boleh melebihi 5 MB.'
         ];
     }
 }

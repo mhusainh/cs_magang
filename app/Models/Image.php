@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Image extends Model
 {
     use HasFactory;
+    
     protected $table = 'images'; // Add this line to specify the table name
     protected $fillable = [
         'public_id',
