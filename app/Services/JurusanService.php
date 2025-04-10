@@ -123,4 +123,21 @@ class JurusanService
             ];
         }
     }
+
+    public function getJurusanByJenjang($jenjang): array
+    {
+        try {
+            $jurusan = $this->jurusanRepository->findbyJenjangSekolah($jenjang);
+            return [
+               'success' => true,
+                'data' => GetDetailResource::collection($jurusan),
+               'message' => 'Daftar jurusan berhasil diambil'
+            ]; 
+        } catch (\Exception $e) {
+            return [
+              'success' => false,
+              'message' => 'Gagal mengambil daftar jurusan: '. $e->getMessage()
+            ];
+        }
+    }
 } 

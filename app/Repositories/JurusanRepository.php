@@ -16,7 +16,7 @@ class JurusanRepository
 
     public function findbyJenjangSekolah(string $jenjang_sekolah):?Jurusan
     {
-        return $this->model->where('jenjang_sekolah', $jenjang_sekolah)->first();
+        return $this->model->where('jenjang_sekolah', $jenjang_sekolah);
     }
 
     public function create(array $data): Jurusan

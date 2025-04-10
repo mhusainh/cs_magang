@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\DTO\JurusanDTO;
-use App\Http\Requests\Jurusan\CreateRequest;
-use App\Http\Requests\Jurusan\UpdateRequest;
+use App\Traits\ApiResponse;
 use App\Services\JurusanService;
 use Illuminate\Http\JsonResponse;
-use App\Traits\ApiResponse;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Jurusan\CreateRequest;
+use App\Http\Requests\Jurusan\UpdateRequest;
 
 class JurusanController extends Controller
 {
@@ -70,5 +71,14 @@ class JurusanController extends Controller
             return $this->error($result['message'], 400, null);
         }
         return $this->success(null, $result['message'], 204);
+    }
+
+    public function getByJenjang(): JsonResponse
+    {
+        $result = $this->jurusanService->getJurusanByJenjang(Auth::user()->peserta->jenjang_sekolah);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400, null);
+        }
+        return $this->success($result, $result['message'], 200);
     }
 }

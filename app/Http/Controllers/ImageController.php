@@ -22,7 +22,7 @@ class ImageController extends Controller
     {
         $uploadedImage = $request->validated('image');
         $urutan = $request->validated('urutan');
-        $result = $this->imageService->create_homepage($uploadedImage, $urutan);
+        $result = $this->imageService->createHomepage($uploadedImage, $urutan);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }
@@ -37,7 +37,7 @@ class ImageController extends Controller
             'jenjang_sekolah' => $request->validated('jenjang_sekolah')
         ];
         
-        $result = $this->imageService->create_berita($uploadedImage, $data);
+        $result = $this->imageService->createBerita($uploadedImage, $data);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }

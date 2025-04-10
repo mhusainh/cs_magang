@@ -14,7 +14,7 @@ class ImageRepository
         private MediaHomepage $homepage
         ) {}
 
-    public function create_homepage($cloudinary, int $urutan): MediaHomepage
+    public function createHomepage($cloudinary, int $urutan): MediaHomepage
     {
         $data = [
             'url' => $cloudinary->getSecurePath(),
@@ -24,7 +24,7 @@ class ImageRepository
         return $this->homepage->create($data);
     }
 
-    public function create_berita($cloudinary, array $data): MediaBerita
+    public function createBerita($cloudinary, array $data): MediaBerita
     {
         $data = [
             'url' => $cloudinary->getSecurePath(),
@@ -35,4 +35,13 @@ class ImageRepository
         return $this->berita->create($data);
     }
 
+    public function getHomepage(): Collection
+    {
+        return $this->homepage->orderBy('urutan', 'asc')->get();
+    }
+
+    public function getBerita(string $jenjang_sekolah): Collection
+    {
+        return $this->berita->where('jenjang_sekolah', $jenjang_sekolah)->orderBy('urutan', 'asc')->get();
+    }
 } 

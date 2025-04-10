@@ -29,19 +29,14 @@ Route::prefix('auth')->group(function () {
     Route::middleware('auth:api')->post('refresh', [AuthController::class, 'refresh']);
 });
 // Public routes (bisa diakses tanpa login)
-Route::get('jurusan', [JurusanController::class, 'getAll']);
-Route::get('jurusan/{id}', [JurusanController::class, 'getById']);
-Route::get('pekerjaan-ortu', [PekerjaanOrtuController::class, 'getAll']);
-Route::get('pekerjaan-ortu/{id}', [PekerjaanOrtuController::class, 'getById']);
 Route::post('/upload-image', [ImageController::class, 'uploadHomepage']);
-Route::post('upload-berita', [ImageController::class,'uploadBerita']);
+Route::post('upload-berita', [ImageController::class, 'uploadBerita']);
 
 // Protected routes (memerlukan login)
 Route::middleware('auth:api')->group(function () {
     // Routes yang bisa diakses user dan admin
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    Route::get('jurusan', [JurusanController::class, 'getByJenjang']);
+    Route::get('pekerjaan-ortu', [PekerjaanOrtuController::class, 'getAll']);
 
     // Routes khusus user
     Route::middleware('role:user')->group(function () {
@@ -57,19 +52,9 @@ Route::middleware('auth:api')->group(function () {
             Route::get('peserta', [PesertaController::class, 'getByUser']);
             Route::put('peserta', [PesertaController::class, 'updateByUser']);
             Route::put('peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']);
-
-            // Tagihan Management
-            Route::get('tagihan', [TagihanController::class, 'getAll']);
-            Route::get('tagihan/{id}', [TagihanController::class, 'getById']);
-
-            // Transaksi Management
-            Route::get('transaksi', [TransaksiController::class, 'getAll']);
-            Route::get('transaksi/{id}', [TransaksiController::class, 'getById']);
-            Route::post('transaksi', [TransaksiController::class, 'create']);
-            
         });
     });
-    
+
     // Routes khusus admin
     Route::middleware('role:admin')->group(function () {
         // User management
@@ -79,7 +64,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/user/{id}', [UserController::class, 'getById']);
             Route::put('/user', [UserController::class, 'update']);
             Route::delete('/user/{id}', [UserController::class, 'delete']);
-            
+
             // Peserta management
             Route::get('/pesertas', [PesertaController::class, 'getAll']);
             Route::get('peserta/{id}', [PesertaController::class, 'getById']);
@@ -93,18 +78,30 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('tagihan/{id}', [TagihanController::class, 'delete']);
 
             // Transaksi Management
-            Route::delete('transaksi/{id}', [TransaksiController::class,'delete']);
-            Route::put('transaksi/{id}', [TransaksiController::class,'update']);
+            Route::delete('transaksi/{id}', [TransaksiController::class, 'delete']);
+            Route::put('transaksi/{id}', [TransaksiController::class, 'update']);
 
             // Jurusan Management            
             Route::post('jurusan', [JurusanController::class, 'create']);
             Route::put('jurusan/{id}', [JurusanController::class, 'update']);
             Route::delete('jurusan/{id}', [JurusanController::class, 'delete']);
+            Route::get('jurusan', [JurusanController::class, 'getAll']);
+            Route::get('jurusan/{id}', [JurusanController::class, 'getById']);
 
             // Pekerjaan Ortu Management
             Route::post('pekerjaan-ortu', [PekerjaanOrtuController::class, 'create']);
             Route::put('pekerjaan-ortu/{id}', [PekerjaanOrtuController::class, 'update']);
             Route::delete('pekerjaan-ortu/{id}', [PekerjaanOrtuController::class, 'delete']);
+            Route::get('pekerjaan-ortu/{id}', [PekerjaanOrtuController::class, 'getById']);
+
+            // Tagihan Management
+            Route::get('tagihan', [TagihanController::class, 'getAll']);
+            Route::get('tagihan/{id}', [TagihanController::class, 'getById']);
+
+            // Transaksi Management
+            Route::get('transaksi', [TransaksiController::class, 'getAll']);
+            Route::get('transaksi/{id}', [TransaksiController::class, 'getById']);
+            Route::post('transaksi', [TransaksiController::class, 'create']);
         });
     });
 });
