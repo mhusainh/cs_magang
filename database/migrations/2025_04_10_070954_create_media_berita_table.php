@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('medias', function (Blueprint $table) {
+        Schema::create('media_berita', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('media_1')->nullable();
-            $table->string('media_2')->nullable();
-            $table->string('media_3')->nullable();
-            $table->string('media_4')->nullable();
-            $table->string('media_5')->nullable();
+            $table->integer('urutan')->nullable()->unique();
+            $table->string('url');
+            $table->string('public_id');
+            $table->string('jenjang_sekolah'); 
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('medias');
+        Schema::dropIfExists('media_berita');
     }
 };

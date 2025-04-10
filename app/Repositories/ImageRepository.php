@@ -3,48 +3,36 @@
 namespace App\Repositories;
 
 use App\Models\Image;
+use App\Models\MediaBerita;
+use App\Models\MediaHomepage;
 use Illuminate\Database\Eloquent\Collection;
 
 class ImageRepository
 {
-    public function __construct(private Image $model) {}
+    public function __construct(
+        private MediaBerita $berita,
+        private MediaHomepage $homepage
+        ) {}
 
-    public function findById(int $id): ?Image
-    {
-        return $this->model->where('id', $id)->first();
-    }
-
-
-    public function create($uploadedImage, $cloudinary, array $imageable): Image
+    public function create_homepage($cloudinary, int $urutan): MediaHomepage
     {
         $data = [
-            'public_id' => $cloudinary->getPublicId(),
-            'file_name' => $uploadedImage->getClientOriginalName(),
-            'file_type' => $uploadedImage->getClientMimeType(),
             'url' => $cloudinary->getSecurePath(),
-            'secure_url' => $cloudinary->getSecurePath(),
-            'size' => $cloudinary->getSize(),
-            'imageable_type' => $imageable['imageable_type'],
-            'imageable_id' => $imageable['imageable_id'],
+            'public_id' => $cloudinary->getPublicId(),
+            'urutan' => $urutan,
         ];
-        
-        return $this->model->create($data);
+        return $this->homepage->create($data);
     }
 
-    public function update(Image $image, array $data): bool
+    public function create_berita($cloudinary, array $data): MediaBerita
     {
-        return $image->update($data);
-    }
-
-
-    public function delete(Image $image): bool
-    {
-        return $image->delete();
-    }
-
-    public function getAll(): Collection
-    {
-        return $this->model->all();
+        $data = [
+            'url' => $cloudinary->getSecurePath(),
+            'public_id' => $cloudinary->getPublicId(),
+            'jenjang_sekolah' => $data['jenjang_sekolah'],
+            'urutan' => $data['urutan'],
+        ];
+        return $this->berita->create($data);
     }
 
 } 
