@@ -25,5 +25,12 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
         @vite('resources/js/app.js')
     </body>
-
+    <script>
+        // Cek apakah token ada di local storage
+        if (!localStorage.getItem('token')) {
+            // Jika tidak ada, redirect ke halaman login
+            window.location.href = '/login';
+        }
+    </script>
+    
     </html>

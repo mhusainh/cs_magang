@@ -9,6 +9,7 @@
         <table class="w-full border-collapse border border-gray-400 text-xs font-normal text-center">
             <thead class="h-8">
               <tr>
+                
                 <th class="border border-gray-300 text-xs font-normal">No</th>
                 <th class="border border-gray-300 text-xs font-normal">Nama Siswa</th>
                 <th class="border border-gray-300 text-xs font-normal">Uang Wakaf</th>
