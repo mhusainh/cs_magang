@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\ImageDTO;
 use App\Http\Requests\Image\CreateRequest;
+use App\Http\Resources\Image\BeritaResource;
 use App\Http\Resources\Image\HomepageResource;
 use App\Models\Image;
 use App\Repositories\ImageRepository;
@@ -22,9 +23,9 @@ class ImageService
             $result = Cloudinary::upload($image->getRealPath(), [
                 'folder' => 'homepage',
                 'transformation' => [
-                    'quality' => 'auto', 
-                    'fetch_format' => 'auto', 
-                    'compression' => 'low', 
+                    'quality' => 'auto',
+                    'fetch_format' => 'auto',
+                    'compression' => 'low',
                 ]
             ]);
 
@@ -34,14 +35,14 @@ class ImageService
                     'message' => 'Gagal mengunggah gambar',
                 ];
             }
-            
+
 
             $image = $this->imageRepository->createHomepage($result, $urutan);
             if (!$image) {
                 Cloudinary::destroy($result->getPublicId());
                 return [
-                'success' => false,
-                'message' => 'Gagal mengunggah gambar',
+                    'success' => false,
+                    'message' => 'Gagal mengunggah gambar',
                 ];
             }
 
@@ -53,9 +54,10 @@ class ImageService
             ];
         } catch (\Exception $e) {
             return [
-            'success' => false,
-            'message' => 'Kesalahan saat mengunggah gambar',
-        ];}
+                'success' => false,
+                'message' => 'Kesalahan saat mengunggah gambar',
+            ];
+        }
     }
 
     public function createBerita($image, $data): array
@@ -64,9 +66,9 @@ class ImageService
             $result = Cloudinary::upload($image->getRealPath(), [
                 'folder' => 'berita',
                 'transformation' => [
-                    'quality' => 'auto', 
-                    'fetch_format' => 'auto', 
-                    'compression' => 'low', 
+                    'quality' => 'auto',
+                    'fetch_format' => 'auto',
+                    'compression' => 'low',
                 ]
             ]);
 
@@ -76,14 +78,14 @@ class ImageService
                     'message' => 'Gagal mengunggah gambar',
                 ];
             }
-            
+
 
             $image = $this->imageRepository->createBerita($result, $data);
             if (!$image) {
                 Cloudinary::destroy($result->getPublicId());
                 return [
-                'success' => false,
-                'message' => 'Gagal mengunggah gambar',
+                    'success' => false,
+                    'message' => 'Gagal mengunggah gambar',
                 ];
             }
             return [
@@ -93,14 +95,21 @@ class ImageService
             ];
         } catch (\Exception $e) {
             return [
-            'success' => false,
-            'message' => 'Kesalahan saat mengunggah gambar',
-        ];}
+                'success' => false,
+                'message' => 'Kesalahan saat mengunggah gambar',
+            ];
+        }
     }
 
     public function getAllHomepage(): array
     {
         $images = $this->imageRepository->getHomepage();
+        if (!$images) {
+            return [
+               'success' => false,
+               'message' => 'Gagal mendapatkan semua gambar homepage',
+            ]; 
+        }
         return [
             'success' => true,
             'data' => HomepageResource::collection($images),
@@ -108,13 +117,233 @@ class ImageService
         ];
     }
 
-    public function getAllBerita($jenjang): array
+    public function getAllBerita(): array
     {
-        $images = $this->imageRepository->getBerita($jenjang);
+        $images = $this->imageRepository->getBerita();
+        if (!$images) {
+            return [
+              'success' => false,
+              'message' => 'Gagal mendapatkan semua gambar berita',
+            ]; 
+        }
         return [
            'success' => true,
-            'data' => HomepageResource::collection($images),
+            'data' => BeritaResource::collection($images),
            'message' => 'Berhasil mendapatkan semua gambar berita',
+        ];
+    }
+
+    public function getBeritaByUser($jenjang): array
+    {
+        $images = $this->imageRepository->getBeritaByUser($jenjang);
+        if (!$images) {
+            return [
+             'success' => false,
+             'message' => 'Gagal mendapatkan semua gambar berita',
+            ]; 
+        }
+        return [
+            'success' => true,
+            'data' => BeritaResource::collection($images),
+            'message' => 'Berhasil mendapatkan semua gambar berita',
+        ];
+    }
+
+    public function GetHomepageById($id): array
+    {
+        $image = $this->imageRepository->findHomepageById($id);
+        if (!$image) {
+            return [
+                'success' => false,
+                'message' => 'Gambar tidak ditemukan',
+            ];
+        }
+        return [
+            'success' => true,
+            'data' => new HomepageResource($image),
+            'message' => 'Berhasil mendapatkan gambar',
+        ];
+    }
+
+    public function GetBeritaById($id): array
+    {
+        $image = $this->imageRepository->findBeritaById($id);
+        if (!$image) {
+            return [
+                'success' => false,
+                'message' => 'Gambar tidak ditemukan',
+            ];
+        }
+        return [
+            'success' => true,
+            'data' => new BeritaResource($image),
+            'message' => 'Berhasil mendapatkan gambar',
+        ];
+    }
+
+    public function updateHomepage($image, $data, $id): array
+    {
+        try {
+            $oldImage = $this->imageRepository->findHomepageById($id);
+            if (!$oldImage) {
+                return [
+                    'success' => false,
+                    'message' => 'Gambar tidak ditemukan',
+                ];
+            }
+
+            if ($image) {
+                Cloudinary::destroy($oldImage->public_id);
+                $result = Cloudinary::upload($image->getRealPath(), [
+                    'folder' => 'homepage',
+                    'transformation' => [
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto',
+                        'compression' => 'low',
+                    ]
+                ]);
+
+                if (!$result || !$result->getPublicId() || !$result->getSecurePath()) {
+                    return [
+                        'success' => false,
+                        'message' => 'Gagal mengunggah gambar',
+                    ];
+                }
+            }
+
+            $updated = $this->imageRepository->updateHomepage(
+                $image ? $result : null,
+                $data,
+                $id
+            );
+
+            if (!$updated) {
+                if ($image && isset($result)) {
+                    Cloudinary::destroy($result->getPublicId());
+                }
+                return [
+                    'success' => false,
+                    'message' => 'Gagal memperbarui gambar',
+                ];
+            }
+
+            return [
+                'success' => true,
+                'message' => 'Gambar berhasil diperbarui',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Kesalahan saat memperbarui gambar',
+            ];
+        }
+    }
+
+    public function updateBerita($image, $data, $id): array
+    {
+        try {
+            $oldImage = $this->imageRepository->findBeritaById($id);
+            if (!$oldImage) {
+                return [
+                    'success' => false,
+                    'message' => 'Gambar tidak ditemukan',
+                ];
+            }
+
+            if ($image) {
+                Cloudinary::destroy($oldImage->public_id);
+                $result = Cloudinary::upload($image->getRealPath(), [
+                    'folder' => 'berita',
+                    'transformation' => [
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto',
+                        'compression' => 'low',
+                    ]
+                ]);
+
+                if (!$result || !$result->getPublicId() || !$result->getSecurePath()) {
+                    return [
+                        'success' => false,
+                        'message' => 'Gagal mengunggah gambar',
+                    ];
+                }
+            }
+
+            $updated = $this->imageRepository->updateBerita(
+                $image ? $result : null,
+                $data,
+                $id
+            );
+
+            if (!$updated) {
+                if ($image && isset($result)) {
+                    Cloudinary::destroy($result->getPublicId());
+                }
+                return [
+                    'success' => false,
+                    'message' => 'Gagal memperbarui gambar',
+                ];
+            }
+
+            return [
+                'success' => true,
+                'message' => 'Gambar berhasil diperbarui',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Kesalahan saat memperbarui gambar',
+            ];
+        }
+    }
+
+    public function deleteHomepage($id): array
+    {
+        $image = $this->imageRepository->findHomepageById($id);
+        if (!$image) {
+            return [
+                'success' => false,
+                'message' => 'Gambar tidak ditemukan',
+            ];
+        }
+
+        $deleted = $this->imageRepository->deleteHomepage($id)
+            && Cloudinary::destroy($image->public_id);
+
+        if (!$deleted) {
+            return [
+                'success' => false,
+                'message' => 'Gagal menghapus gambar',
+            ];
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Gambar berhasil dihapus',
+        ];
+    }
+
+    public function deleteBerita($id): array
+    {
+        $image = $this->imageRepository->findBeritaById($id);
+        if (!$image) {
+            return [
+                'success' => false,
+                'message' => 'Gambar tidak ditemukan',
+            ];
+        }
+
+        $deleted = $this->imageRepository->deleteBerita($id)
+            && Cloudinary::destroy($image->public_id);
+        if (!$deleted) {
+            return [
+                'success' => false,
+                'message' => 'Gagal menghapus gambar',
+            ];
+        }
+        return [
+            'success' => true,
+            'message' => 'Gambar berhasil dihapus',
         ];
     }
 }

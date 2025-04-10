@@ -21,16 +21,14 @@ use App\Http\Controllers\ImageController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
 // Public routes (bisa diakses tanpa login)
+Route::get('home', [ImageController::class, 'getAllHomepage']);
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
     Route::middleware('auth:api')->post('refresh', [AuthController::class, 'refresh']);
+    Route::middleware('auth:api')->post('logout', [AuthController::class,'logout']);
 });
-// Public routes (bisa diakses tanpa login)
-Route::post('/upload-image', [ImageController::class, 'uploadHomepage']);
-Route::post('upload-berita', [ImageController::class, 'uploadBerita']);
 
 // Protected routes (memerlukan login)
 Route::middleware('auth:api')->group(function () {
@@ -43,6 +41,9 @@ Route::middleware('auth:api')->group(function () {
         route::prefix('user')->group(function () {
             // Home
             Route::get('/home', [HomeController::class, 'index']);
+
+            // Berita
+            Route::get('/berita', [ImageController::class, 'getBeritaByUser']);
 
             // User profile
             Route::get('/profile', [AuthController::class, 'me']);
@@ -59,6 +60,9 @@ Route::middleware('auth:api')->group(function () {
     Route::middleware('role:admin')->group(function () {
         // User management
         Route::prefix('admin')->group(function () {
+
+            Route::get('/profile', [AuthController::class, 'me']);
+
             // User management
             Route::get('/users', [UserController::class, 'getAll']);
             Route::get('/user/{id}', [UserController::class, 'getById']);
@@ -102,6 +106,20 @@ Route::middleware('auth:api')->group(function () {
             Route::get('transaksi', [TransaksiController::class, 'getAll']);
             Route::get('transaksi/{id}', [TransaksiController::class, 'getById']);
             Route::post('transaksi', [TransaksiController::class, 'create']);
+
+            // Homepage Management
+            Route::post('homepage', [ImageController::class, 'uploadHomepage']);
+            Route::get('homepage', [ImageController::class, 'getAllHomepage']);
+            Route::get('homepage/{id}', [ImageController::class, 'getHomepageById']);
+            Route::put('homepage/{id}', [ImageController::class, 'updateHomepage']);
+            Route::delete('homepage/{id}', [ImageController::class, 'deleteHomepage']);
+
+            // Berita Management
+            Route::post('berita', [ImageController::class, 'uploadBerita']);
+            Route::get('berita', [ImageController::class, 'getAllBerita']);
+            Route::get('berita/{id}', [ImageController::class, 'getBeritaById']);
+            Route::put('berita/{id}', [ImageController::class, 'updateBerita']);
+            Route::delete('berita/{id}', [ImageController::class, 'deleteBerita']);
         });
     });
 });
