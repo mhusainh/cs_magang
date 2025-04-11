@@ -89,10 +89,6 @@ class AuthController extends Controller
             'id' => $user->id,
             'no_telp' => $user->no_telp,
         ];
-        if ($userData['success'] == false) {
-            return $this->error($userData['message'], 400, null);
-        }
-
-        return $this->success($userData, $userData['message'], 200);
+        return $this->success($userData, 'Data user berhasil diambil', 200);
     }
 }
