@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\ImageDTO;
 use App\Http\Requests\Image\BeritaRequest;
 use App\Http\Requests\Image\HomepageRequest;
-use App\Models\Image;
 use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
 use App\Services\ImageService;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\Image\CreateRequest;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
 
 class ImageController extends Controller
 {

@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('berkas', function (Blueprint $table) {
+        Schema::create('ketentuan_berkas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('peserta_id')->constrained('peserta_ppdbs')->onDelete('cascade');
-            $table->string('kententuan_berkas_id')->constrained('ketentuan_berkas')->onDelete('cascade');
-            $table->string('url_file');
-            $table->string('public_id');
+            $table->string('nama');
+            $table->string('jenjang_sekolah');
+            $table->int('is_required');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('berkas');
+        Schema::dropIfExists('ketentuan_berkas');
     }
 };

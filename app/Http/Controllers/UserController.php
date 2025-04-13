@@ -5,10 +5,7 @@ namespace App\Http\Controllers;
 use App\DTO\UserDTO;
 use App\Services\UserService;
 use App\Traits\ApiResponse;
-use App\Http\Requests\User\LoginRequest;
-use App\Http\Requests\User\RegisterRequest;
 use App\Http\Requests\User\UpdateRequest;
-use App\Http\Requests\User\GetByIdRequest;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller

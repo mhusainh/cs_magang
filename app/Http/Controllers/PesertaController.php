@@ -6,10 +6,8 @@ use App\DTO\PesertaDTO;
 use App\DTO\ProgressUserDTO;
 use App\Services\PesertaService;
 use App\Traits\ApiResponse;
-use App\Http\Requests\Peserta\CreatePesertaRequest;
 use App\Http\Requests\Peserta\InputFormPesertaRequest;
 use App\Http\Requests\Peserta\UpdatePesertaRequest;
-use Illuminate\Http\Request;
 use App\Services\ProgressUserService;
 use Illuminate\Support\Facades\Auth;
 

@@ -6,10 +6,8 @@ use App\Models\User;
 use App\DTO\UserDTO;
 use App\Traits\ApiResponse;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Models\PesertaPpdb as Peserta;
 use App\Http\Requests\Peserta\CreatePesertaRequest;
 use App\Http\Requests\User\LoginRequest;
-use Illuminate\Validation\ValidationException;
 use App\Services\UserService;
 
 class AuthController extends Controller

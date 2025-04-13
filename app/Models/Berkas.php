@@ -14,17 +14,24 @@ class Berkas extends Model
 
     protected $fillable = [
         'peserta_id',
-        'nama_file',
-        'url_file'
+        'kententuan_berkas_id',
+        'url_file',
+        'public_id'
     ];
 
     /**
-     * Get the user that owns the Berkas
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Get the peserta that owns the berkas
      */
-    public function user(): BelongsTo
+    public function peserta(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(PesertaPpdb::class, 'peserta_id');
+    }
+
+    /**
+     * Get the ketentuan berkas that owns the berkas
+     */
+    public function ketentuanBerkas(): BelongsTo
+    {
+        return $this->belongsTo(KetentuanBerkas::class, 'kententuan_berkas_id');
     }
 }
