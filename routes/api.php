@@ -28,7 +28,7 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
     Route::middleware('auth:api')->post('refresh', [AuthController::class, 'refresh']);
-    Route::middleware('auth:api')->post('logout', [AuthController::class,'logout']);
+    Route::middleware('auth:api')->post('logout', [AuthController::class, 'logout']);
 });
 
 // Protected routes (memerlukan login)
@@ -45,12 +45,11 @@ Route::middleware('auth:api')->group(function () {
 
             // Berita
             Route::get('/berita', [ImageController::class, 'getBeritaByUser']);
-            
+
             // Berkas Management
             Route::get('/berkas', [BerkasController::class, 'getKetentuanBerkas']);
-            Route::post('/berkas/upload/{id}', [BerkasController::class, 'uploadBerkas']);
+            Route::post('/berkas/upload', [BerkasController::class, 'uploadBerkas']); // Menerima array files dan ketentuan_berkas_ids dalam request body
             Route::put('/berkas/{id}', [BerkasController::class, 'updateBerkas']);
-            Route::delete('/berkas/{id}', [BerkasController::class, 'deleteBerkas']);
 
             // User profile
             Route::get('/profile', [AuthController::class, 'me']);
@@ -127,7 +126,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('berita/{id}', [ImageController::class, 'getBeritaById']);
             Route::put('berita/{id}', [ImageController::class, 'updateBerita']);
             Route::delete('berita/{id}', [ImageController::class, 'deleteBerita']);
-            
+
             // Ketentuan Berkas Management
             Route::get('ketentuan-berkas', [KetentuanBerkasController::class, 'getAll']);
             Route::get('ketentuan-berkas/jenjang/{jenjangSekolah}', [KetentuanBerkasController::class, 'getByJenjang']);
@@ -135,8 +134,9 @@ Route::middleware('auth:api')->group(function () {
             Route::post('ketentuan-berkas', [KetentuanBerkasController::class, 'create']);
             Route::put('ketentuan-berkas/{id}', [KetentuanBerkasController::class, 'update']);
             Route::delete('ketentuan-berkas/{id}', [KetentuanBerkasController::class, 'delete']);
-            
+
             // Berkas Peserta Management (untuk admin)
+            Route::delete('berkas/{id}', [BerkasController::class, 'deleteBerkas']);
             Route::get('berkas/peserta/{pesertaId}', [BerkasController::class, 'getBerkasByPesertaId']);
         });
     });

@@ -16,28 +16,8 @@ class BerkasController extends Controller
     use ApiResponse;
 
     public function __construct(
-        private BerkasService $berkasService,
-        private KetentuanBerkasService $ketentuanService
+        private BerkasService $berkasService
     ) {}
-
-    /**
-     * Mendapatkan ketentuan berkas berdasarkan jenjang sekolah peserta
-     */
-    public function getKetentuanBerkas()
-    {
-        // Ambil jenjang sekolah dari peserta yang terkait dengan user yang login
-        $peserta = PesertaPpdb::where('user_id', Auth::user()->id)->first();
-        if (!$peserta) {
-            return $this->error('Data peserta tidak ditemukan', 404, null);
-        }
-
-        $result = $this->ketentuanService->getKetentuanBerkasByJenjang($peserta->jenjang_sekolah);
-        if (!$result['success']) {
-            return $this->error($result['message'], 404, null);
-        }
-
-        return $this->success($result['data'], $result['message'], 200);
-    }
 
     /**
      * Upload berkas
@@ -100,27 +80,12 @@ class BerkasController extends Controller
      */
     public function deleteBerkas($id)
     {
-        // Cek apakah berkas milik peserta yang login
-        $peserta = PesertaPpdb::where('user_id', Auth::user()->id)->first();
-        if (!$peserta) {
-            return $this->error('Data peserta tidak ditemukan', 404, null);
-        }
-
-        $berkas = Berkas::find($id);
-        if (!$berkas) {
-            return $this->error('Berkas tidak ditemukan', 404, null);
-        }
-
-        if ($berkas->peserta_id != $peserta->id) {
-            return $this->error('Anda tidak memiliki akses untuk menghapus berkas ini', 403, null);
-        }
-
         $result = $this->berkasService->deleteBerkas($id);
         if (!$result['success']) {
-            return $this->error($result['message'], 422, null);
+            return $this->error($result['message'], 404, null);
         }
 
-        return $this->success(null, $result['message'], 200);
+        return $this->success($result['data'], $result['message'], 200);
     }
 
     /**
