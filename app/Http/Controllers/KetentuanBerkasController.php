@@ -6,6 +6,7 @@ use App\DTO\KetentuanBerkasDTO;
 use App\Services\KetentuanBerkasService;
 use App\Traits\ApiResponse;
 use App\Http\Requests\Berkas\KetentuanBerkasRequest;
+use Illuminate\Support\Facades\Auth;
 
 class KetentuanBerkasController extends Controller
 {
@@ -14,11 +15,11 @@ class KetentuanBerkasController extends Controller
     public function __construct(private KetentuanBerkasService $ketentuanBerkasService) {}
 
     /**
-     * Mendapatkan semua ketentuan berkas
+     * Mendapatkan semua ketentuan berkas dengan fitur pencarian dan filter
      */
-    public function getAll()
+    public function getAll(\Illuminate\Http\Request $request)
     {
-        $result = $this->ketentuanBerkasService->getAllKetentuanBerkas();
+        $result = $this->ketentuanBerkasService->getAllKetentuanBerkas($request);
         if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }
@@ -29,9 +30,12 @@ class KetentuanBerkasController extends Controller
     /**
      * Mendapatkan ketentuan berkas berdasarkan jenjang sekolah
      */
-    public function getByJenjang($jenjangSekolah)
-    {
-        $result = $this->ketentuanBerkasService->getKetentuanBerkasByJenjang($jenjangSekolah);
+    public function getByJenjang()
+    {   
+        $result = $this->ketentuanBerkasService->getKetentuanBerkasByJenjang(Auth::user()->peserta->jenjang_sekolah);
+        if (!$result['success']) {
+            return $this->error($result['message'], 404, null);
+        }
         if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }

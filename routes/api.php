@@ -47,7 +47,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/berita', [ImageController::class, 'getBeritaByUser']);
 
             // Berkas Management
-            Route::get('/berkas', [BerkasController::class, 'getKetentuanBerkas']);
+            Route::get('/berkas', [KetentuanBerkasController::class, 'getKetentuanBerkas']);
             Route::post('/berkas/upload', [BerkasController::class, 'uploadBerkas']); // Menerima array files dan ketentuan_berkas_ids dalam request body
             Route::put('/berkas/{id}', [BerkasController::class, 'updateBerkas']);
 
@@ -129,7 +129,6 @@ Route::middleware('auth:api')->group(function () {
 
             // Ketentuan Berkas Management
             Route::get('ketentuan-berkas', [KetentuanBerkasController::class, 'getAll']);
-            Route::get('ketentuan-berkas/jenjang/{jenjangSekolah}', [KetentuanBerkasController::class, 'getByJenjang']);
             Route::get('ketentuan-berkas/{id}', [KetentuanBerkasController::class, 'getById']);
             Route::post('ketentuan-berkas', [KetentuanBerkasController::class, 'create']);
             Route::put('ketentuan-berkas/{id}', [KetentuanBerkasController::class, 'update']);

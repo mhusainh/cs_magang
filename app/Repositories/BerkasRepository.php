@@ -11,9 +11,38 @@ class BerkasRepository
     /**
      * Mendapatkan semua ketentuan berkas
      */
-    public function getAllBerkas(int $perPage = 10)
+    public function getAllBerkas(Berkas $request)
     {
-        return $this->model->paginate($perPage);
+        $query = Berkas::query();
+
+        // Search functionality
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_barang', 'like', "%{$search}%")
+                    ->orWhere('deskripsi', 'like', "%{$search}%")
+                    ->orWhere('kategori', 'like', "%{$search}%");
+            });
+        }
+
+        // Category filter
+        if ($request->has('category') && $request->category != '') {
+            $query->where('kategori', $request->category);
+        }
+
+
+        // Get total items for current filter
+        $totalItems = $query->count();
+
+        // Paginate results with 9 items per page
+        $barangs = $query->paginate(9)->withQueryString();
+
+        // Get current filter status
+        $currentFilters = [
+            'search' => $request->search ?? '',
+        ];
+
+
     }
 
     /**
@@ -24,10 +53,6 @@ class BerkasRepository
         return $this->model->where('id', $id)->first();
     }
 
-    public function getBerkasByPesertaId($pesertaId): ?Berkas
-    {
-        return $this->model->where('peserta_id', $pesertaId)->first();
-    }
 
     /**
      * Mendapatkan berkas berdasarkan peserta ID dan ketentuan berkas ID
@@ -47,7 +72,10 @@ class BerkasRepository
         return $this->model->create($data);
     }
 
-    public function updateBerkas(array $data): bool
+    /**
+     * Mengupdate berkas berdasarkan ID
+     */
+    public function updateBerkas($id, array $data): bool
     {
         return $this->model->update($data);
     }

@@ -34,16 +34,16 @@ class KetentuanBerkasService
     }
 
     /**
-     * Mendapatkan semua ketentuan berkas
+     * Mendapatkan semua ketentuan berkas dengan fitur pencarian dan filter
      */
-    public function getAllKetentuanBerkas()
+    public function getAllKetentuanBerkas($request = null)
     {
         try {
-            $ketentuanBerkas = $this->ketentuanBerkasRepository->getAllKetentuanBerkas();
+            $result = $this->ketentuanBerkasRepository->getAllKetentuanBerkas($request);
             return [
                 'success' => true,
                 'message' => 'Berhasil mendapatkan semua ketentuan berkas',
-                'data' => $ketentuanBerkas
+                'data' => $result
             ];
         } catch (\Exception $e) {
             return [
