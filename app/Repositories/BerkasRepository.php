@@ -98,7 +98,10 @@ class BerkasRepository
         return $this->model->where('id', $id)->first();
     }
 
-
+    public function getBerkasByPesertaId($id): ?Berkas
+    {
+        return $this->model->where('peserta_id', $id)->first();
+    }
     /**
      * Mendapatkan berkas berdasarkan peserta ID dan ketentuan berkas ID
      */
