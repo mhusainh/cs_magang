@@ -164,6 +164,13 @@ class BerkasService
                 'data' => $berkas
             ];
         }  
+        catch (\Exception $e) {
+            return [
+               'success' => false,
+               'message' => 'Gagal mendapatkan berkas: '. $e->getMessage(),
+                'data' => null
+            ];
+        }
     }
     public function getStatusBerkasPeserta($pesertaId, $jenjangSekolah)
     {
