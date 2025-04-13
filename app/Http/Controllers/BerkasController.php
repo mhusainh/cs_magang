@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Berkas;
 use App\Models\PesertaPpdb;
-use App\Services\BerkasService;
-use App\Services\KetentuanBerkasService;
 use App\Traits\ApiResponse;
-use App\Http\Requests\Berkas\UploadBerkasRequest;
-use App\Http\Requests\Berkas\UpdateBerkasRequest;
+use Illuminate\Http\Request;
+use App\Services\BerkasService;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Berkas\UploadBerkasRequest;
 
 class BerkasController extends Controller
 {
@@ -18,6 +16,24 @@ class BerkasController extends Controller
     public function __construct(
         private BerkasService $berkasService
     ) {}
+
+    /**
+     * Get all berkas with search and filter functionality
+     */
+    public function getAllBerkas(Request $request)
+    {
+        $filters = [
+            'search' => $request->search,
+            'ketentuan_berkas_id' => $request->ketentuan_berkas_id
+        ];
+
+        $result = $this->berkasService->getAllBerkas($filters, 9);
+        if (!$result['success']) {
+            return $this->error($result['message'], 404, null);
+        }
+
+        return $this->success($result['data'], $result['message'], 200);
+    }
 
     /**
      * Upload berkas

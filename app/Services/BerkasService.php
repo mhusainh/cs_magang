@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Repositories\BerkasRepository;
 use App\Services\KetentuanBerkasService;
 use App\Repositories\KetentuanBerkasRepository;
+use App\Http\Resources\Berkas\GetAllBerkasResource;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 
@@ -81,6 +82,48 @@ class BerkasService
             return [
                 'success' => false,
                 'message' => 'Gagal mengupload berkas: ' . $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+
+    public function getAllBerkas($filters = [], $perPage = 10)
+    {
+        try {
+            // Get berkas with filters and pagination
+            $berkas = $this->berkasRepository->getAllBerkas($filters, $perPage);
+
+            // Get unique ketentuan berkas for filter dropdown
+            $ketentuanBerkas = $this->KetentuanBerkasRepository->getAllKetentuanBerkas();
+
+            // Get total items for current filter
+            $totalItems = $berkas->total();
+
+            // Get current filter status
+            $currentFilters = [
+                'search' => $filters['search'] ?? '',
+                'ketentuan_berkas_id' => $filters['ketentuan_berkas_id'] ?? '',
+                'start_date' => $filters['start_date'] ?? '',
+                'end_date' => $filters['end_date'] ?? '',
+                'jenjang_sekolah' => $filters['jenjang_sekolah'] ?? '',
+                'nama_ketentuan' => $filters['nama_ketentuan'] ?? '',
+                'is_required' => $filters['is_required'] ?? '',
+                'total_items' => $totalItems
+            ];
+
+            return [
+                'success' => true,
+                'message' => 'Berhasil mendapatkan berkas',
+                'data' => [
+                    'berkas' => GetAllBerkasResource::collection($berkas),
+                    'ketentuan_berkas' => $ketentuanBerkas,
+                    'current_filters' => $currentFilters
+                ]
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mendapatkan berkas: ' . $e->getMessage(),
                 'data' => null
             ];
         }

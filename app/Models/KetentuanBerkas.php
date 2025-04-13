@@ -23,6 +23,6 @@ class KetentuanBerkas extends Model
      */
     public function berkas()
     {
-        return $this->hasMany(Berkas::class, 'kententuan_berkas_id');
+        return $this->hasMany(Berkas::class, 'ketentuan_berkas_id');
     }
 }
