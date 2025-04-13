@@ -14,7 +14,8 @@ class Berkas extends Model
 
     protected $fillable = [
         'peserta_id',
-        'kententuan_berkas_id',
+        'nama_file',
+        'ketentuan_berkas_id',
         'url_file',
         'public_id'
     ];
@@ -27,11 +28,8 @@ class Berkas extends Model
         return $this->belongsTo(PesertaPpdb::class, 'peserta_id');
     }
 
-    /**
-     * Get the ketentuan berkas that owns the berkas
-     */
     public function ketentuanBerkas(): BelongsTo
     {
-        return $this->belongsTo(KetentuanBerkas::class, 'kententuan_berkas_id');
+        return $this->belongsTo(KetentuanBerkas::class, 'ketentuan_berkas_id');
     }
 }

@@ -48,7 +48,7 @@ Route::middleware('auth:api')->group(function () {
             
             // Berkas Management
             Route::get('/berkas', [BerkasController::class, 'getKetentuanBerkas']);
-            Route::post('/berkas/upload', [BerkasController::class, 'uploadBerkas']);
+            Route::post('/berkas/upload/{id}', [BerkasController::class, 'uploadBerkas']);
             Route::put('/berkas/{id}', [BerkasController::class, 'updateBerkas']);
             Route::delete('/berkas/{id}', [BerkasController::class, 'deleteBerkas']);
 

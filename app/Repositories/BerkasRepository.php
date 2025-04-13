@@ -3,17 +3,17 @@
 namespace App\Repositories;
 
 use App\Models\Berkas;
-use Illuminate\Support\Collection; 
+use Illuminate\Support\Collection;
 
 class BerkasRepository
 {
-    public function __construct(private Berkas $model){}
+    public function __construct(private Berkas $model) {}
     /**
      * Mendapatkan semua ketentuan berkas
      */
-    public function getAllBerkas(): Collection
+    public function getAllBerkas(int $perPage = 10)
     {
-        return Berkas::all();
+        return $this->model->paginate($perPage);
     }
 
     /**
@@ -21,12 +21,12 @@ class BerkasRepository
      */
     public function getBerkasById($id): ?Berkas
     {
-        return $this->model->where('id', $id);
+        return $this->model->where('id', $id)->first();
     }
 
     public function getBerkasByPesertaId($pesertaId): ?Berkas
     {
-        return $this->model->where('peserta_id', $pesertaId);
+        return $this->model->where('peserta_id', $pesertaId)->first();
     }
 
     /**

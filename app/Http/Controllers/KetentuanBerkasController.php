@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\DTO\KetentuanBerkasDTO;
 use App\Services\KetentuanBerkasService;
 use App\Traits\ApiResponse;
 use App\Http\Requests\Berkas\KetentuanBerkasRequest;
@@ -57,7 +57,11 @@ class KetentuanBerkasController extends Controller
      */
     public function create(KetentuanBerkasRequest $request)
     {
-        $data = $request->validated();
+        $data = KetentuanBerkasDTO::createKetentuanBerkasDTO(
+            $request->validated('nama'),
+            $request->validated('jenjang_sekolah'),
+            $request->validated('is_required')
+        );
         $result = $this->ketentuanBerkasService->createKetentuanBerkas($data);
 
         if (!$result['success']) {
@@ -65,21 +69,6 @@ class KetentuanBerkasController extends Controller
         }
 
         return $this->success($result['data'], $result['message'], 201);
-    }
-
-    /**
-     * Mengupdate ketentuan berkas
-     */
-    public function update(KetentuanBerkasRequest $request, $id)
-    {
-        $data = $request->validated();
-        $result = $this->ketentuanBerkasService->updateKetentuanBerkas($id, $data);
-
-        if (!$result['success']) {
-            return $this->error($result['message'], 422, null);
-        }
-
-        return $this->success($result['data'], $result['message'], 200);
     }
 
     /**

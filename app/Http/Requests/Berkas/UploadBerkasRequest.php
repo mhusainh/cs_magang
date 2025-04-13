@@ -8,7 +8,7 @@ use App\Traits\FormRequestTrait;
 class UploadBerkasRequest extends FormRequest
 {
     use FormRequestTrait;
-    
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -25,8 +25,10 @@ class UploadBerkasRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'ketentuan_berkas_id' => 'required|exists:ketentuan_berkas,id'
+            'files' => 'required|array',
+            'files.*' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'ketentuan_berkas_ids' => 'required|array',
+            'ketentuan_berkas_ids.*' => 'required|exists:ketentuan_berkas,id'
         ];
     }
 
@@ -38,12 +40,16 @@ class UploadBerkasRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'file.required' => 'File berkas harus diupload',
-            'file.file' => 'Upload harus berupa file',
-            'file.mimes' => 'Format file harus pdf, jpg, jpeg, atau png',
-            'file.max' => 'Ukuran file maksimal 2MB',
-            'ketentuan_berkas_id.required' => 'ID ketentuan berkas harus diisi',
-            'ketentuan_berkas_id.exists' => 'ID ketentuan berkas tidak valid'
+            'files.required' => 'File berkas harus diupload',
+            'files.array' => 'File berkas harus berupa array',
+            'files.*.required' => 'Setiap file berkas harus diupload',
+            'files.*.file' => 'Upload harus berupa file',
+            'files.*.mimes' => 'Format file harus pdf, jpg, jpeg, atau png',
+            'files.*.max' => 'Ukuran file maksimal 2MB',
+            'ketentuan_berkas_ids.required' => 'ID ketentuan berkas harus diisi',
+            'ketentuan_berkas_ids.array' => 'ID ketentuan berkas harus berupa array',
+            'ketentuan_berkas_ids.*.required' => 'Setiap ID ketentuan berkas harus diisi',
+            'ketentuan_berkas_ids.*.exists' => 'ID ketentuan berkas tidak valid'
         ];
     }
 }

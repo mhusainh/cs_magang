@@ -55,6 +55,37 @@ class KetentuanBerkasService
     }
 
     /**
+     * Menghapus ketentuan berkas
+     */
+    public function deleteKetentuanBerkas($id)
+    {
+        try {
+            $ketentuanBerkas = $this->ketentuanBerkasRepository->getKetentuanBerkasById($id);
+            if (!$ketentuanBerkas) {
+                return [
+                    'success' => false,
+                    'message' => 'Ketentuan berkas tidak ditemukan',
+                    'data' => null
+                ];
+            }
+
+            $this->ketentuanBerkasRepository->deleteKetentuanBerkas($id);
+
+            return [
+                'success' => true,
+                'message' => 'Berhasil menghapus ketentuan berkas',
+                'data' => null
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal menghapus ketentuan berkas: ' . $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+
+    /**
      * Mendapatkan ketentuan berkas berdasarkan jenjang sekolah
      */
     public function getKetentuanBerkasByJenjang($jenjangSekolah)
@@ -129,47 +160,6 @@ class KetentuanBerkasService
             return [
                 'success' => false,
                 'message' => 'Gagal mengupdate ketentuan berkas: ' . $e->getMessage(),
-                'data' => null
-            ];
-        }
-    }
-
-    /**
-     * Menghapus ketentuan berkas
-     */
-    public function deleteKetentuanBerkas($id)
-    {
-        try {
-            $ketentuanBerkas = $this->ketentuanBerkasRepository->getKetentuanBerkasById($id);
-            if (!$ketentuanBerkas) {
-                return [
-                    'success' => false,
-                    'message' => 'Ketentuan berkas tidak ditemukan',
-                    'data' => null
-                ];
-            }
-
-            // Cek apakah ada berkas yang terkait dengan ketentuan ini
-            $berkasCount = Berkas::where('ketentuan_berkas_id', $id)->count();
-            if ($berkasCount > 0) {
-                return [
-                    'success' => false,
-                    'message' => 'Tidak dapat menghapus ketentuan berkas karena masih digunakan',
-                    'data' => null
-                ];
-            }
-
-            $this->ketentuanBerkasRepository->deleteKetentuanBerkas($id);
-
-            return [
-                'success' => true,
-                'message' => 'Berhasil menghapus ketentuan berkas',
-                'data' => null
-            ];
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'message' => 'Gagal menghapus ketentuan berkas: ' . $e->getMessage(),
                 'data' => null
             ];
         }

@@ -15,7 +15,10 @@ class BerkasController extends Controller
 {
     use ApiResponse;
 
-    public function __construct(private BerkasService $berkasService,private KetentuanBerkasService $ketentuanService) {}
+    public function __construct(
+        private BerkasService $berkasService,
+        private KetentuanBerkasService $ketentuanService
+    ) {}
 
     /**
      * Mendapatkan ketentuan berkas berdasarkan jenjang sekolah peserta
@@ -37,44 +40,40 @@ class BerkasController extends Controller
     }
 
     /**
-     * Mendapatkan status berkas peserta (sudah upload atau belum)
-     */
-    public function getStatusBerkas()
-    {
-        // Ambil peserta yang terkait dengan user yang login
-        $peserta = PesertaPpdb::where('user_id', Auth::user()->id)->first();
-        if (!$peserta) {
-            return $this->error('Data peserta tidak ditemukan', 404, null);
-        }
-
-        $result = $this->berkasService->getStatusBerkasPeserta($peserta->id, $peserta->jenjang_sekolah);
-        if (!$result['success']) {
-            return $this->error($result['message'], 404, null);
-        }
-
-        return $this->success($result['data'], $result['message'], 200);
-    }
-
-    /**
      * Upload berkas
      */
     public function uploadBerkas(UploadBerkasRequest $request)
     {
-        // Ambil peserta yang terkait dengan user yang login
-        $peserta = PesertaPpdb::where('user_id', Auth::user()->id)->first();
-        if (!$peserta) {
-            return $this->error('Data peserta tidak ditemukan', 404, null);
+        $files = $request->validated('files');
+        $ketentuanBerkasIds = $request->validated('ketentuan_berkas_ids');
+
+        if (count($files) !== count($ketentuanBerkasIds)) {
+            return $this->error('Jumlah file tidak sesuai dengan jumlah ketentuan berkas', 422, null);
         }
 
-        $file = $request->file('file');
-        $ketentuanBerkasId = $request->validated('ketentuan_berkas_id');
+        $results = [];
+        foreach ($files as $index => $file) {
+            $data = [
+                'file' => $file,
+                'peserta_id' => Auth::user()->peserta->id,
+                'ketentuan_berkas_id' => $ketentuanBerkasIds[$index],
+            ];
 
-        $result = $this->berkasService->uploadBerkas($file, $peserta->id, $ketentuanBerkasId);
-        if (!$result['success']) {
-            return $this->error($result['message'], 422, null);
+            $result = $this->berkasService->uploadBerkas($data);
+            $results[] = [
+                'ketentuan_berkas_id' => $ketentuanBerkasIds[$index],
+                'success' => $result['success'],
+                'message' => $result['message'],
+                'data' => $result['data']
+            ];
         }
 
-        return $this->success($result['data'], $result['message'], 200);
+        $hasError = collect($results)->contains('success', false);
+        if ($hasError) {
+            return $this->error('Beberapa file gagal diupload', 422, $results);
+        }
+
+        return $this->success($results, 'Semua file berhasil diupload', 200);
     }
 
     /**
@@ -132,37 +131,6 @@ class BerkasController extends Controller
         $result = $this->berkasService->getBerkasByPesertaId($pesertaId);
         if (!$result['success']) {
             return $this->error($result['message'], 404, null);
-        }
-
-        return $this->success($result['data'], $result['message'], 200);
-    }
-
-    /**
-     * Update berkas
-     */
-    public function updateBerkas(UpdateBerkasRequest $request, $id)
-    {
-        // Cek apakah berkas milik peserta yang login
-        $peserta = PesertaPpdb::where('user_id', Auth::user()->id)->first();
-        if (!$peserta) {
-            return $this->error('Data peserta tidak ditemukan', 404, null);
-        }
-
-        $berkas = Berkas::find($id);
-        if (!$berkas) {
-            return $this->error('Berkas tidak ditemukan', 404, null);
-        }
-
-        if ($berkas->peserta_id != $peserta->id) {
-            return $this->error('Anda tidak memiliki akses untuk mengupdate berkas ini', 403, null);
-        }
-
-        $file = $request->file('file');
-        $ketentuanBerkasId = $request->validated('ketentuan_berkas_id');
-
-        $result = $this->berkasService->updateBerkas($id, $file, $ketentuanBerkasId);
-        if (!$result['success']) {
-            return $this->error($result['message'], 422, null);
         }
 
         return $this->success($result['data'], $result['message'], 200);
