@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DTO\PesertaDTO;
 use App\DTO\ProgressUserDTO;
 use App\Services\PesertaService;
+use App\Services\BerkasService;
 use App\Traits\ApiResponse;
 use App\Http\Requests\Peserta\InputFormPesertaRequest;
 use App\Http\Requests\Peserta\UpdatePesertaRequest;
@@ -17,7 +18,8 @@ class PesertaController extends Controller
 
     public function __construct(
         private PesertaService $pesertaService,
-        private ProgressUserService $progressUserService
+        private ProgressUserService $progressUserService,
+        private BerkasService $berkasService
     ) {}
 
     // public function create(CreatePesertaRequest $request)
@@ -63,13 +65,22 @@ class PesertaController extends Controller
 
     public function getByUser()
     {
-        $result = $this->pesertaService->getByUserId(Auth::user()->id);
-
-        if (!$result['success']) {
-            return $this->error($result['message'], 404);
+        $peserta = $this->pesertaService->getByUserId(Auth::user()->id);
+        if (!$peserta['success']) {
+            return $this->error($peserta['message'], 404);
+        }
+        
+        $berkas = $this->berkasService->getBerkasByPesertaId($peserta['data']->id);
+        if (!$berkas['success']) {
+            return $this->error($berkas['message'], 404);
         }
 
-        return $this->success($result['data'], $result['message'], 200);
+        $result = [
+            'peserta' => $peserta['data'],
+            'berkas' => $berkas['data']
+        ];
+
+        return $this->success($result, 'Data peserta dan berkas berhasil diambil', 200);
     }
 
     public function updateByUser(UpdatePesertaRequest $request)

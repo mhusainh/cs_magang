@@ -56,7 +56,7 @@ Route::middleware('auth:api')->group(function () {
             Route::put('/profile', [UserController::class, 'updateProfile']);
 
             // Peserta Management
-            Route::get('peserta', [PesertaController::class, 'getByUser']);
+            Route::get('peserta', [PesertaController::class, 'getByUser']); // Mengambil data peserta dan berkas berdasarkan user_id
             Route::put('peserta', [PesertaController::class, 'updateByUser']);
             Route::put('peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']);
         });
