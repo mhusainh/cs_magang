@@ -77,10 +77,6 @@ class BerkasRepository
         return $this->model->where('id', $id)->first();
     }
 
-    public function getBerkasByPesertaId($pesertaId): ?Berkas
-    {
-        return $this->model->where('peserta_id', $pesertaId)->first();
-    }
 
     /**
      * Mendapatkan berkas berdasarkan peserta ID dan ketentuan berkas ID
@@ -100,7 +96,10 @@ class BerkasRepository
         return $this->model->create($data);
     }
 
-    public function updateBerkas(array $data): bool
+    /**
+     * Mengupdate berkas berdasarkan ID
+     */
+    public function updateBerkas($id, array $data): bool
     {
         return $this->model->update($data);
     }
