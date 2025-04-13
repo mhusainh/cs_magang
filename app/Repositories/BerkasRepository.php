@@ -11,7 +11,7 @@ class BerkasRepository
     /**
      * Mendapatkan semua ketentuan berkas
      */
-    public function getAllBerkas(array $filters = [], int $perPage = 10)
+    public function getAllBerkas(array $filters = [])
     {
         $query = $this->model->query();
 
@@ -65,7 +65,28 @@ class BerkasRepository
             });
         }
 
-        $paginator = $query->with('ketentuanBerkas')->paginate($perPage);
+        // Sorting functionality
+        if (isset($filters['sort_by']) && $filters['sort_by'] !== '') {
+            $sortField = $filters['sort_by'];
+            $sortDirection = isset($filters['sort_direction']) && strtolower($filters['sort_direction']) === 'desc' ? 'desc' : 'asc';
+
+            // Handle sorting for related fields
+            if (strpos($sortField, '.') !== false) {
+                [$relation, $field] = explode('.', $sortField);
+                $query->join($relation, $relation . '.id', '=', 'berkas.' . $relation . '_id')
+                    ->orderBy($relation . '.' . $field, $sortDirection);
+            } else {
+                $query->orderBy($sortField, $sortDirection);
+            }
+        } else {
+            // Default sorting by created_at in descending order
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $paginator = $query->with([
+            'ketentuanBerkas',
+            'peserta'
+        ])->paginate($filters['per_page'] ?? 10);
         return $paginator->appends(request()->query());
     }
 

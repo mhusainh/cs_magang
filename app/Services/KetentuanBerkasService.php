@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\KetentuanBerkas\GetAllKetentuanBerkasResource;
 use App\Models\Berkas;
 use App\Models\KetentuanBerkas;
 use App\Repositories\KetentuanBerkasRepository;
@@ -36,14 +37,47 @@ class KetentuanBerkasService
     /**
      * Mendapatkan semua ketentuan berkas dengan fitur pencarian dan filter
      */
-    public function getAllKetentuanBerkas($request = null)
+    public function getAllKetentuanBerkas(array $filters = [])
     {
         try {
-            $result = $this->ketentuanBerkasRepository->getAllKetentuanBerkas($request);
+            $result = $this->ketentuanBerkasRepository->getAllKetentuanBerkas($filters);
+            if (!$result) {
+                return [
+                    'success' => false,
+                    'message' => 'Ketentuan berkas tidak ditemukan',
+                    'data' => null
+                ];
+            }
+
+            $totalItems = $result->total();
+            $totalPages = $result->lastPage();
+            $currentPage = $result->currentPage();
+            $perPage = $result->perPage();
+
+            $currentFilters = [
+                'search' => $filters['search'] ?? '',
+                'jenjang_sekolah' => $filters['jenjang'] ?? '',
+                'is_required' => $filters['is_required'] ?? '',
+                'sort_by' => $filters['sort_by'] ?? '',
+                'sort_direction' => $filters['sort_direction'] ?? ''
+            ];
+
+            // Set pagination data
+            $pagination = [
+                'page' => $currentPage,
+                'per_page' => $perPage,
+                'total_items' => $totalItems,
+                'total_pages' => $totalPages
+            ];
+
             return [
                 'success' => true,
                 'message' => 'Berhasil mendapatkan semua ketentuan berkas',
-                'data' => $result
+                'data' => [
+                    'ketentuan_berkas' => GetAllKetentuanBerkasResource::collection($result),
+                    'current_filters' => $currentFilters
+                ],
+                'pagination' => $pagination
             ];
         } catch (\Exception $e) {
             return [
@@ -91,7 +125,7 @@ class KetentuanBerkasService
     public function getKetentuanBerkasByJenjang($jenjangSekolah)
     {
         try {
-            
+
             $ketentuanBerkas = $this->ketentuanBerkasRepository->getKetentuanBerkasByJenjang($jenjangSekolah);
             return [
                 'success' => true,

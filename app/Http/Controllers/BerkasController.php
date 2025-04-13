@@ -24,15 +24,23 @@ class BerkasController extends Controller
     {
         $filters = [
             'search' => $request->search,
-            'ketentuan_berkas_id' => $request->ketentuan_berkas_id
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'ketentuan_berkas_id' => $request->ketentuan_berkas_id,
+            'jenjang_sekolah' => $request->jenjang_sekolah,
+            'nama_ketentuan' => $request->nama_ketentuan,
+            'is_required' => $request->is_required,
+            'sort_by' => $request->sort_by,
+            'sort_direction' => $request->sort_order,
+            'per_page' => $request->per_page
         ];
 
-        $result = $this->berkasService->getAllBerkas($filters, 9);
+        $result = $this->berkasService->getAllBerkas($filters);
         if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }
 
-        return $this->success($result['data'], $result['message'], 200);
+        return $this->success($result['data'], $result['message'], 200, $result['pagination']);
     }
 
     /**

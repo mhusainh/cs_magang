@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\KetentuanBerkasDTO;
-use App\Services\KetentuanBerkasService;
 use App\Traits\ApiResponse;
-use App\Http\Requests\Berkas\KetentuanBerkasRequest;
+use Illuminate\Http\Request;
+use App\DTO\KetentuanBerkasDTO;
 use Illuminate\Support\Facades\Auth;
+use App\Services\KetentuanBerkasService;
+use App\Http\Requests\Berkas\KetentuanBerkasRequest;
 
 class KetentuanBerkasController extends Controller
 {
@@ -17,21 +18,30 @@ class KetentuanBerkasController extends Controller
     /**
      * Mendapatkan semua ketentuan berkas dengan fitur pencarian dan filter
      */
-    public function getAll(\Illuminate\Http\Request $request)
+    public function getAll(Request $request)
     {
-        $result = $this->ketentuanBerkasService->getAllKetentuanBerkas($request);
+        $filters = [
+            'search' => $request->search,
+            'jenjang' => $request->jenjang,
+            'is_required' => $request->is_required,
+            'sort_by' => $request->sort_by,
+            'sort_direction' => $request->sort_order,
+            'per_page' => $request->per_page
+        ];
+
+        $result = $this->ketentuanBerkasService->getAllKetentuanBerkas($filters);
         if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }
 
-        return $this->success($result['data'], $result['message'], 200);
+        return $this->success($result['data'], $result['message'], 200, $result['pagination']);
     }
 
     /**
      * Mendapatkan ketentuan berkas berdasarkan jenjang sekolah
      */
     public function getByJenjang()
-    {   
+    {
         $result = $this->ketentuanBerkasService->getKetentuanBerkasByJenjang(Auth::user()->peserta->jenjang_sekolah);
         if (!$result['success']) {
             return $this->error($result['message'], 404, null);

@@ -18,7 +18,8 @@ trait ApiResponse
             $response['pagination'] = [
                 'page' => $pagination['page'] ?? 1,
                 'per_page' => $pagination['per_page'] ?? 10,
-                'total_items' => $pagination['total_items'] ?? 0
+                'total_items' => $pagination['total_items'] ?? 0,
+                'total_pages' => $pagination['total_pages']?? 1
             ];
         }
 

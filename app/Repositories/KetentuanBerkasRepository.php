@@ -8,54 +8,54 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class KetentuanBerkasRepository
-{  
-    public function __construct(private KetentuanBerkas $model){}
+{
+    public function __construct(private KetentuanBerkas $model) {}
     /**
      * Mendapatkan semua ketentuan berkas dengan fitur pencarian dan filter
      */
-    public function getAllKetentuanBerkas(Request $request = null): array
+    public function getAllKetentuanBerkas(array $filters = [])
     {
         $query = $this->model->query();
 
         // Search functionality
-        if ($request && $request->has('search') && $request->search != '') {
-            $search = $request->search;
+        if (isset($filters['search']) && $filters['search'] !== '') {
+            $search = $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('jenjang_sekolah', 'like', "%{$search}%");
+                    ->orWhere('jenjang_sekolah', 'like', "%{$search}%");
             });
         }
 
         // Jenjang sekolah filter
-        if ($request && $request->has('jenjang') && $request->jenjang != '') {
-            $query->where('jenjang_sekolah', $request->jenjang);
+        if (isset($filters['jenjang']) && $filters['jenjang'] !== '') {
+            $query->where('jenjang_sekolah', $filters['jenjang']);
         }
 
-        // Get unique jenjang sekolah for filter dropdown
-        $jenjangSekolah = $this->model->select('jenjang_sekolah')
-            ->distinct()
-            ->orderBy('jenjang_sekolah')
-            ->pluck('jenjang_sekolah');
+        // Is required filter
+        if (isset($filters['is_required']) && $filters['is_required'] !== '') {
+            $query->where('is_required', $filters['is_required']);
+        }
 
-        // Get total items for current filter
-        $totalItems = $query->count();
+        // Sorting functionality
+        if (isset($filters['sort_by']) && $filters['sort_by'] !== '') {
+            $sortField = $filters['sort_by'];
+            $sortDirection = isset($filters['sort_direction']) && strtolower($filters['sort_direction']) === 'desc' ? 'desc' : 'asc';
 
-        // Paginate results with 10 items per page
-        $perPage = $request && $request->has('per_page') ? $request->per_page : 10;
-        $ketentuanBerkas = $query->paginate($perPage)->withQueryString();
+            // Handle sorting for related field
+            if (strpos($sortField, '.') !== false) {
+                [$relation, $field] = explode('.', $sortField);
+                $query->join($relation, $relation . '.id', '=', 'ketentuan_berkas.' . $relation . '_id')
+                    ->orderBy($relation . '.' . $field, $sortDirection);
+            } else {
+                $query->orderBy($sortField, $sortDirection);
+            }
+        } else {
+            // Default sorting by created_at in descending order
+            $query->orderBy('created_at', 'desc');
+        }
 
-        // Get current filter status
-        $currentFilters = [
-            'search' => $request ? ($request->search ?? '') : '',
-            'jenjang' => $request ? ($request->jenjang ?? '') : '',
-            'total_items' => $totalItems
-        ];
-
-        return [
-            'ketentuan_berkas' => $ketentuanBerkas,
-            'jenjang_sekolah' => $jenjangSekolah,
-            'current_filters' => $currentFilters
-        ];
+        $paginator = $query->paginate($filters['per_page'] ?? 10);
+        return $paginator->appends(request()->query());
     }
 
     /**
@@ -87,7 +87,7 @@ class KetentuanBerkasRepository
      */
     public function updateKetentuanBerkas(array $data): bool
     {
-        return$this->model->update($data);      
+        return $this->model->update($data);
     }
 
     public function deleteKetentuanBerkas($id): bool

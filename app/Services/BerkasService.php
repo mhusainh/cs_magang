@@ -87,17 +87,24 @@ class BerkasService
         }
     }
 
-    public function getAllBerkas($filters = [], $perPage = 10)
+    public function getAllBerkas($filters = [])
     {
         try {
             // Get berkas with filters and pagination
-            $berkas = $this->berkasRepository->getAllBerkas($filters, $perPage);
-
-            // Get unique ketentuan berkas for filter dropdown
-            $ketentuanBerkas = $this->KetentuanBerkasRepository->getAllKetentuanBerkas();
+            $berkas = $this->berkasRepository->getAllBerkas($filters);
+            if (!$berkas) {
+                return [
+                    'success' => false,
+                    'message' => 'Berkas tidak ditemukan',
+                    'data' => null
+                ];
+            }
 
             // Get total items for current filter
             $totalItems = $berkas->total();
+            $totalpages = $berkas->lastPage(); // Jumlah halaman total
+            $currentPage = $berkas->currentPage(); // Halaman saat ini
+            $perPage = $berkas->perPage(); // Jumlah item per halam
 
             // Get current filter status
             $currentFilters = [
@@ -108,7 +115,16 @@ class BerkasService
                 'jenjang_sekolah' => $filters['jenjang_sekolah'] ?? '',
                 'nama_ketentuan' => $filters['nama_ketentuan'] ?? '',
                 'is_required' => $filters['is_required'] ?? '',
-                'total_items' => $totalItems
+                'sort_by' => $filters['sort_by']?? '',
+                'sort_direction' => $filters['sort_direction']?? ''
+            ];
+
+            // Set pagination data
+            $pagination = [
+                'page' => $currentPage,
+                'per_page' => $perPage,
+                'total_items' => $totalItems,
+                'total_pages' => $totalpages
             ];
 
             return [
@@ -116,9 +132,9 @@ class BerkasService
                 'message' => 'Berhasil mendapatkan berkas',
                 'data' => [
                     'berkas' => GetAllBerkasResource::collection($berkas),
-                    'ketentuan_berkas' => $ketentuanBerkas,
                     'current_filters' => $currentFilters
-                ]
+                ],
+                'pagination' => $pagination
             ];
         } catch (\Exception $e) {
             return [
