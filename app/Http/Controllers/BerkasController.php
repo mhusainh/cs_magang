@@ -57,43 +57,11 @@ class BerkasController extends Controller
     }
 
     /**
-     * Mendapatkan berkas peserta
-     */
-    public function getBerkas()
-    {
-        // Ambil peserta yang terkait dengan user yang login
-        $peserta = PesertaPpdb::where('user_id', Auth::user()->id)->first();
-        if (!$peserta) {
-            return $this->error('Data peserta tidak ditemukan', 404, null);
-        }
-
-        $result = $this->berkasService->getBerkasByPesertaId($peserta->id);
-        if (!$result['success']) {
-            return $this->error($result['message'], 404, null);
-        }
-
-        return $this->success($result['data'], $result['message'], 200);
-    }
-
-    /**
      * Menghapus berkas
      */
     public function deleteBerkas($id)
     {
         $result = $this->berkasService->deleteBerkas($id);
-        if (!$result['success']) {
-            return $this->error($result['message'], 404, null);
-        }
-
-        return $this->success($result['data'], $result['message'], 200);
-    }
-
-    /**
-     * Admin: Mendapatkan berkas peserta berdasarkan ID peserta
-     */
-    public function getBerkasByPesertaId($pesertaId)
-    {
-        $result = $this->berkasService->getBerkasByPesertaId($pesertaId);
         if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }

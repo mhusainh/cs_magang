@@ -86,26 +86,7 @@ class BerkasService
         }
     }
 
-    public function getBerkasByPesertaId($pesertaId)
-    {
-        try {
-            // Menggunakan repository untuk mendapatkan berkas
-            $berkasQuery = $this->berkasRepository->getBerkasByPesertaId($pesertaId);
-            $berkas = $berkasQuery->with('ketentuanBerkas')->get();
 
-            return [
-                'success' => true,
-                'message' => 'Berhasil mendapatkan berkas',
-                'data' => $berkas
-            ];
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'message' => 'Gagal mendapatkan berkas: ' . $e->getMessage(),
-                'data' => null
-            ];
-        }
-    }
 
     public function getStatusBerkasPeserta($pesertaId, $jenjangSekolah)
     {
