@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PesertaPpdb extends Model
@@ -57,5 +58,10 @@ class PesertaPpdb extends Model
     public function hasil(): HasOne
     {
         return $this->hasOne(Hasil::class, 'peserta_id');
+    }
+
+    public function berkas(): HasMany
+    {
+        return $this->hasMany(Berkas::class, 'peserta_id'); 
     }
 }

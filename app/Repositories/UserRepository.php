@@ -43,7 +43,8 @@ class UserRepository
     {
         return $this->model->with(
             'peserta',
-            'progressUser'
+            'progressUser',
+            'pesan'
         )->where('id', $id)->first();
     }
 

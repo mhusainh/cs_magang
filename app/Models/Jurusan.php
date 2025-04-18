@@ -38,4 +38,5 @@ class Jurusan extends Model
     {
         return $this->hasOne(Hasil::class);
     }
+    
 }

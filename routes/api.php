@@ -4,14 +4,17 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\PesanController;
+use App\Http\Controllers\BerkasController;
+use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\TagihanController;
 use App\Http\Controllers\TransaksiController;
-use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\PekerjaanOrtuController;
-use App\Http\Controllers\ImageController;
-use App\Http\Controllers\BerkasController;
+use App\Http\Controllers\PengajuanBiayaController;
 use App\Http\Controllers\KetentuanBerkasController;
+use App\Http\Controllers\BiayaPendaftaranController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -41,24 +44,36 @@ Route::middleware('auth:api')->group(function () {
     Route::middleware('role:user')->group(function () {
         route::prefix('user')->group(function () {
             // Home
-            Route::get('/home', [HomeController::class, 'index']);
+            Route::get('home', [HomeController::class, 'index']);
 
             // Berita
-            Route::get('/berita', [ImageController::class, 'getBeritaByUser']);
+            Route::get('berita', [ImageController::class, 'getBeritaByUser']);
 
             // Berkas Management
-            Route::get('/berkas', [KetentuanBerkasController::class, 'getKetentuanBerkas']);
-            Route::post('/berkas/upload', [BerkasController::class, 'uploadBerkas']); // Menerima array files dan ketentuan_berkas_ids dalam request body
-            Route::put('/berkas/{id}', [BerkasController::class, 'updateBerkas']);
+            Route::get('berkas', [KetentuanBerkasController::class, 'getKetentuanBerkas']);
+            Route::post('berkas/upload', [BerkasController::class, 'uploadBerkas']); // Menerima array files dan ketentuan_berkas_ids dalam request body
+            Route::put('berkas/{id}', [BerkasController::class, 'updateBerkas']);
+
+            // COBA
+            // Media ({$nama} = jadwal || pengajuan_biaya)
+            Route::get('media/{nama}', [ImageController::class, 'GetByUser']);
 
             // User profile
-            Route::get('/profile', [AuthController::class, 'me']);
-            Route::put('/profile', [UserController::class, 'updateProfile']);
+            Route::get('profile', [AuthController::class, 'me']);
+            Route::put('profile', [UserController::class, 'updateProfile']);
 
             // Peserta Management
             Route::get('peserta', [PesertaController::class, 'getByUser']); // Mengambil data peserta dan berkas berdasarkan user_id
             Route::put('peserta', [PesertaController::class, 'updateByUser']);
             Route::put('peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']);
+
+            // COBA
+            // Pengajuan Biaya Management
+            Route::get('pengajuan-biaya', [PengajuanBiayaController::class, 'getAll']);
+
+            // COBA
+            // Pesan Management
+            Route::get('pesan', [PesanController::class, 'getByUser']);
         });
     });
 
@@ -137,6 +152,40 @@ Route::middleware('auth:api')->group(function () {
             // Berkas Peserta Management (untuk admin)
             Route::delete('berkas/{id}', [BerkasController::class, 'deleteBerkas']);
             Route::get('berkas/peserta/{pesertaId}', [BerkasController::class, 'getBerkasByPesertaId']);
+
+            //COBA
+            // Media Management (jadwal dan pengajuan_biaya)
+            Route::get('media', [ImageController::class, 'getAll']);
+            Route::get('media/{id}', [ImageController::class, 'getById']);
+            Route::post('media/jadwal', [ImageController::class, 'uploadJadwal']);
+            Route::post('media/pengajuan-biaya', [ImageController::class, 'uploadPengajuanBiaya']);
+            Route::put('media/{id}', [ImageController::class, 'update']);
+            Route::delete('media/{id}', [ImageController::class, 'delete']);
+
+            // COBA
+            // Pengajuan Biaya Management
+            Route::get('pengajuan-biaya', [PengajuanBiayaController::class, 'getAll']);
+            Route::get('pengajuan-biaya/{id}', [PengajuanBiayaController::class, 'getById']);
+            Route::post('pengajuan-biaya', [PengajuanBiayaController::class, 'create']);
+            Route::put('pengajuan-biaya/{id}', [PengajuanBiayaController::class, 'update']);
+            Route::delete('pengajuan-biaya/{id}', [PengajuanBiayaController::class, 'delete']);
+
+            // COBA
+            // Biaya Pendaftaran Management
+            Route::get('biaya-pendaftaran', [BiayaPendaftaranController::class, 'getAll']);
+            Route::get('biaya-pendaftaran/{id}', [BiayaPendaftaranController::class, 'getById']);
+            Route::post('biaya-pendaftaran', [BiayaPendaftaranController::class, 'create']);
+            Route::put('biaya-pendaftaran/{id}', [BiayaPendaftaranController::class, 'update']);
+            Route::delete('biaya-pendaftaran/{id}', [BiayaPendaftaranController::class, 'delete']);
+            
+            // COBA
+            // Pesan Management
+            Route::get('pesan', [PesanController::class, 'getAll']);
+            Route::get('pesan/{id}', [PesanController::class, 'getById']);
+            Route::get('pesan/user/{userId}', [PesanController::class, 'getByUserId']);
+            Route::post('pesan', [PesanController::class, 'create']);
+            Route::put('pesan/{id}', [PesanController::class, 'update']);
+            Route::delete('pesan/{id}', [PesanController::class, 'delete']);
         });
     });
 });

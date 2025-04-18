@@ -92,7 +92,7 @@ class BerkasService
         try {
             // Get berkas with filters and pagination
             $berkas = $this->berkasRepository->getAllBerkas($filters);
-            if (!$berkas) {
+            if (!$berkas || $berkas->isEmpty()) {
                 return [
                     'success' => false,
                     'message' => 'Berkas tidak ditemukan',
@@ -100,13 +100,15 @@ class BerkasService
                 ];
             }
 
-            // Get total items for current filter
-            $totalItems = $berkas->total();
-            $totalpages = $berkas->lastPage(); // Jumlah halaman total
-            $currentPage = $berkas->currentPage(); // Halaman saat ini
-            $perPage = $berkas->perPage(); // Jumlah item per halam
+            // Set pagination data
+            $pagination = [
+                'page' => $berkas->currentPage(),
+                'per_page' => $berkas->perPage(),
+                'total_items' => $berkas->total(),
+                'total_pages' => $berkas->lastPage()
+            ];
 
-            // Get current filter status
+            // Set current filters untuk response
             $currentFilters = [
                 'search' => $filters['search'] ?? '',
                 'ketentuan_berkas_id' => $filters['ketentuan_berkas_id'] ?? '',
@@ -115,26 +117,16 @@ class BerkasService
                 'jenjang_sekolah' => $filters['jenjang_sekolah'] ?? '',
                 'nama_ketentuan' => $filters['nama_ketentuan'] ?? '',
                 'is_required' => $filters['is_required'] ?? '',
-                'sort_by' => $filters['sort_by']?? '',
-                'sort_direction' => $filters['sort_direction']?? ''
-            ];
-
-            // Set pagination data
-            $pagination = [
-                'page' => $currentPage,
-                'per_page' => $perPage,
-                'total_items' => $totalItems,
-                'total_pages' => $totalpages
+                'sort_by' => $filters['sort_by'] ?? '',
+                'sort_direction' => $filters['sort_direction'] ?? ''
             ];
 
             return [
                 'success' => true,
                 'message' => 'Berhasil mendapatkan berkas',
-                'data' => [
-                    'berkas' => GetAllBerkasResource::collection($berkas),
-                    'current_filters' => $currentFilters
-                ],
-                'pagination' => $pagination
+                'data' => GetAllBerkasResource::collection($berkas),
+                'pagination' => $pagination,
+                'current_filters' => $currentFilters
             ];
         } catch (\Exception $e) {
             return [
@@ -149,25 +141,24 @@ class BerkasService
     {
         try {
             // Menggunakan repository untuk mendapatkan berkas berdasarkan peserta_id
-            $berkas = $this->berkasRepository->getBerkasByPesertaId($pesertaId); 
+            $berkas = $this->berkasRepository->getBerkasByPesertaId($pesertaId);
             if (!$berkas) {
                 return [
-                   'success' => false,
-                   'message' => 'Berkas tidak ditemukan',
+                    'success' => false,
+                    'message' => 'Berkas tidak ditemukan',
                     'data' => null
                 ];
             }
 
             return [
-               'success' => true,
-               'message' => 'Berhasil mendapatkan berkas',
+                'success' => true,
+                'message' => 'Berhasil mendapatkan berkas',
                 'data' => $berkas
             ];
-        }  
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return [
-               'success' => false,
-               'message' => 'Gagal mendapatkan berkas: '. $e->getMessage(),
+                'success' => false,
+                'message' => 'Gagal mendapatkan berkas: ' . $e->getMessage(),
                 'data' => null
             ];
         }

@@ -8,13 +8,17 @@ use App\Traits\ApiResponse;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests\Peserta\CreatePesertaRequest;
 use App\Http\Requests\User\LoginRequest;
+use App\Services\PesanService;
 use App\Services\UserService;
 
 class AuthController extends Controller
 {
     use ApiResponse;
 
-    public function __construct(private UserService $userService) {}
+    public function __construct(
+        private UserService $userService,
+        private PesanService $pesanService
+    ) {}
 
     public function login(LoginRequest $request)
     {
@@ -52,6 +56,17 @@ class AuthController extends Controller
 
         if (!$result['success']) {
             return $this->error($result['message'], 400, null);
+        }
+
+        $dataPesan = [
+            'user_id' => $result['data']->id,
+            'judul' => 'Registrasi Berhasil',
+            'deskripsi' => "Selamat! Pendaftaran atas nama {$data['nama']} berhasil dilakukan",
+        ];
+
+        $pesan = $this->pesanService->create($dataPesan);
+        if (!$pesan['success']) {
+            return $this->error($pesan['message'], 400, null);
         }
 
         return $this->success($data, $result['message'], 201);

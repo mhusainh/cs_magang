@@ -29,6 +29,7 @@ class CardResource extends JsonResource
                 'id' => $this->progressUser->id,
                 'progress' => $this->progressUser->progress,
             ] : null,
+            'pesan' => $this->pesan()->where('is_read', true)->count(),
         ];
     }
 }

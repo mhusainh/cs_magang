@@ -14,12 +14,13 @@ class Media extends Model
      *
      * @var array<int, string>
      */
+
+    protected $table = 'media';
+
     protected $fillable = [
         'nama',
-        'media_1',
-        'media_2',
-        'media_3',
-        'media_4',
-        'media_5'
+        'url',
+        'public_id',
+        'jenjang_sekolah'
     ];
 }

@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
-use App\Http\Resources\User\CardResource;
-use App\Repositories\UserRepository;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Log;
+use App\Repositories\UserRepository;
 use App\Repositories\PesertaRepository;
+use App\Http\Resources\User\CardResource;
 
 class UserService
 {
@@ -58,6 +59,7 @@ class UserService
             ]);
 
             return [
+                'data'  => $user,
                 'success' => true,
                 'message' => 'Pendaftaran berhasil'
             ];
@@ -96,7 +98,7 @@ class UserService
                 'message' => 'User berhasil diperbarui'
             ];
         } catch (\Exception $e) {
-            \Log::error('Error updating user: ' . $e->getMessage(), [
+            Log::error('Error updating user: ' . $e->getMessage(), [
                 'user_id' => $data['id'],
                 'data' => $data,
                 'trace' => $e->getTraceAsString()

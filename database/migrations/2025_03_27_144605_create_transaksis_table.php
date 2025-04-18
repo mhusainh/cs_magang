@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('method', 10);
             $table->string('ref_no', 8);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

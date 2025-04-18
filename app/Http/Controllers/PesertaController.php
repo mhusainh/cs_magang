@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\DTO\PesertaDTO;
-use App\DTO\ProgressUserDTO;
-use App\Services\PesertaService;
-use App\Services\BerkasService;
 use App\Traits\ApiResponse;
-use App\Http\Requests\Peserta\InputFormPesertaRequest;
-use App\Http\Requests\Peserta\UpdatePesertaRequest;
-use App\Services\ProgressUserService;
+use App\DTO\ProgressUserDTO;
+use App\Services\PesanService;
+use App\Services\BerkasService;
+use App\Services\PesertaService;
 use Illuminate\Support\Facades\Auth;
+use App\Services\ProgressUserService;
+use App\Http\Requests\Peserta\UpdatePesertaRequest;
+use App\Http\Requests\Peserta\InputFormPesertaRequest;
 
 class PesertaController extends Controller
 {
@@ -19,7 +20,8 @@ class PesertaController extends Controller
     public function __construct(
         private PesertaService $pesertaService,
         private ProgressUserService $progressUserService,
-        private BerkasService $berkasService
+        private BerkasService $berkasService,
+        private PesanService $pesanService
     ) {}
 
     // public function create(CreatePesertaRequest $request)
@@ -69,7 +71,7 @@ class PesertaController extends Controller
         if (!$peserta['success']) {
             return $this->error($peserta['message'], 404);
         }
-        
+
         $berkas = $this->berkasService->getBerkasByPesertaId($peserta['data']->id);
         if (!$berkas['success']) {
             return $this->error($berkas['message'], 404);
@@ -99,15 +101,23 @@ class PesertaController extends Controller
         );
 
         $peserta = $this->pesertaService->getByUserId(Auth::user()->id);
-
         if (!$peserta['success']) {
             return $this->error($peserta['message'], 400);
         }
 
         $result = $this->pesertaService->update($peserta['data']->id, $data);
-
         if (!$result['success']) {
             return $this->error($result['message'], 400);
+        }
+
+        $dataPesan = [
+            'user_id' => Auth::user()->id,
+            'judul' => 'Formulir Pendaftaran Peserta',
+            'deskripsi' => 'Data pendaftaran PPDB Anda telah diperbarui. Mohon periksa kembali kebenaran data yang telah diubah.'
+        ];
+        $pesan = $this->pesanService->create($dataPesan);
+        if (!$pesan['success']) {
+            return $this->error($pesan['message'], 400, null);
         }
 
         return $this->success($data, $result['message'], 200);
@@ -127,25 +137,32 @@ class PesertaController extends Controller
             user_id: Auth::user()->id,
             progress: 1
         );
-        
+
         $peserta = $this->pesertaService->getByUserId(Auth::user()->id);
-        
         if (!$peserta['success']) {
             return $this->error($peserta['message'], 400);
         }
-        
+
         $result = $this->pesertaService->update($peserta['data']->id, $data);
-        
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
-        
-        $progress = $this->progressUserService->create($progressData);
 
+        $progress = $this->progressUserService->create($progressData);
         if (!$progress['success']) {
             return $this->error($progress['message'], 400);
         }
-        
+
+        $dataPesan = [
+            'user_id' => Auth::user()->id,
+            'judul' => 'Formulir Pendaftaran Peserta',
+            'deskripsi' => 'Selamat! Anda telah menyelesaikan tahap pengisian formulir pendaftaran PPDB. Langkah selanjutnya adalah mengunggah berkas persyaratan yang dibutuhkan.'
+        ];
+        $pesan = $this->pesanService->create($dataPesan);
+        if (!$pesan['success']) {
+            return $this->error($pesan['message'], 400, null);
+        }
+
         return $this->success($data, $result['message'], 200);
     }
 

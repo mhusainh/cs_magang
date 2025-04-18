@@ -193,7 +193,6 @@ class ImageService
             }
 
             if ($image) {
-                Cloudinary::destroy($oldImage->public_id);
                 $result = Cloudinary::upload($image->getRealPath(), [
                     'folder' => 'homepage',
                     'transformation' => [
@@ -209,6 +208,7 @@ class ImageService
                         'message' => 'Gagal mengunggah gambar',
                     ];
                 }
+                Cloudinary::destroy($oldImage->public_id);
             }
 
             $updated = $this->imageRepository->updateHomepage(
@@ -251,7 +251,6 @@ class ImageService
             }
 
             if ($image) {
-                Cloudinary::destroy($oldImage->public_id);
                 $result = Cloudinary::upload($image->getRealPath(), [
                     'folder' => 'berita',
                     'transformation' => [
@@ -267,6 +266,7 @@ class ImageService
                         'message' => 'Gagal mengunggah gambar',
                     ];
                 }
+                Cloudinary::destroy($oldImage->public_id);
             }
 
             $updated = $this->imageRepository->updateBerita(

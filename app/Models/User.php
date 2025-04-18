@@ -82,13 +82,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(ProgressUser::class);
     }
-    /**
-     * Get the berkas associated with the berkas
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function berkas(): HasOne
+    public function pesan(): HasMany
     {
-        return $this->hasOne(Berkas::class);
+        return $this->hasMany(Pesan::class);
     }
 }

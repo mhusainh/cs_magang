@@ -8,13 +8,15 @@ use Illuminate\Http\Request;
 use App\Services\BerkasService;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Berkas\UploadBerkasRequest;
+use App\Services\PesanService;
 
 class BerkasController extends Controller
 {
     use ApiResponse;
 
     public function __construct(
-        private BerkasService $berkasService
+        private BerkasService $berkasService,
+        private PesanService $pesanService
     ) {}
 
     /**
@@ -77,6 +79,18 @@ class BerkasController extends Controller
             return $this->error('Beberapa file gagal diupload', 422, $results);
         }
 
+        $dataPesan = [
+            'user_id' => Auth::user()->id,
+            'judul' => 'Upload Berkas',
+            'deskripsi' => 'Halo ' . Auth::user()->peserta->nama . ', berkas Anda telah berhasil diunggah. Terima kasih!',
+        ];
+
+        $pesan = $this->pesanService->create($dataPesan);
+
+        if (!$pesan['success']) {
+            return $this->error($pesan['message'], 422, null); 
+        }
+        
         return $this->success($results, 'Semua file berhasil diupload', 200);
     }
 
