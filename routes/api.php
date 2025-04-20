@@ -15,6 +15,7 @@ use App\Http\Controllers\PekerjaanOrtuController;
 use App\Http\Controllers\PengajuanBiayaController;
 use App\Http\Controllers\KetentuanBerkasController;
 use App\Http\Controllers\BiayaPendaftaranController;
+use App\Http\Controllers\MediaController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -155,12 +156,12 @@ Route::middleware('auth:api')->group(function () {
 
             //COBA
             // Media Management (jadwal dan pengajuan_biaya)
-            Route::get('media', [ImageController::class, 'getAll']);
-            Route::get('media/{id}', [ImageController::class, 'getById']);
-            Route::post('media/jadwal', [ImageController::class, 'uploadJadwal']);
-            Route::post('media/pengajuan-biaya', [ImageController::class, 'uploadPengajuanBiaya']);
-            Route::put('media/{id}', [ImageController::class, 'update']);
-            Route::delete('media/{id}', [ImageController::class, 'delete']);
+            Route::get('media', [MediaController::class, 'getAll']);
+            Route::get('media/{id}', [MediaController::class, 'getById']);
+            Route::post('media/jadwal', [MediaController::class, 'uploadJadwal']);
+            Route::post('media/pengajuan-biaya', [MediaController::class, 'uploadPengajuanBiaya']);
+            Route::put('media/{id}', [MediaController::class, 'update']);
+            Route::delete('media/{id}', [MediaController::class, 'delete']);
 
             // COBA
             // Pengajuan Biaya Management
