@@ -16,7 +16,7 @@ class BiayaPendaftaranController extends Controller
     public function create(CreateRequest $request)
     {
         $data = [
-            'data' => $request->validated('nominal'),
+            'nominal' => $request->validated('nominal'),
         ];
 
         $result = $this->biayaPendaftaranService->create($data);
