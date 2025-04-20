@@ -174,7 +174,7 @@ class PesertaController extends Controller
             return $this->error($result['message'], 400);
         }
 
-        return $this->success(null, $result['message'], 204);
+        return $this->success(null, $result['message'], 200);
     }
 
     public function getAll()

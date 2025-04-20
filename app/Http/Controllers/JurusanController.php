@@ -70,7 +70,7 @@ class JurusanController extends Controller
         if  (!$result['success']) {
             return $this->error($result['message'], 400, null);
         }
-        return $this->success(null, $result['message'], 204);
+        return $this->success(null, $result['message'], 200);
     }
 
     public function getByJenjang(): JsonResponse

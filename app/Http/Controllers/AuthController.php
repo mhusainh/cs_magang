@@ -89,7 +89,7 @@ class AuthController extends Controller
     {
         try {
             JWTAuth::invalidate(JWTAuth::getToken());
-            return $this->success(null, 'Logout successful', 204);
+            return $this->success(null, 'Logout successful', 200);
         } catch (\Exception $e) {
             return $this->error('Error logging out', 400, null);
         }

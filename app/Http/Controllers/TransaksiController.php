@@ -71,6 +71,9 @@ class TransaksiController extends Controller
     public function delete(int $id): JsonResponse
     {
         $result = $this->transaksiService->delete($id);
-        return $this->response($result);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success($result, $result['message'], 200);
     }
 } 
