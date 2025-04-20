@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('jenjang_sekolah');
-            $table->int('is_required');
+            $table->integer('is_required');
             $table->timestamps();
         });
     }
