@@ -18,7 +18,7 @@ class BiayaPendaftaranController extends Controller
         $data = [
             'data' => $request->validated('nominal'),
         ];
-        dd($data);
+
         $result = $this->biayaPendaftaranService->create($data);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
