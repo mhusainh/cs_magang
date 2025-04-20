@@ -186,7 +186,7 @@ class MediaService
 
             return [
                 'success' => true,
-                'message' => 'Gambar berhasil diperbarui',
+                'message' => 'Data berhasil diperbarui',
             ];
         } catch (\Exception $e) {
             return [
