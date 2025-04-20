@@ -85,6 +85,6 @@ class PesanController extends Controller
         if (!$result) {
             return $this->error($result['message'], 404, null);
         }
-        return $this->success($result['data'], $result['message'], 204);
+        return $this->success($result['data'], $result['message'], 200);
     }
 }

@@ -45,48 +45,6 @@ class LogService
         ];
     }
 
-    public function create($data): array
-    {
-        $result = $this->logRepository->create($data);
-        if (!$result) {
-            return [
-                'success' => false,
-                'message' => 'Data gagal ditambahkan',
-                'data' => null,
-            ];
-        }
-        return [
-            'success' => true,
-            'message' => 'Data berhasil ditambahkan',
-            'data' => $result,
-        ];
-    }
-
-    public function update($id, $data): array
-    {
-        $result = $this->logRepository->findById($id);
-        if (!$result) {
-            return [
-                'success' => false,
-                'message' => 'Data tidak ditemukan',
-                'data' => null,
-            ];
-        }
-        $result = $this->logRepository->update($result, $data);
-        if (!$result) {
-            return [
-                'success' => false,
-                'message' => 'Data gagal diubah',
-                'data' => null,
-            ];
-        }
-        return [
-            'success' => true,
-            'message' => 'Data berhasil diubah',
-            'data' => $result,
-        ];
-    }
-
     public function delete($id): array
     {
         $result = $this->logRepository->findById($id);

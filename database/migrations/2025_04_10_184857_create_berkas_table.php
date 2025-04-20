@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('berkas', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('peserta_id')->constrained('peserta_ppdbs')->onDelete('cascade');
+            $table->foreignId('ketentuan_berkas_id')->constrained('ketentuan_berkas');
+            $table->string('nama_file');
+            $table->string('url_file');
+            $table->string('public_id');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('berkas');
+    }
+};

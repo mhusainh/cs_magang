@@ -19,11 +19,6 @@ class LogRepository
         return $this->model->create($data);
     }
 
-    public function update(Log $log, array $data): bool
-    {
-        return $log->update($data);
-    }
-
     public function delete(Log $log): bool
     {
         return $log->delete();
@@ -31,7 +26,6 @@ class LogRepository
 
     public function getAll(): Collection
     {
-        return $this->model->all();
+        return $this->model->orderBy('created_at', 'desc');
     }
-
-} 
+}
