@@ -38,7 +38,7 @@ class BiayaPendaftaranController extends Controller
     public function update(CreateRequest $request, $id)
     {
         $data = [
-            $request->validated('nominal'),
+            'nominal' => $request->validated('nominal'),
         ];
         $result = $this->biayaPendaftaranService->update($id, $data);
         if (!$result['success']) {
