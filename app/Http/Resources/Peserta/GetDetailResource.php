@@ -47,6 +47,14 @@ class GetDetailResource extends JsonResource
                     'penghasilan' => $this->biodataOrtu->penghasilanOrtu->penghasilan_ortu
                 ] : null
             ] : null,
+            'berkas' => $this->berkas ? $this->berkas->map(function ($berkas) {
+                return [
+                    'id' => $berkas->id,
+                    'nama_file' => $berkas->nama_file,
+                    'url_file' => $berkas->url_file,
+                    'public_id' => $berkas->public_id,
+                ];
+            }) : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

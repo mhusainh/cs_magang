@@ -6,7 +6,6 @@ use App\DTO\PesertaDTO;
 use App\Traits\ApiResponse;
 use App\DTO\ProgressUserDTO;
 use App\Services\PesanService;
-use App\Services\BerkasService;
 use App\Services\PesertaService;
 use Illuminate\Support\Facades\Auth;
 use App\Services\ProgressUserService;
@@ -20,7 +19,6 @@ class PesertaController extends Controller
     public function __construct(
         private PesertaService $pesertaService,
         private ProgressUserService $progressUserService,
-        private BerkasService $berkasService,
         private PesanService $pesanService
     ) {}
 
@@ -67,22 +65,12 @@ class PesertaController extends Controller
 
     public function getByUser()
     {
-        $peserta = $this->pesertaService->getByUserId(Auth::user()->id);
-        if (!$peserta['success']) {
-            return $this->error($peserta['message'], 404);
+        $result = $this->pesertaService->getByUserId(Auth::user()->id);
+        if (!$result['success']) {
+            return $this->error($result['message'], 404);
         }
 
-        $berkas = $this->berkasService->getBerkasByPesertaId($peserta['data']->id);
-        if (!$berkas['success']) {
-            return $this->error($berkas['message'], 404);
-        }
-
-        $result = [
-            'peserta' => $peserta['data'],
-            'berkas' => $berkas['data']
-        ];
-
-        return $this->success($result, 'Data peserta dan berkas berhasil diambil', 200);
+        return $this->success($result['data'], $result['message'], 200);
     }
 
     public function updateByUser(UpdatePesertaRequest $request)
