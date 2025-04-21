@@ -14,10 +14,10 @@ class MediaRepository
         return $this->model->where('id', $id)->first();
     }
 
-    public function findByUser(string $nama, string $jenjang_sekolah): ?Media
+    public function findByUser(string $nama, string $jenjang_sekolah): Collection
     {
         return $this->model->where('nama', $nama)
-            ->where('jenjang_sekolah', $jenjang_sekolah);
+            ->where('jenjang_sekolah', $jenjang_sekolah)->get();
     }
 
     public function create(array $data): Media

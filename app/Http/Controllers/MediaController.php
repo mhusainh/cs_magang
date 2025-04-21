@@ -85,7 +85,7 @@ class MediaController extends Controller
     }
 
 
-    public function update(Request $request, int $id): JsonResponse
+    public function update(UpdateRequest $request, int $id): JsonResponse
     {
         $image = $request->validated('image');
         $data = [
