@@ -5,17 +5,18 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PesanController;
 use App\Http\Controllers\BerkasController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\TagihanController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\BiodataOrtuController;
 use App\Http\Controllers\PekerjaanOrtuController;
 use App\Http\Controllers\PengajuanBiayaController;
 use App\Http\Controllers\KetentuanBerkasController;
 use App\Http\Controllers\BiayaPendaftaranController;
-use App\Http\Controllers\MediaController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -71,6 +72,10 @@ Route::middleware('auth:api')->group(function () {
             // COBA
             // Pengajuan Biaya Management
             Route::get('pengajuan-biaya', [PengajuanBiayaController::class, 'getAll']);
+
+            // Biodata Ortu Management
+            Route::post('biodata-ortu', [BiodataOrtuController::class, 'create']);
+            Route::put('biodata-ortu', [BiodataOrtuController::class, 'updateByUser']);
 
             // COBA
             // Pesan Management
@@ -187,6 +192,12 @@ Route::middleware('auth:api')->group(function () {
             Route::post('pesan', [PesanController::class, 'create']);
             Route::put('pesan/{id}', [PesanController::class, 'update']);
             Route::delete('pesan/{id}', [PesanController::class, 'delete']);
+
+            // Biodata Ortu Management
+            Route::get('biodata-ortu', [BiodataOrtuController::class, 'getAll']);
+            Route::get('biodata-ortu/{id}', [BiodataOrtuController::class, 'getById']);
+            Route::put('biodata-ortu/{id}', [BiodataOrtuController::class, 'update']);
+            Route::delete('biodata-ortu/{id}', [BiodataOrtuController::class, 'delete']);
         });
     });
 });
