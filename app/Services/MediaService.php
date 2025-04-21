@@ -133,7 +133,7 @@ class MediaService
         }
         return [
             'success' => true,
-            'data' => new GetResource($media),
+            'data' => GetResource::collection($media),
             'message' => 'Berhasil mendapatkan gambar',
         ];
     }
