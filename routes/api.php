@@ -157,7 +157,6 @@ Route::middleware('auth:api')->group(function () {
             // Berkas Peserta Management (untuk admin)
             Route::get('berkas', [BerkasController::class,'getAllBerkas']);
             Route::delete('berkas/{id}', [BerkasController::class, 'deleteBerkas']);
-            Route::get('berkas/peserta/{pesertaId}', [BerkasController::class, 'getBerkasByPesertaId']);
 
             //COBA
             // Media Management (jadwal dan pengajuan_biaya)

@@ -113,7 +113,6 @@ class ImageController extends Controller
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }
-
         return $this->success($result['data'], $result['message'], 200);
     }
 

@@ -125,7 +125,7 @@ class BerkasRepository
      */
     public function updateBerkas($id, array $data): bool
     {
-        return $this->model->update($data);
+        return $this->model->where('id', $id)->update($data);
     }
     /**
      * Menghapus berkas

@@ -267,7 +267,7 @@ class ImageService
 
     public function updateBerita($image, $data, $id): array
     {
-        // try {
+        try {
             $oldImage = $this->imageRepository->findBeritaById($id);
             if (!$oldImage) {
                 return [
@@ -310,17 +310,18 @@ class ImageService
                     'message' => 'Gagal memperbarui gambar',
                 ];
             }
-
+            $updatedImage = $this->imageRepository->findBeritaById($id);
             return [
                 'success' => true,
                 'message' => 'Gambar berhasil diperbarui',
+                'data' => new BeritaResource($updatedImage),
             ];
-        // } catch (\Exception $e) {
-        //     return [
-        //         'success' => false,
-        //         'message' => 'Kesalahan saat memperbarui gambar',
-        //     ];
-        // }
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Kesalahan saat memperbarui gambar',
+            ];
+        }
     }
 
     public function deleteHomepage($id): array

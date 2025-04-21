@@ -267,7 +267,7 @@ class BerkasService
     
     public function updateBerkas($id, $data)
     {
-        try {
+        // try {
             // Validasi data input
             if (!isset($data['ketentuan_berkas_id']) || !isset($data['peserta_id']) || !isset($data['file'])) {
                 return [
@@ -283,6 +283,13 @@ class BerkasService
                 return [
                     'success' => false,
                     'message' => 'Berkas tidak ditemukan',
+                    'data' => null
+                ];
+            }
+            if ($berkas->peserta_id !== $data['peserta_id']) {
+                return [
+                   'success' => false,
+                   'message' => 'Anda tidak memiliki akses untuk mengupdate berkas ini',
                     'data' => null
                 ];
             }
@@ -339,7 +346,7 @@ class BerkasService
                 if (!$result) {
                     return [
                       'success' => false,
-                      'message' => 'Gagal memperbarui berkas',
+                      'message' => 'Gagal memperbarui berkas ',
                         'data' => null
                     ];
                 }
@@ -357,16 +364,16 @@ class BerkasService
                 Cloudinary::destroy($uploadedFile->getPublicId());
                 return [
                     'success' => false,
-                    'message' => 'Gagal memperbarui berkas: ' . $e->getMessage(),
+                    'message' => 'Gagal memperbarui berkas : ' . $e->getMessage(),
                     'data' => null
                 ];
             }
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'message' => 'Gagal memperbarui berkas: ' . $e->getMessage(),
-                'data' => null
-            ];
-        }
+        // } catch (\Exception $e) {
+        //     return [
+        //         'success' => false,
+        //         'message' => 'Gagal memperbarui berkas: ' . $e->getMessage(),
+        //         'data' => null
+        //     ];
+        // }
     }
 }

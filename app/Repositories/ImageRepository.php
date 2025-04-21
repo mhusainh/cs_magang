@@ -60,9 +60,8 @@ class ImageRepository
         return $this->homepage->where('id', $id)->update($data);
     }
 
-    public function updateBerita(?object $cloudinary, $urutan, int $id): bool
+    public function updateBerita(?object $cloudinary, $data, int $id): bool
     {
-        $data = ['urutan' => $urutan];
         if ($cloudinary) {
             $data['url'] = $cloudinary->getSecurePath();
             $data['public_id'] = $cloudinary->getPublicId();
