@@ -154,20 +154,17 @@ class BerkasController extends Controller
     {
         $file = $request->validated('file');
         $data = [
+            'file' => $file,
             'ketentuan_berkas_id' => $request->validated('ketentuan_berkas_id'),
             'peserta_id' => Auth::user()->peserta->id
         ];
         
-        $result = $this->berkasService->uploadBerkas([
-            'file' => $file,
-            'ketentuan_berkas_id' => $data['ketentuan_berkas_id'],
-            'peserta_id' => $data['peserta_id']
-        ]);
+        $result = $this->berkasService->updateBerkas($id, $data);
         
         if (!$result['success']) {
             return $this->error($result['message'], 400, null);
         }
         
-        return $this->success(null, $result['message'], 200);
+        return $this->success($result['data'], $result['message'], 200);
     }
 }

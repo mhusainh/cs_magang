@@ -53,7 +53,7 @@ Route::middleware('auth:api')->group(function () {
             // Berkas Management
             Route::get('berkas', [KetentuanBerkasController::class, 'getByJenjang']);
             Route::post('berkas/upload', [BerkasController::class, 'uploadBerkas']); // Menerima array files dan ketentuan_berkas_ids dalam request body
-            Route::put('berkas/{id}', [BerkasController::class, 'updateBerkas']);
+            Route::post('berkas/{id}', [BerkasController::class, 'updateBerkas']);
 
             // COBA
             // Media ({$nama} = jadwal || pengajuan_biaya)
@@ -88,7 +88,7 @@ Route::middleware('auth:api')->group(function () {
             // User management
             Route::get('/users', [UserController::class, 'getAll']);
             Route::get('/user/{id}', [UserController::class, 'getById']);
-            Route::put('/user', [UserController::class, 'update']);
+            Route::put('/user/{id}', [UserController::class, 'update']);
             Route::delete('/user/{id}', [UserController::class, 'delete']);
 
             // Peserta management
@@ -99,7 +99,6 @@ Route::middleware('auth:api')->group(function () {
             Route::post('/peserta', [PesertaController::class, 'create']);
 
             // Tagihan Management
-            Route::post('tagihan', [TagihanController::class, 'create']);
             Route::put('tagihan/{id}', [TagihanController::class, 'update']);
             Route::delete('tagihan/{id}', [TagihanController::class, 'delete']);
 
@@ -133,14 +132,14 @@ Route::middleware('auth:api')->group(function () {
             Route::post('homepage', [ImageController::class, 'uploadHomepage']);
             Route::get('homepage', [ImageController::class, 'getAllHomepage']);
             Route::get('homepage/{id}', [ImageController::class, 'getHomepageById']);
-            Route::put('homepage/{id}', [ImageController::class, 'updateHomepage']);
+            Route::post('homepage/{id}', [ImageController::class, 'updateHomepage']);
             Route::delete('homepage/{id}', [ImageController::class, 'deleteHomepage']);
 
             // Berita Management
             Route::post('berita', [ImageController::class, 'uploadBerita']);
             Route::get('berita', [ImageController::class, 'getAllBerita']);
             Route::get('berita/{id}', [ImageController::class, 'getBeritaById']);
-            Route::put('berita/{id}', [ImageController::class, 'updateBerita']);
+            Route::post('berita/{id}', [ImageController::class, 'updateBerita']);
             Route::delete('berita/{id}', [ImageController::class, 'deleteBerita']);
 
             // Ketentuan Berkas Management
@@ -151,6 +150,7 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('ketentuan-berkas/{id}', [KetentuanBerkasController::class, 'delete']);
 
             // Berkas Peserta Management (untuk admin)
+            Route::get('berkas', [BerkasController::class,'getAllBerkas']);
             Route::delete('berkas/{id}', [BerkasController::class, 'deleteBerkas']);
             Route::get('berkas/peserta/{pesertaId}', [BerkasController::class, 'getBerkasByPesertaId']);
 

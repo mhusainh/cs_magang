@@ -264,4 +264,109 @@ class BerkasService
             ];
         }
     }
+    
+    public function updateBerkas($id, $data)
+    {
+        try {
+            // Validasi data input
+            if (!isset($data['ketentuan_berkas_id']) || !isset($data['peserta_id']) || !isset($data['file'])) {
+                return [
+                    'success' => false,
+                    'message' => 'Data tidak lengkap untuk update berkas',
+                    'data' => null
+                ];
+            }
+
+            // Cek apakah berkas ada
+            $berkas = $this->berkasRepository->getBerkasById($id);
+            if (!$berkas) {
+                return [
+                    'success' => false,
+                    'message' => 'Berkas tidak ditemukan',
+                    'data' => null
+                ];
+            }
+
+            // Cek apakah ketentuan berkas ada menggunakan repository
+            $ketentuanBerkas = $this->KetentuanBerkasRepository->getKetentuanBerkasById($data['ketentuan_berkas_id']);
+            if (!$ketentuanBerkas) {
+                return [
+                    'success' => false,
+                    'message' => 'Ketentuan berkas tidak ditemukan',
+                    'data' => null
+                ];
+            }
+
+            // Hapus berkas lama dari Cloudinary
+
+
+            // Upload berkas baru ke Cloudinary
+            $fileExtension = strtolower($data['file']->getClientOriginalExtension());
+            $uploadOptions = [
+                'folder' => 'berkas',
+            ];
+            
+            // Jika file bukan PDF, gunakan transformasi default
+            if ($fileExtension !== 'pdf') {
+                $uploadOptions['transformation'] = [
+                    'quality' => 'auto',
+                    'fetch_format' => 'auto',
+                    'compression' => 'low',
+                ];
+            }
+            
+            $uploadedFile = Cloudinary::uploadFile($data['file']->getRealPath(), $uploadOptions);
+            if (!$uploadedFile) {
+                return [
+                   'success' => false,
+                   'message' => 'Gagal mengupload berkas baru',
+                    'data' => null
+                ];
+            }
+            
+            $berkasData = [
+                'peserta_id' => $data['peserta_id'],
+                'nama_file' => $ketentuanBerkas->nama,
+                'url_file' => $uploadedFile->getSecurePath(),
+                'public_id' => $uploadedFile->getPublicId(),
+                'ketentuan_berkas_id' => $data['ketentuan_berkas_id']
+            ];
+
+            // Update data berkas ke database dalam transaction
+            DB::beginTransaction();
+            try {
+                $result = $this->berkasRepository->updateBerkas($id, $berkasData);
+                if (!$result) {
+                    return [
+                      'success' => false,
+                      'message' => 'Gagal memperbarui berkas',
+                        'data' => null
+                    ];
+                }
+                Cloudinary::destroy($berkas->public_id);
+
+                DB::commit();
+                
+                return [
+                    'success' => true,
+                    'message' => 'Berhasil memperbarui berkas',
+                    'data' => $berkas->fresh()
+                ];
+            } catch (\Exception $e) {
+                DB::rollback();
+                Cloudinary::destroy($uploadedFile->getPublicId());
+                return [
+                    'success' => false,
+                    'message' => 'Gagal memperbarui berkas: ' . $e->getMessage(),
+                    'data' => null
+                ];
+            }
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal memperbarui berkas: ' . $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
 }

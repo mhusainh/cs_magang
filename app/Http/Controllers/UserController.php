@@ -14,11 +14,11 @@ class UserController extends Controller
 
     public function __construct(private UserService $userService) {}
 
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, int $id)
     {
         try {
             $data = UserDTO::UserUpdateDTO(
-                $request->validated('id'),
+                $id,
                 $request->validated('no_telp')
             );
 
@@ -63,7 +63,7 @@ class UserController extends Controller
         $result = $this->userService->getById($id);
 
         if (!$result['success']) {
-            return $this->error($result['message'], 400);
+            return $this->error($result['message'], 200);
         }
 
         return $this->success($result['data'], $result['message'], 200);
