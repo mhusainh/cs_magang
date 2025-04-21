@@ -53,14 +53,21 @@ class BerkasService
             }
 
             // Upload berkas ke Cloudinary
-            $uploadedFile = Cloudinary::upload($data['file']->getRealPath(), [
+            $fileExtension = strtolower($data['file']->getClientOriginalExtension());
+            $uploadOptions = [
                 'folder' => 'berkas',
-                'transformation' => [
+            ];
+            
+            // Jika file bukan PDF, gunakan transformasi default
+            if ($fileExtension !== 'pdf') {
+                $uploadOptions['transformation'] = [
                     'quality' => 'auto',
                     'fetch_format' => 'auto',
                     'compression' => 'low',
-                ]
-            ]);
+                ];
+            }
+            
+            $uploadedFile = Cloudinary::uploadFile($data['file']->getRealPath(), $uploadOptions);
 
             $berkas = [
                 'peserta_id' => $data['peserta_id'],

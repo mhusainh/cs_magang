@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use App\Services\BerkasService;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Berkas\UploadBerkasRequest;
+use App\Http\Requests\Berkas\UpdateBerkasRequest;
 use App\Services\PesanService;
+use Illuminate\Http\JsonResponse;
 
 class BerkasController extends Controller
 {
@@ -143,5 +145,29 @@ class BerkasController extends Controller
         }
 
         return $this->success($result['data'], $result['message'], 200);
+    }
+    
+    /**
+     * Update berkas
+     */
+    public function updateBerkas(UpdateBerkasRequest $request, int $id): JsonResponse
+    {
+        $file = $request->validated('file');
+        $data = [
+            'ketentuan_berkas_id' => $request->validated('ketentuan_berkas_id'),
+            'peserta_id' => Auth::user()->peserta->id
+        ];
+        
+        $result = $this->berkasService->uploadBerkas([
+            'file' => $file,
+            'ketentuan_berkas_id' => $data['ketentuan_berkas_id'],
+            'peserta_id' => $data['peserta_id']
+        ]);
+        
+        if (!$result['success']) {
+            return $this->error($result['message'], 400, null);
+        }
+        
+        return $this->success(null, $result['message'], 200);
     }
 }
