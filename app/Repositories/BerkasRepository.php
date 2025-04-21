@@ -105,10 +105,10 @@ class BerkasRepository
     /**
      * Mendapatkan berkas berdasarkan peserta ID dan ketentuan berkas ID
      */
-    public function getBerkasByPesertaAndKetentuanId($pesertaId, $ketentuanBerkasId): Berkas
+    public function getBerkasByPesertaAndKetentuanId($pesertaId, $ketentuanBerkasId): ?Berkas
     {
         return $this->model->where('peserta_id', $pesertaId)
-            ->where('kententuan_berkas_id', $ketentuanBerkasId)
+            ->where('ketentuan_berkas_id', $ketentuanBerkasId)
             ->first();
     }
 

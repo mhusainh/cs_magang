@@ -53,7 +53,7 @@ class BerkasController extends Controller
         $files = $request->validated('files');
         $ketentuanBerkasIds = $request->validated('ketentuan_berkas_ids');
 
-        if (count($files) !== count($ketentuanBerkasIds)) {
+        if (is_null($ketentuanBerkasIds) || count($files) !== count($ketentuanBerkasIds)) {
             return $this->error('Jumlah file tidak sesuai dengan jumlah ketentuan berkas', 422, null);
         }
 
@@ -62,7 +62,7 @@ class BerkasController extends Controller
             $data = [
                 'file' => $file,
                 'peserta_id' => Auth::user()->peserta->id,
-                'ketentuan_berkas_id' => $ketentuanBerkasIds[$index],
+                'ketentuan_berkas_id' => $ketentuanBerkasIds[$index] ?? null,
             ];
 
             $result = $this->berkasService->uploadBerkas($data);
