@@ -21,6 +21,15 @@ class BerkasService
     public function uploadBerkas($data)
     {
         try {
+            // Validasi data input
+            if (!isset($data['ketentuan_berkas_id']) || !isset($data['peserta_id']) || !isset($data['file'])) {
+                return [
+                    'success' => false,
+                    'message' => 'Data tidak lengkap untuk upload berkas',
+                    'data' => null
+                ];
+            }
+
             // Cek apakah ketentuan berkas ada menggunakan repository
             $ketentuanBerkas = $this->KetentuanBerkasRepository->getKetentuanBerkasById($data['ketentuan_berkas_id']);
             if (!$ketentuanBerkas) {
@@ -69,6 +78,12 @@ class BerkasService
                     throw new \Exception('Gagal menyimpan data berkas');
                 }
                 DB::commit();
+                
+                return [
+                    'success' => true,
+                    'message' => 'Berhasil mengupload berkas',
+                    'data' => $result
+                ];
             } catch (\Exception $e) {
                 DB::rollback();
                 Cloudinary::destroy($uploadedFile->getPublicId());
