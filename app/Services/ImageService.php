@@ -119,18 +119,27 @@ class ImageService
 
     public function getAllBerita(): array
     {
+        try {
         $images = $this->imageRepository->getBerita();
         if (!$images) {
             return [
-              'success' => false,
-              'message' => 'Gagal mendapatkan semua gambar berita',
+                'code' => 200,
+                'success' => false,
+                'message' => 'Gagal mendapatkan semua gambar berita',
             ]; 
         }
         return [
+            'code' => 200,
            'success' => true,
             'data' => BeritaResource::collection($images),
            'message' => 'Berhasil mendapatkan semua gambar berita',
-        ];
+        ];} catch (\Exception $e) {
+            return [
+                'code' => 400,
+               'success' => false,
+               'message' => 'Gagal mendapatkan semua gambar berita',
+            ];
+        }      
     }
 
     public function getBeritaByUser($jenjang): array
@@ -167,18 +176,28 @@ class ImageService
 
     public function GetBeritaById($id): array
     {
+        try {
         $image = $this->imageRepository->findBeritaById($id);
-        if (!$image) {
+            if (!$image) {
+                return [
+                    'code' => 200,
+                    'success' => false,
+                    'message' => 'Gambar tidak ditemukan',
+                ];
+            }
             return [
+                'code' => 200,
+                'success' => true,
+                'data' => new BeritaResource($image),
+                'message' => 'Berhasil mendapatkan gambar',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'code' => 400,
                 'success' => false,
-                'message' => 'Gambar tidak ditemukan',
+                'message' => 'Gagal mendapatkan gambar',
             ];
         }
-        return [
-            'success' => true,
-            'data' => new BeritaResource($image),
-            'message' => 'Berhasil mendapatkan gambar',
-        ];
     }
 
     public function updateHomepage($image, $data, $id): array
@@ -192,6 +211,7 @@ class ImageService
                 ];
             }
 
+            $result = null;
             if ($image) {
                 $result = Cloudinary::upload($image->getRealPath(), [
                     'folder' => 'homepage',
@@ -208,7 +228,6 @@ class ImageService
                         'message' => 'Gagal mengunggah gambar',
                     ];
                 }
-                Cloudinary::destroy($oldImage->public_id);
             }
 
             $updated = $this->imageRepository->updateHomepage(
@@ -227,8 +246,15 @@ class ImageService
                 ];
             }
 
+            // Hapus gambar lama hanya jika update berhasil dan ada gambar baru
+            if ($image && isset($result)) {
+                Cloudinary::destroy($oldImage->public_id);
+            }
+
+            $updatedImage = $this->imageRepository->findHomepageById($id);
             return [
                 'success' => true,
+                'data' => new HomepageResource($updatedImage),
                 'message' => 'Gambar berhasil diperbarui',
             ];
         } catch (\Exception $e) {
@@ -241,7 +267,7 @@ class ImageService
 
     public function updateBerita($image, $data, $id): array
     {
-        try {
+        // try {
             $oldImage = $this->imageRepository->findBeritaById($id);
             if (!$oldImage) {
                 return [
@@ -289,12 +315,12 @@ class ImageService
                 'success' => true,
                 'message' => 'Gambar berhasil diperbarui',
             ];
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'message' => 'Kesalahan saat memperbarui gambar',
-            ];
-        }
+        // } catch (\Exception $e) {
+        //     return [
+        //         'success' => false,
+        //         'message' => 'Kesalahan saat memperbarui gambar',
+        //     ];
+        // }
     }
 
     public function deleteHomepage($id): array

@@ -46,7 +46,7 @@ class PesertaController extends Controller
         $result = $this->pesertaService->getById($id);
 
         if (!$result['success']) {
-            return $this->error($result['message'], 404);
+            return $this->error($result['message'], $result['code']);
         }
 
         return $this->success($result['data'], $result['message'], 200);

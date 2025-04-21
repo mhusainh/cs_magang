@@ -37,6 +37,7 @@ class PesertaService
             $peserta = $this->pesertaRepository->findById($id);
             if (!$peserta) {
                 return [
+                    'code' => 200,
                     'success' => false,
                     'message' => 'Peserta tidak ditemukan'
                 ];
@@ -49,6 +50,7 @@ class PesertaService
             ];
         } catch (\Exception $e) {
             return [
+                'code' => 500,
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat mengambil data peserta'
             ];

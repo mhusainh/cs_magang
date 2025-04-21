@@ -25,7 +25,7 @@ class KetentuanBerkasController extends Controller
             'jenjang' => $request->jenjang,
             'is_required' => $request->is_required,
             'sort_by' => $request->sort_by,
-            'sort_direction' => $request->sort_order,
+            'sort_direction' => $request->order_by,
             'per_page' => $request->per_page
         ];
 

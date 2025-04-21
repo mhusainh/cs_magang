@@ -52,12 +52,12 @@ class ImageController extends Controller
 
     public function getAllBerita()
     {
-        $images = $this->imageService->getAllBerita();
-        if (!$images) {
-            return $this->error('Gagal mendapatkan semua gambar berita', 404, null);
+        $result = $this->imageService->getAllBerita();
+        if (!$result['success']) {
+            return $this->error('Gagal mendapatkan semua gambar berita', $result['code'], null);
         }
 
-        return $this->success($images, 'Berhasil mendapatkan semua gambar berita', 200);
+        return $this->success($result, 'Berhasil mendapatkan semua gambar berita', 200);
     }
 
     public function getBeritaByUser()
@@ -82,12 +82,11 @@ class ImageController extends Controller
 
     public function GetBeritaById($id)
     {
-        $image = $this->imageService->GetBeritaById($id);
-        if (!$image) {
-            return $this->error('Gambar tidak ditemukan', 404, null);
+        $result = $this->imageService->GetBeritaById($id);
+        if (!$result['success']) {
+            return $this->error('Gagal mendapatkan gambar', $result['code'], null);
         }
-
-        return $this->success($image, 'Berhasil mendapatkan gambar', 200);
+        return $this->success($result, 'Berhasil mendapatkan gambar', 200);
     }
 
     public function updateHomepage(HomepageRequest $request, $id)

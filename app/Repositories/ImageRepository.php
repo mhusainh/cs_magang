@@ -50,8 +50,9 @@ class ImageRepository
         return $this->berita->where('jenjang_sekolah', $jenjang_sekolah)->orderBy('urutan', 'asc')->get();
     }
 
-    public function updateHomepage(?object $cloudinary, array $data, int $id): bool
+    public function updateHomepage(?object $cloudinary, $urutan, int $id): bool
     {
+        $data = ['urutan' => $urutan];
         if ($cloudinary) {
             $data['url'] = $cloudinary->getSecurePath();
             $data['public_id'] = $cloudinary->getPublicId();
@@ -59,8 +60,9 @@ class ImageRepository
         return $this->homepage->where('id', $id)->update($data);
     }
 
-    public function updateBerita(?object $cloudinary, array $data, int $id): bool
+    public function updateBerita(?object $cloudinary, $urutan, int $id): bool
     {
+        $data = ['urutan' => $urutan];
         if ($cloudinary) {
             $data['url'] = $cloudinary->getSecurePath();
             $data['public_id'] = $cloudinary->getPublicId();
