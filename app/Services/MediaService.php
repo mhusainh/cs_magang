@@ -197,7 +197,6 @@ class MediaService
 
             return [
                 'success' => true,
-                'data' => new GetResource($updatedMedia),
                 'message' => 'Data berhasil diperbarui',
             ];
         } catch (\Exception $e) {

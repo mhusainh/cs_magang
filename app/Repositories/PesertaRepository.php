@@ -33,7 +33,8 @@ class PesertaRepository
             'jurusan2',
             'biodataOrtu.pekerjaanAyah',
             'biodataOrtu.pekerjaanIbu',
-            'biodataOrtu.penghasilanOrtu'
+            'biodataOrtu.penghasilanOrtu',
+            'berkas'
         ])->where('user_id', $userId)->first();
     }
 

@@ -160,7 +160,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('media/{id}', [MediaController::class, 'getById']);
             Route::post('media/jadwal', [MediaController::class, 'uploadJadwal']);
             Route::post('media/pengajuan-biaya', [MediaController::class, 'uploadPengajuanBiaya']);
-            Route::put('media/{id}', [MediaController::class, 'update']);
+            Route::post('media/{id}', [MediaController::class, 'update']);
             Route::delete('media/{id}', [MediaController::class, 'delete']);
 
             // COBA
