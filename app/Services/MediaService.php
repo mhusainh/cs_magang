@@ -148,7 +148,8 @@ class MediaService
                     'message' => 'Gambar tidak ditemukan',
                 ];
             }
-
+            
+            $result = null;
             if ($image) {
                 $result = Cloudinary::upload($image->getRealPath(), [
                     'folder' => 'media',
@@ -165,58 +166,81 @@ class MediaService
                         'message' => 'Gagal mengunggah gambar',
                     ];
                 }
-                Cloudinary::destroy($oldmedia->public_id);
             }
 
-            $updated = $this->mediaRepository->update(
-                $image ? $result : null,
-                $data,
-                $id
-            );
-
+            // Update data di database
+            $updated = $this->mediaRepository->update($result, $data, $id);
             if (!$updated) {
+                // Jika update gagal dan ada gambar baru yang diupload, hapus gambar baru dari Cloudinary
                 if ($image && isset($result)) {
                     Cloudinary::destroy($result->getPublicId());
                 }
                 return [
                     'success' => false,
-                    'message' => 'Gagal memperbarui gambar',
+                    'message' => 'Gagal memperbarui data',
+                ];
+            }
+
+            // Hapus gambar lama dari Cloudinary hanya jika upload gambar baru berhasil
+            if ($image && $oldmedia->public_id) {
+                Cloudinary::destroy($oldmedia->public_id);
+            }
+
+            // Ambil data yang sudah diupdate untuk dikembalikan
+            $updatedMedia = $this->mediaRepository->findById($id);
+            if (!$updatedMedia) {
+                return [
+                    'success' => false,
+                    'message' => 'Gambar tidak ditemukan setelah diperbarui',
                 ];
             }
 
             return [
                 'success' => true,
-                'message' => 'Gambar berhasil diperbarui',
+                'data' => new GetResource($updatedMedia),
+                'message' => 'Data berhasil diperbarui',
             ];
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'message' => 'Kesalahan saat memperbarui gambar',
+                'message' => 'Kesalahan saat memperbarui gambar: ' . $e->getMessage(),
             ];
         }
     }
 
-    public function deleteBerita($id): array
+    public function delete($id): array
     {
-        $media = $this->mediaRepository->findById($id);
-        if (!$media) {
-            return [
-                'success' => false,
-                'message' => 'Gambar tidak ditemukan',
-            ];
-        }
+        try {
+            $media = $this->mediaRepository->findById($id);
+            if (!$media) {
+                return [
+                    'success' => false,
+                    'message' => 'Gambar tidak ditemukan',
+                ];
+            }
 
-        $deleted = $this->mediaRepository->delete($id)
-            && Cloudinary::destroy($media->public_id);
-        if (!$deleted) {
+            $deleted = $this->mediaRepository->delete($media);
+            if (!$deleted) {
+                return [
+                    'success' => false,
+                    'message' => 'Gagal menghapus gambar',
+                ];
+            }
+
+            // Hapus gambar dari Cloudinary
+            if ($media->public_id) {
+                Cloudinary::destroy($media->public_id);
+            }
+
+            return [
+                'success' => true,
+                'message' => 'Gambar berhasil dihapus',
+            ];
+        } catch (\Exception $e) {
             return [
                 'success' => false,
-                'message' => 'Gagal menghapus gambar',
+                'message' => 'Kesalahan saat menghapus gambar: ' . $e->getMessage(),
             ];
         }
-        return [
-            'success' => true,
-            'message' => 'Gambar berhasil dihapus',
-        ];
     }
 }

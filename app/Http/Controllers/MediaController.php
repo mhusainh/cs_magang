@@ -75,6 +75,7 @@ class MediaController extends Controller
         $data = [
             'nama' => 'pengajuan_biaya',
             'image' => $image,
+            'jenjang_sekolah' => $request->validated('jenjang_sekolah'),
         ];
         $result = $this->mediaService->create($data);
         if (!$result['success']) {
@@ -83,16 +84,23 @@ class MediaController extends Controller
         return $this->success($result['data'], $result['message'], 201);
     }
 
+
     public function update(UpdateRequest $request, int $id): JsonResponse
     {
-        $image = $request->validated('image');
-        $data = [
-            'jenjang_sekolah' => $request->validated('jenjang_sekolah'),
-        ];
+        $data = [];
+        
+        // Hanya tambahkan jenjang_sekolah ke data jika ada dalam request
+        if ($request->has('jenjang_sekolah')) {
+            $data['jenjang_sekolah'] = $request->validated('jenjang_sekolah');
+        }
+        
+        // Ambil image jika ada dalam request
+        $image = $request->hasFile('image') ? $request->validated('image') : null;
+        
         $result = $this->mediaService->update($image, $data, $id);
         if (!$result['success']) {
             return $this->error($result['message'], 400, null);
         }
-        return $this->success($result['data'], $result['message'], 200);
+        return $this->success($result['data'] ?? null, $result['message'], 200);
     }
 }

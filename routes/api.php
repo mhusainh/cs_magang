@@ -51,17 +51,17 @@ Route::middleware('auth:api')->group(function () {
             Route::get('berita', [ImageController::class, 'getBeritaByUser']);
 
             // Berkas Management
-            Route::get('berkas', [KetentuanBerkasController::class, 'getKetentuanBerkas']);
+            Route::get('berkas', [KetentuanBerkasController::class, 'getByJenjang']);
             Route::post('berkas/upload', [BerkasController::class, 'uploadBerkas']); // Menerima array files dan ketentuan_berkas_ids dalam request body
             Route::put('berkas/{id}', [BerkasController::class, 'updateBerkas']);
 
             // COBA
             // Media ({$nama} = jadwal || pengajuan_biaya)
-            Route::get('media/{nama}', [ImageController::class, 'GetByUser']);
+            Route::get('media/{nama}', [MediaController::class, 'GetByUser']);
 
             // User profile
             Route::get('profile', [AuthController::class, 'me']);
-            Route::put('profile', [UserController::class, 'updateProfile']);
+            // Route::put('profile', [UserController::class, 'update']);
 
             // Peserta Management
             Route::get('peserta', [PesertaController::class, 'getByUser']); // Mengambil data peserta dan berkas berdasarkan user_id
