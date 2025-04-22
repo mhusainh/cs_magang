@@ -84,6 +84,12 @@ class BiodataOrtuService
             }
 
             $updated = $this->biodataOrtuRepository->update($biodataOrtu, $data);
+            if (!$updated) {
+                return [
+                   'success' => false,
+                   'message' => 'Gagal memperbarui biodataOrtu'
+                ];
+            }
             
             return [
                 'success' => true,
