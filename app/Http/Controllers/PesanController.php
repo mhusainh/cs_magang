@@ -42,7 +42,21 @@ class PesanController extends Controller
         if (!$result) {
             return $this->error($result['message'], 404, null);
         }
+        
         return $this->success($result['data'], $result['message'], 200);
+    }
+
+    public function getByUserAndId($id)
+    {
+        $pesan = $this->pesanService->getById($id);
+        if (!$pesan) {
+            return $this->error('Pesan tidak ditemukan', 404, null);
+        }
+        $result = $this->pesanService->update($pesan['data']->id, ['is_read' => true]);
+        if (!$result) {
+            return $this->error($result['message'], 404, null);
+        }
+        return $this->success($pesan['data'], $pesan['message'], 200);
     }
 
     public function getByUserId($userId)

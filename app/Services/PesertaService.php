@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Repositories\PesertaRepository;
 use App\Http\Resources\Peserta\GetDetailResource;
+use App\Http\Resources\Peserta\GetResource;
 use App\Repositories\JurusanRepository;
 
 class PesertaService
@@ -127,23 +128,47 @@ class PesertaService
         }
     }
 
-    public function getAll(): array
+    public function getAll($filters = []): array
     {
         try {
-            $peserta = $this->pesertaRepository->getAllWithRelationsAndPagination();
+            $peserta = $this->pesertaRepository->getAll($filters);
             if ($peserta->isEmpty()) {
                 return [
+                    'code' => 200,
                     'success' => false,
                     'message' => 'Tidak ada data peserta'
                 ];
             }
+
+            // Set pagination data
+            $pagination = [
+                'page' => $peserta->currentPage(),
+                'per_page' => $peserta->perPage(),
+                'total_items' => $peserta->total(),
+                'total_pages' => $peserta->lastPage()
+            ];
+
+            // Set current filters untuk response
+            $currentFilters = [
+                'search' => $filters['search'] ?? '',
+                'start_date' => $filters['start_date'] ?? '',
+                'end_date' => $filters['end_date'] ?? '',
+                'jenjang_sekolah' => $filters['jenjang_sekolah'] ?? '',
+                'sort_by' => $filters['sort_by'] ?? '',
+                'sort_direction' => $filters['sort_direction'] ?? ''
+            ];
+
             return [
+                'code' => 200,
                 'success' => true,
-                'data' => GetDetailResource::collection($peserta),
-                'message' => 'Data peserta berhasil diambil'
+                'data' => GetResource::collection($peserta),
+                'message' => 'Data peserta berhasil diambil',
+                'pagination' => $pagination,
+                'current_filters' => $currentFilters
             ];
         } catch (\Exception $e) {
             return [
+                'code' => 500,
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat mengambil data peserta'
             ];

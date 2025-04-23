@@ -56,7 +56,6 @@ Route::middleware('auth:api')->group(function () {
             Route::post('berkas/upload', [BerkasController::class, 'uploadBerkas']); // Menerima array files dan ketentuan_berkas_ids dalam request body
             Route::post('berkas/{id}', [BerkasController::class, 'updateBerkas']);
 
-            // COBA
             // Media ({$nama} = jadwal || pengajuan_biaya)
             Route::get('media/{nama}', [MediaController::class, 'GetByUser']);
 
@@ -69,7 +68,6 @@ Route::middleware('auth:api')->group(function () {
             Route::put('peserta', [PesertaController::class, 'updateByUser']);
             Route::put('peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']);
 
-            // COBA
             // Pengajuan Biaya Management
             Route::get('pengajuan-biaya', [PengajuanBiayaController::class, 'getAll']);
 
@@ -77,9 +75,9 @@ Route::middleware('auth:api')->group(function () {
             Route::post('biodata-ortu', [BiodataOrtuController::class, 'create']);
             Route::put('biodata-ortu', [BiodataOrtuController::class, 'updateByUser']);
 
-            // COBA
             // Pesan Management
             Route::get('pesan', [PesanController::class, 'getByUser']);
+            Route::get('pesan/{id}', [PesanController::class, 'getByUserAndId']);
         });
     });
 
@@ -167,7 +165,6 @@ Route::middleware('auth:api')->group(function () {
             Route::post('media/{id}', [MediaController::class, 'update']);
             Route::delete('media/{id}', [MediaController::class, 'delete']);
 
-            // COBA
             // Pengajuan Biaya Management
             Route::get('pengajuan-biaya', [PengajuanBiayaController::class, 'getAll']);
             Route::get('pengajuan-biaya/{id}', [PengajuanBiayaController::class, 'getById']);
@@ -175,7 +172,6 @@ Route::middleware('auth:api')->group(function () {
             Route::put('pengajuan-biaya/{id}', [PengajuanBiayaController::class, 'update']);
             Route::delete('pengajuan-biaya/{id}', [PengajuanBiayaController::class, 'delete']);
 
-            // COBA
             // Biaya Pendaftaran Management
             Route::get('biaya-pendaftaran', [BiayaPendaftaranController::class, 'getAll']);
             Route::get('biaya-pendaftaran/{id}', [BiayaPendaftaranController::class, 'getById']);
@@ -183,7 +179,6 @@ Route::middleware('auth:api')->group(function () {
             Route::put('biaya-pendaftaran/{id}', [BiayaPendaftaranController::class, 'update']);
             Route::delete('biaya-pendaftaran/{id}', [BiayaPendaftaranController::class, 'delete']);
             
-            // COBA
             // Pesan Management
             Route::get('pesan', [PesanController::class, 'getAll']);
             Route::get('pesan/{id}', [PesanController::class, 'getById']);

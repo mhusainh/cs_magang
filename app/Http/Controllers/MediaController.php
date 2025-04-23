@@ -25,7 +25,7 @@ class MediaController extends Controller
             'end_date' => $request->end_date,
             'jenjang_sekolah' => $request->jenjang_sekolah,
             'sort_by' => $request->sort_by,
-            'sort_direction' => $request->sort_order,
+            'sort_direction' => $request->order_by,
             'per_page' => $request->per_page
         ];
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DTO\PesertaDTO;
 use App\Traits\ApiResponse;
 use App\DTO\ProgressUserDTO;
+use Illuminate\Http\Request;
 use App\Services\PesanService;
 use App\Services\PesertaService;
 use Illuminate\Support\Facades\Auth;
@@ -165,14 +166,23 @@ class PesertaController extends Controller
         return $this->success(null, $result['message'], 200);
     }
 
-    public function getAll()
+    public function getAll(Request $request)
     {
-        $result = $this->pesertaService->getAll();
+        $filters = [
+            'search' => $request->search,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'jenjang_sekolah' => $request->jenjang_sekolah,
+            'sort_by' => $request->sort_by,
+            'sort_direction' => $request->order_by,
+            'per_page' => $request->per_page
+        ];
+        $result = $this->pesertaService->getAll($filters);
 
         if (!$result['success']) {
-            return $this->error($result['message'], 400);
+            return $this->error($result['message'], $result['code']);
         }
 
-        return $this->success($result['data'], $result['message'], 200);
+        return $this->success($result['data'], $result['message'], $result['code'], $result['pagination'], $result['current_filters']);
     }
 }

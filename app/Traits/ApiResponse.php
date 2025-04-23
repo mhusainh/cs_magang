@@ -4,7 +4,7 @@ namespace App\Traits;
 
 trait ApiResponse
 {
-    protected function success($data = [], $message = 'Success', $code = 200, $pagination = null)
+    protected function success($data = [], $message = 'Success', $code = 200, $pagination = null, $currentFilters = null)
     {
         $response = [
             'meta' => [
@@ -21,6 +21,10 @@ trait ApiResponse
                 'total_items' => $pagination['total_items'] ?? 0,
                 'total_pages' => $pagination['total_pages']?? 1
             ];
+        }
+
+        if ($currentFilters) {
+            $response['current_filters'] = $currentFilters;
         }
 
         return response()->json($response, $code);

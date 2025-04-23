@@ -6,6 +6,7 @@ use App\DTO\UserDTO;
 use App\Services\UserService;
 use App\Traits\ApiResponse;
 use App\Http\Requests\User\UpdateRequest;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
@@ -33,7 +34,7 @@ class UserController extends Controller
             return $this->error('Terjadi kesalahan saat mempengisi data user', 500);
         } catch (\Exception $e) {
             return $this->error('Terjadi kesalahan saat memperbarui user', 500);
-        } 
+        }
     }
 
     public function delete(int $id)
@@ -47,15 +48,24 @@ class UserController extends Controller
         return $this->success(null, $result['message'], 200);
     }
 
-    public function getAll()
+    public function getAll(Request $request)
     {
-        $result = $this->userService->getAll();
+        $filters = [
+            'search' => $request->search,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'status' => $request->status,
+            'per_page' => $request->per_page,
+            'sort_by' => $request->sort_by,
+            'sort_direction' => $request->order_by
+        ];
+        $result = $this->userService->getAll($filters);
 
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
 
-        return $this->success($result['data']);
+        return $this->success($result['data'], $result['message'], 200, $result['pagination'], $result['current_filters']);
     }
 
     public function getById(int $id)

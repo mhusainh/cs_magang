@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use App\Repositories\UserRepository;
 use App\Repositories\PesertaRepository;
 use App\Http\Resources\User\CardResource;
+use App\Http\Resources\User\GetResource;
 
 class UserService
 {
@@ -129,14 +130,40 @@ class UserService
         ];
     }
 
-    public function getAll(): array
+    public function getAll($filters = []): array
     {
-        $users = $this->userRepository->getAll();
+        $users = $this->userRepository->getAll($filters);
+        if (!$users) {
+            return [
+                'success' => false,
+                'message' => 'User tidak tersedia'
+            ];
+        }
+        
+        // Set pagination data
+        $pagination = [
+            'page' => $users->currentPage(),
+            'per_page' => $users->perPage(),
+            'total_items' => $users->total(),
+            'total_pages' => $users->lastPage()
+        ];
+
+        // Set current filters untuk response
+        $currentFilters = [
+            'search' => $filters['search'] ?? '',
+            'start_date' => $filters['start_date'] ?? '',
+            'end_date' => $filters['end_date'] ?? '',
+            'status' => $filters['status']?? '',
+            'sort_by' => $filters['sort_by'] ?? '',
+            'sort_direction' => $filters['sort_direction'] ?? '',
+        ];
 
         return [
             'success' => true,
-            'data' => $users,
-            'message' => 'User berhasil diambil'
+            'data' => GetResource::collection($users),
+            'message' => 'User berhasil diambil',
+            'pagination' => $pagination,
+            'current_filters' => $currentFilters
         ];
     }
 

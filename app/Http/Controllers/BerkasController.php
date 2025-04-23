@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PesertaPpdb;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use App\Services\BerkasService;
@@ -35,7 +34,7 @@ class BerkasController extends Controller
             'nama_ketentuan' => $request->nama_ketentuan,
             'is_required' => $request->is_required,
             'sort_by' => $request->sort_by,
-            'sort_direction' => $request->sort_order,
+            'sort_direction' => $request->order_by,
             'per_page' => $request->per_page
         ];
 
