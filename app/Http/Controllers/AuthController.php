@@ -56,7 +56,6 @@ class AuthController extends Controller
             $request->validated('no_telp'),
             $request->validated('jenjang_sekolah')
         );
-
         $result = $this->userService->register($data);
 
         if (!$result['success']) {
@@ -65,7 +64,7 @@ class AuthController extends Controller
         $dataTagihan = [
             'user_id' => $result['data']->id,
             'nama_tagihan' => 'Registrasi',
-            'total' => 20000,
+            'total' => 1,
         ];
         
         $tagihan = $this->tagihanService->create($dataTagihan);

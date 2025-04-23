@@ -32,7 +32,7 @@ class GetDetailResource extends JsonResource
             'ref_no' => $this->ref_no,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-            
+
             // Optional: Include relationships
             'user' => $this->whenLoaded('user'),
             'tagihan' => $this->whenLoaded('tagihan')

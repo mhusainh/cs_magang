@@ -9,14 +9,13 @@ class TagihanService
 {
     public function __construct(
         private TagihanRepository $tagihanRepository
-    ) {
-    }
+    ) {}
 
     public function getById(int $id, int $userId): array
     {
         try {
             $tagihan = $this->tagihanRepository->findUserById($id, $userId);
-            
+
             if (!$tagihan) {
                 return [
                     'success' => false,
@@ -40,13 +39,13 @@ class TagihanService
     public function create(array $data): array
     {
         try {
-            // Validasi VA number unik
-            if ($this->tagihanRepository->vaNumberExists($data['va_number'])) {
-                return [
-                    'success' => false,
-                    'message' => 'VA Number sudah digunakan'
-                ];
-            }
+            $data = [
+                'user_id' => $data['user_id'],
+                'nama_tagihan' => $data['nama_tagihan'],
+                'total' => $data['total'],
+                'created_time' => now()->format('s') . substr(now()->format('u'), 0, 6),
+                'va_number' => $_ENV['VA_NUMBER'] . str_pad(random_int(1000000000, 9999999999), 10, '0', STR_PAD_LEFT),
+            ];
 
             $tagihan = $this->tagihanRepository->create($data);
             return [
@@ -66,7 +65,7 @@ class TagihanService
     {
         try {
             $tagihan = $this->tagihanRepository->findById($data['id']);
-            
+
             if (!$tagihan) {
                 return [
                     'success' => false,
@@ -83,7 +82,7 @@ class TagihanService
             }
 
             $updated = $this->tagihanRepository->update($tagihan, $data);
-            
+
             return [
                 'success' => true,
                 'data' => $updated,
@@ -101,7 +100,7 @@ class TagihanService
     {
         try {
             $tagihan = $this->tagihanRepository->findById($id);
-            
+
             if (!$tagihan) {
                 return [
                     'success' => false,
@@ -110,7 +109,7 @@ class TagihanService
             }
 
             $this->tagihanRepository->delete($tagihan);
-            
+
             return [
                 'success' => true,
                 'message' => 'Tagihan berhasil dihapus'
@@ -139,4 +138,4 @@ class TagihanService
             ];
         }
     }
-} 
+}
