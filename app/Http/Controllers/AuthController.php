@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\DTO\UserDTO;
+use App\Models\User;
 use App\Traits\ApiResponse;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Http\Requests\Peserta\CreatePesertaRequest;
-use App\Http\Requests\User\LoginRequest;
-use App\Services\PesanService;
 use App\Services\UserService;
+use App\Services\PesanService;
+use App\Services\TagihanService;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Requests\User\LoginRequest;
+use App\Http\Requests\Peserta\CreatePesertaRequest;
 
 class AuthController extends Controller
 {
@@ -17,7 +18,8 @@ class AuthController extends Controller
 
     public function __construct(
         private UserService $userService,
-        private PesanService $pesanService
+        private PesanService $pesanService,
+        private TagihanService $tagihanService
     ) {}
 
     public function login(LoginRequest $request)
@@ -59,6 +61,16 @@ class AuthController extends Controller
 
         if (!$result['success']) {
             return $this->error($result['message'], 400, null);
+        }
+        $dataTagihan = [
+            'user_id' => $result['data']->id,
+            'nama_tagihan' => 'Registrasi',
+            'total' => 20000,
+        ];
+        
+        $tagihan = $this->tagihanService->create($dataTagihan);
+        if (!$tagihan['success']) {
+            return $this->error($tagihan['message'], 400, null);
         }
 
         $dataPesan = [

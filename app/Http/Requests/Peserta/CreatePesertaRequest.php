@@ -19,7 +19,7 @@ class CreatePesertaRequest extends FormRequest
             'nama' => 'required|string|max:255',
             'no_telp' => 'required|string|max:15|unique:users,no_telp',
             'jenis_kelamin' => 'required|string|in:Laki-laki,Perempuan',
-            'jenjang_sekolah' => 'required|string|in:SD,SMP,SMA'
+            'jenjang_sekolah' => 'required|string'
         ];
     }
 
@@ -37,8 +37,7 @@ class CreatePesertaRequest extends FormRequest
             'jenis_kelamin.string' => 'Jenis kelamin harus berupa teks',
             'jenis_kelamin.in' => 'Jenis kelamin harus Laki-laki atau Perempuan',
             'jenjang_sekolah.required' => 'Jenjang sekolah harus diisi',
-            'jenjang_sekolah.string' => 'Jenjang sekolah harus berupa teks',
-            'jenjang_sekolah.in' => 'Jenjang sekolah harus SD, SMP, atau SMA'
+            'jenjang_sekolah.string' => 'Jenjang sekolah harus berupa teks'
         ];
     }
 }
