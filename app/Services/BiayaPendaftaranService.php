@@ -112,4 +112,21 @@ class BiayaPendaftaranService
             'data' => null,
         ];
     }
+
+    public function getOnTop(): array
+    {
+        $result = $this->biayaPendaftaranRepository->getOnTop();
+        if (!$result) {
+            return [
+                'success' => false,
+                'message' => 'Data tidak ditemukan',
+                'data' => null,
+            ];
+        }
+        return [
+            'success' => true,
+            'message' => 'Data berhasil ditemukan',
+            'data' => new GetResource($result),
+        ];
+    }
 }

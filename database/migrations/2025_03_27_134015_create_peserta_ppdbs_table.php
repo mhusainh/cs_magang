@@ -29,6 +29,8 @@ return new class extends Migration
             $table->foreignId('jurusan2_id')->nullable()->constrained('jurusan');
             $table->integer('pengajuan_biaya')->nullable();
             $table->integer('wakaf')->nullable();
+            $table->integer('spp')->nullable();
+            $table->integer('book_vee')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

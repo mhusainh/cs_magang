@@ -5,7 +5,7 @@ namespace App\Http\Requests\PengajuanBiaya;
 use App\Traits\FormRequestTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRequest extends FormRequest
+class BookVeeRequest extends FormRequest
 {
     use FormRequestTrait;
     /**
@@ -24,14 +24,15 @@ class CreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nominal' => 'required|numeric',
+            'book_vee' =>'required|numeric',
         ];
     }
+
     public function messages(): array
     {
         return [
-            'nominal.required' => 'Nominal tidak boleh kosong',
-            'nominal.numeric' => 'Nominal harus berupa angka',
+            'book_vee.required' => 'Book Vee tidak boleh kosong',
+            'book_vee.numeric' => 'Book Vee harus berupa angka',
         ];
     }
 }

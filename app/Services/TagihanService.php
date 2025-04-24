@@ -2,15 +2,13 @@
 
 namespace App\Services;
 
-use App\Helpers\JWT;
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Auth;
 use App\Repositories\TagihanRepository;
 
 class TagihanService
 {
     public function __construct(
-        private TagihanRepository $tagihanRepository
+        private TagihanRepository $tagihanRepository,
+        private QrisService $qrisService
     ) {}
 
     public function getById(int $id, int $userId): array
@@ -58,7 +56,7 @@ class TagihanService
             }
 
             // Generate QRIS terlebih dahulu
-            $qrisResult = $this->generateQris($data);
+            $qrisResult = $this->qrisService->generateQris($data);
             if (!$qrisResult['success']) {
                 return $qrisResult;
             }
@@ -77,7 +75,10 @@ class TagihanService
 
             return [
                 'success' => true,
-                'data' => $data,
+                'data' => [
+                    'va_number' => $data['va_number'],
+                    'qr_data' => $qrisResult['data']['rawQrData'],
+                ],
                 'message' => 'Tagihan berhasil dibuat'
             ];
         } catch (\Exception $e) {
@@ -168,47 +169,6 @@ class TagihanService
             return [
                 'success' => false,
                 'message' => 'Gagal mengambil tagihan: ' . $e->getMessage()
-            ];
-        }
-    }
-
-    private function generateQris(array $data): array
-    {
-        try {
-            $payload = [
-                'accountNo' => $_ENV['QRIS_ACCOUNT_NO'],
-                'amount' => (string) $data['total'],
-                'mitraCustomerId' => $_ENV['QRIS_MITRA_CUSTOMER_ID'],
-                'transactionId' => $data['created_time'],
-                'tipeTransaksi' => $_ENV['QRIS_TIPE_TRANSAKSI'],
-                'vano' => $data['va_number']
-            ];
-
-            $token = JWT::encode($payload, 'TokenJWT_BMI_ICT', 'HS256');
-
-            $client = new Client();
-            $response = $client->post($_ENV['QRIS_URL'], [
-                'query' => ['token' => (string) $token]
-            ]);
-
-            $result = json_decode($response->getBody()->getContents(), true);
-
-            if ($result['responseCode'] === '00') {
-                return [
-                    'success' => true,
-                    'data' => $result['transactionDetail'],
-                    'message' => 'QRIS berhasil dibuat'
-                ];
-            }
-
-            return [
-                'success' => false,
-                'message' => 'Gagal membuat QRIS: ' . $result['responseMessage']
-            ];
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'message' => 'Gagal membuat QRIS: ' . $e->getMessage()
             ];
         }
     }

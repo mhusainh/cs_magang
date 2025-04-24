@@ -34,4 +34,8 @@ class PengajuanBiayaRepository
         return $this->model->all();
     }
 
+    public function getOnTop(): ?PengajuanBiaya
+    {
+        return $this->model->orderBy('created_at', 'desc')->first();
+    }
 } 

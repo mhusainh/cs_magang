@@ -5,7 +5,7 @@ namespace App\Http\Requests\PengajuanBiaya;
 use App\Traits\FormRequestTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRequest extends FormRequest
+class WakafRequest extends FormRequest
 {
     use FormRequestTrait;
     /**
@@ -24,14 +24,14 @@ class CreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nominal' => 'required|numeric',
+            'wakaf' => 'required|numeric',
         ];
     }
     public function messages(): array
     {
         return [
-            'nominal.required' => 'Nominal tidak boleh kosong',
-            'nominal.numeric' => 'Nominal harus berupa angka',
+            'wakaf.required' => 'Wakaf harus diisi',
+            'wakaf.numeric' => 'Wakaf harus berupa angka',
         ];
     }
 }

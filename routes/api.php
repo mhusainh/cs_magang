@@ -69,7 +69,15 @@ Route::middleware('auth:api')->group(function () {
             Route::put('peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']);
 
             // Pengajuan Biaya Management
-            Route::get('pengajuan-biaya', [PengajuanBiayaController::class, 'getAll']);
+            Route::get('pengajuan-biaya', [PengajuanBiayaController::class, 'getOnTop']);
+            Route::put('pengajuan-biaya/wakaf', [PengajuanBiayaController::class, 'wakaf']);
+            Route::put('pengajuan-biaya/spp', [PengajuanBiayaController::class, 'spp']);
+            Route::put('pengajuan-biaya/book-vee', [PengajuanBiayaController::class,'bookVee']);
+            Route::put('pengajuan-biaya/reguler', [PengajuanBiayaController::class, 'reguler']);
+            
+
+            // Biaya Pendaftaran Management
+            Route::get('biaya-pendaftaran', [BiayaPendaftaranController::class, 'getOnTop']);
 
             // Biodata Ortu Management
             Route::post('biodata-ortu', [BiodataOrtuController::class, 'create']);
@@ -78,6 +86,10 @@ Route::middleware('auth:api')->group(function () {
             // Pesan Management
             Route::get('pesan', [PesanController::class, 'getByUser']);
             Route::get('pesan/{id}', [PesanController::class, 'getByUserAndId']);
+
+            // Transaksi Management
+            Route::get('riwayat', [TransaksiController::class, 'riwayat']);
+            Route::get('peringkat', [TransaksiController::class, 'getPeringkat']);
         });
     });
 
