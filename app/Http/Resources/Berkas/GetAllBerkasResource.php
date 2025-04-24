@@ -20,17 +20,17 @@ class GetAllBerkasResource extends JsonResource
             'url_file' => $this->url_file,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'ketentuan_berkas' => [
+            'ketentuan_berkas' => $this->ketentuanBerkas ? [
                 'id' => $this->ketentuanBerkas->id,
                 'nama' => $this->ketentuanBerkas->nama,
                 'jenjang_sekolah' => $this->ketentuanBerkas->jenjang_sekolah,
                 'is_required' => $this->ketentuanBerkas->is_required,
-            ],
-            'peserta' => [
+            ] : null,
+            'peserta' => $this->peserta ? [
                 'id' => $this->peserta->id,
                 'nama' => $this->peserta->nama,
                 'nisn' => $this->peserta->nisn,
-            ],
+            ] : null,
         ];
     }
 }
