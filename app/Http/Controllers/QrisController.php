@@ -24,7 +24,7 @@ class QrisController extends Controller
         if (!$tagihan) {
             return $this->error('Tagihan not found', 404, null);
         }
-        $result = $this->qrisService->checkStatus($tagihan['data']['qrData']);
+        $result = $this->qrisService->checkStatus($tagihan['data']);
         if (!$result['success']) {
             return $this->error($result['message'], 400, null);
         }
