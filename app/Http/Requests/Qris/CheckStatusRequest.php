@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\PengajuanBiaya;
+namespace App\Http\Requests\Qris;
 
 use App\Traits\FormRequestTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRequest extends FormRequest
+class CheckStatusRequest extends FormRequest
 {
     use FormRequestTrait;
     /**
@@ -24,14 +24,15 @@ class CreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nominal' => 'required|numeric',
+            'qr_data' => 'required|string'
         ];
     }
+
     public function messages(): array
     {
         return [
-            'nominal.required' => 'Nominal tidak boleh kosong',
-            'nominal.numeric' => 'Nominal harus berupa angka',
+            'qr_data.required' => 'QR data harus diisi',
+            'qr_data.string' => 'QR data harus berupa string'
         ];
     }
 }

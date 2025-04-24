@@ -53,6 +53,7 @@ class GetDetailResource extends JsonResource
                     'nama_file' => $berkas->nama_file,
                     'url_file' => $berkas->url_file,
                     'public_id' => $berkas->public_id,
+                    'ketentuan_berkas_id' => $berkas->ketentuan_berkas_id,
                 ];
             }) : null,
             'created_at' => $this->created_at,

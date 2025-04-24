@@ -21,7 +21,7 @@ class PesanController extends Controller
     public function getAll()
     {
         $result = $this->pesanService->getAll();
-        if (!$result) {
+        if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }
         return $this->success($result['data'], $result['message'], 200); 
@@ -30,7 +30,7 @@ class PesanController extends Controller
     public function getById($id)
     {
         $result = $this->pesanService->getById($id);
-        if (!$result) {
+        if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }
         return $this->success($result['data'], $result['message'], 200);
@@ -39,7 +39,7 @@ class PesanController extends Controller
     public function getByUser()
     {
         $result = $this->pesanService->getByUserId(Auth::user()->id);
-        if (!$result) {
+        if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }
         
@@ -49,11 +49,11 @@ class PesanController extends Controller
     public function getByUserAndId($id)
     {
         $pesan = $this->pesanService->getById($id);
-        if (!$pesan) {
+        if (!$pesan['success']) {
             return $this->error('Pesan tidak ditemukan', 404, null);
         }
         $result = $this->pesanService->update($pesan['data']->id, ['is_read' => true]);
-        if (!$result) {
+        if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }
         return $this->success($pesan['data'], $pesan['message'], 200);
@@ -62,7 +62,7 @@ class PesanController extends Controller
     public function getByUserId($userId)
     {
         $result = $this->pesanService->getByUserId($userId);
-        if (!$result) {
+        if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }
         return $this->success($result['data'], $result['message'], 200);
@@ -76,7 +76,7 @@ class PesanController extends Controller
             $request->validated('deskripsi'),
         );
         $result = $this->pesanService->create($data);   
-        if (!$result) {
+        if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }
         return $this->success($result['data'], $result['message'], 201);
@@ -88,7 +88,7 @@ class PesanController extends Controller
             $request->validated('deskripsi'),
         );
         $result = $this->pesanService->update($id, $data);
-        if (!$result) {
+        if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }
         return $this->success($result['data'], $result['message'], 201);
@@ -96,7 +96,7 @@ class PesanController extends Controller
 
     public function delete($id){
         $result = $this->pesanService->delete($id);
-        if (!$result) {
+        if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }
         return $this->success($result['data'], $result['message'], 200);

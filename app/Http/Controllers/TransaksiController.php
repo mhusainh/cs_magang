@@ -3,17 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\DTO\TransaksiDTO;
+use App\Traits\ApiResponse;
+use Illuminate\Http\JsonResponse;
+use App\Services\TransaksiService;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Transaksi\CreateRequest;
 use App\Http\Requests\Transaksi\UpdateRequest;
-use App\Services\TransaksiService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 class TransaksiController extends Controller
 {
-    public function __construct(private TransaksiService $transaksiService)
-    {
-    }
+    use ApiResponse;
+
+    public function __construct(private TransaksiService $transaksiService) {}
 
     public function getAll(): JsonResponse
     {
@@ -21,14 +22,17 @@ class TransaksiController extends Controller
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
-        return $this->success($result, $result['message'], 200);
+        return $this->success($result['data'], $result['message'], 200);
     }
 
     public function getById(int $id): JsonResponse
     {
         $userId = Auth::user()->id;
         $result = $this->transaksiService->getById($id, $userId);
-        return $this->response($result);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success($result['data'], $result['message'], 200);
     }
 
     public function create(CreateRequest $request): JsonResponse
@@ -44,7 +48,10 @@ class TransaksiController extends Controller
         );
 
         $result = $this->transaksiService->create($data);
-        return $this->response($result, 201);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success($data, $result['message'], 201);
     }
 
     public function update(UpdateRequest $request): JsonResponse
@@ -65,15 +72,33 @@ class TransaksiController extends Controller
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
-        return $this->success($result, $result['message'], 200);
+        return $this->success($data, $result['message'], 200);
     }
-    
+
     public function delete(int $id): JsonResponse
     {
         $result = $this->transaksiService->delete($id);
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
-        return $this->success($result, $result['message'], 200);
+        return $this->success(null, $result['message'], 200);
     }
-} 
+
+    public function riwayat(): JsonResponse
+    {
+        $result = $this->transaksiService->getByUserId(Auth::user()->id);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success($result['data'], $result['message'], 200);
+    }
+
+    public function getPeringkat(): JsonResponse
+    {
+        $result = $this->transaksiService->getAllBookVee();
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success($result['data'], $result['message'], 200, $result['pagination']);
+    }
+}

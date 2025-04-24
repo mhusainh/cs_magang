@@ -34,4 +34,8 @@ class BiayaPendaftaranRepository
         return $this->model->all();
     }
 
+    public function getOnTop(): ?BiayaPendaftaran
+    {
+        return $this->model->orderBy('created_at', 'desc')->first();
+    }
 } 

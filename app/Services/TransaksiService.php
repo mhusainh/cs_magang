@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
-use App\Repositories\TransaksiRepository;
+use Exception;
 use App\Helpers\JWT;
+use App\Http\Resources\Transaksi\PeringkatResource;
+use App\Http\Resources\Transaksi\RiwayatResource;
 use GuzzleHttp\Client;
+use App\Repositories\TransaksiRepository;
 
 class TransaksiService
 {
@@ -29,10 +32,10 @@ class TransaksiService
         }
     }
 
-    public function getById(int $id, int $userId): array
+    public function getById(int $id): array
     {
         try {
-            $transaksi = $this->transaksiRepository->findUserById($id, $userId);
+            $transaksi = $this->transaksiRepository->findById($id);
 
             if (!$transaksi) {
                 return [
@@ -111,6 +114,70 @@ class TransaksiService
             return [
                 'success' => false,
                 'message' => 'Gagal menghapus transaksi: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function getByUserId(int $userId, $filters = []): array
+    {
+        try {
+            $transaksi = $this->transaksiRepository->findUserId($userId, $filters);
+            if ($transaksi->isEmpty()) {
+                return [
+                    'success' => false,
+                    'message' => 'Transaksi tidak ditemukan'
+                ];
+            }
+
+            return [
+                'success' => true,
+                'data' => RiwayatResource::collection($transaksi),
+                'message' => 'Detail transaksi berhasil diambil',
+                'pagination' => [
+                    'page' => $transaksi->currentPage(),
+                    'per_page' => $transaksi->perPage(),
+                    'total_items' => $transaksi->total(),
+                    'total_pages' => $transaksi->lastPage()
+                ],
+                'current_filters' => [
+                    'start_date' => $filters['start_date'] ?? '',
+                    'end_date' => $filters['end_date'] ?? '',
+                ]
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mengambil detail transaksi: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function getAllBookVee(): array
+    {
+        try {
+            $transaksi = $this->transaksiRepository->findBookVeeWithPeserta();
+            if ($transaksi->isEmpty()) {
+                return [
+                    'success' => false,
+                    'message' => 'Transaksi tidak ditemukan'
+                ];
+            }
+
+            return [
+                'success' => true,
+                'data' => PeringkatResource::collection($transaksi->items()),
+                'message' => 'Detail transaksi berhasil diambil',
+                'pagination' => [
+                    'page' => $transaksi->currentPage(),
+                    'per_page' => $transaksi->perPage(),
+                    'total_items' => $transaksi->total(),
+                    'total_pages' => $transaksi->lastPage()
+                ]
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mengambil detail transaksi: ' . $e->getMessage()
             ];
         }
     }

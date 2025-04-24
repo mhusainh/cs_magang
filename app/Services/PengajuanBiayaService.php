@@ -110,4 +110,21 @@ class PengajuanBiayaService
             'message' => 'Pengajuan Biaya berhasil dihapus',
         ];
     }
+
+    public function getOnTop(): array
+    {
+        $result = $this->pengajuanBiayaRepository->getOnTop();
+        if (!$result) {
+            return [
+                'success' => false,
+                'message' => 'Data tidak ditemukan',
+                'data' => null,
+            ];
+        }
+        return [
+            'success' => true,
+            'message' => 'Pengajuan Biaya berhasil ditemukan',
+            'data' => new GetResource($result),
+        ];
+    }
 }

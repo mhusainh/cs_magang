@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\DTO\TagihanDTO;
-use App\Http\Requests\Tagihan\CreateRequest;
-use App\Http\Requests\Tagihan\UpdateRequest;
-use App\Services\TagihanService;
+use App\Traits\ApiResponse;
 use App\Services\PesertaService;
+use App\Services\TagihanService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Tagihan\CreateRequest;
+use App\Http\Requests\Tagihan\UpdateRequest;
 
 class TagihanController extends Controller
 {
-    public function __construct(private TagihanService $tagihanService, private PesertaService $pesertaService)
-    {
-    }
+    use ApiResponse;
+
+    public function __construct(private TagihanService $tagihanService, private PesertaService $pesertaService) {}
 
     public function getAll(): JsonResponse
     {
@@ -82,4 +83,4 @@ class TagihanController extends Controller
         }
         return $this->success(null, $result['message'], 200);
     }
-} 
+}

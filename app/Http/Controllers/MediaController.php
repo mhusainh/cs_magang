@@ -97,4 +97,13 @@ class MediaController extends Controller
         }
         return $this->success(null, $result['message'], 200);
     }
+
+    public function delete(int $id): JsonResponse
+    {
+        $result = $this->mediaService->delete($id);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400, null);
+        }
+        return $this->success(null, $result['message'], 200);
+    }
 }
