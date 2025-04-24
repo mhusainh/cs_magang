@@ -187,7 +187,7 @@ class TagihanService
             $token = JWT::encode($payload, 'TokenJWT_BMI_ICT', 'HS256');
 
             $client = new Client();
-            $response = $client->post('http://103.23.103.43/apidevelopment/qris_dev/server_dev.php', [
+            $response = $client->post($_ENV['QRIS_URL'], [
                 'query' => ['token' => (string) $token]
             ]);
 
