@@ -9,15 +9,12 @@ use App\Services\TransaksiService;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Transaksi\CreateRequest;
 use App\Http\Requests\Transaksi\UpdateRequest;
-use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
 {
     use ApiResponse;
-    
-    public function __construct(private TransaksiService $transaksiService)
-    {
-    }
+
+    public function __construct(private TransaksiService $transaksiService) {}
 
     public function getAll(): JsonResponse
     {
@@ -77,7 +74,7 @@ class TransaksiController extends Controller
         }
         return $this->success($data, $result['message'], 200);
     }
-    
+
     public function delete(int $id): JsonResponse
     {
         $result = $this->transaksiService->delete($id);
@@ -87,18 +84,13 @@ class TransaksiController extends Controller
         return $this->success(null, $result['message'], 200);
     }
 
-
-    public function riwayat(Request $request): JsonResponse
+    public function riwayat(): JsonResponse
     {
-        $filters = [
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-        ];
-        $result = $this->transaksiService->getByUserId(Auth::user()->id, $filters);
+        $result = $this->transaksiService->getByUserId(Auth::user()->id);
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
-        return $this->success($result['data'], $result['message'], 200, $result['pagination'], $result['current_filters']);
+        return $this->success($result['data'], $result['message'], 200);
     }
 
     public function getPeringkat(): JsonResponse
@@ -109,4 +101,4 @@ class TransaksiController extends Controller
         }
         return $this->success($result['data'], $result['message'], 200, $result['pagination']);
     }
-} 
+}

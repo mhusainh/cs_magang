@@ -51,4 +51,9 @@ class TagihanRepository
     {
         return $this->model->where('user_id', $userId)->get();
     }
+
+    public function getByQrData(string $qrData)
+    {
+        return $this->model->where('qr_data', $qrData)->first();
+    }
 } 

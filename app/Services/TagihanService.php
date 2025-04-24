@@ -172,4 +172,29 @@ class TagihanService
             ];
         }
     }
+
+    public function getByQrData(string $qrData): array
+    {
+        try {
+            $tagihan = $this->tagihanRepository->getByQrData($qrData);
+
+            if (!$tagihan) {
+                return [
+                   'success' => false,
+                   'message' => 'Tagihan tidak ditemukan'
+                ];
+            }
+
+            return [
+               'success' => true,
+              'data' => $tagihan,
+              'message' => 'Tagihan berhasil diambil'
+            ];
+        } catch (\Exception $e) {
+            return [
+              'success' => false,
+              'message' => 'Gagal mengambil tagihan: '. $e->getMessage()
+            ];
+        }
+    }
 }
