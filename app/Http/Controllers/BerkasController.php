@@ -128,7 +128,7 @@ class BerkasController extends Controller
                 return $this->error($progressUser['message'], 404, null);
             }
 
-            $updateProgress = $this->progressUserService->updateProgress($progressUser, ['progress' => 2]);
+            $updateProgress = $this->progressUserService->updateProgress($progressUser['data'], ['progress' => 2]);
             if (!$updateProgress['success']) {
                 return $this->error($updateProgress['message'], 404, null);
             }
