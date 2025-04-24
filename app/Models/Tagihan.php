@@ -24,6 +24,7 @@ class Tagihan extends Model
         'status',
         'va_number',
         'transaction_qr_id',
+        'raw_qr_data',
         'created_time'
     ];
     /**
