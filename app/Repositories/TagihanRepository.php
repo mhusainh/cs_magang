@@ -11,13 +11,13 @@ class TagihanRepository
     {
     }
 
-    public function findUserById(int $id, int $userId)
+    public function findUserById(int $id, int $userId):?Tagihan
     {
         return $this->model->where('id', $id)
                            ->where('user_id', $userId)
                            ->first();
     }
-    public function findById(int $id)
+    public function findById(int $id):?Tagihan
     {
         return $this->model->where('id', $id)->first();
     }
@@ -52,7 +52,7 @@ class TagihanRepository
         return $this->model->where('user_id', $userId)->get();
     }
 
-    public function getByQrData(string $qrData)
+    public function getByQrData(string $qrData): ?Tagihan
     {
         return $this->model->where('qr_data', $qrData)->first();
     }

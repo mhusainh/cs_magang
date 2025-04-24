@@ -176,7 +176,11 @@ class TagihanService
     public function getByQrData(string $qrData): array
     {
         try {
+            // Get the tagihan from the repository
             $tagihan = $this->tagihanRepository->getByQrData($qrData);
+
+            // Debug the raw data from repository if needed
+            // dd(['repository_returns' => $tagihan]);
 
             if (!$tagihan) {
                 return [
@@ -185,10 +189,24 @@ class TagihanService
                 ];
             }
 
+            // Convert the Eloquent model to an array
+            $tagihanArray = $tagihan->toArray();
+            
+            // Make sure we have all the required fields for QRIS check
+            if (!isset($tagihanArray['total']) || !isset($tagihanArray['created_time']) || !isset($tagihanArray['transaction_qr_id'])) {
+                // Debug the missing fields
+                // dd(['missing_fields' => true, 'tagihan_data' => $tagihanArray]);
+                
+                return [
+                   'success' => false,
+                   'message' => 'Data tagihan tidak lengkap untuk QRIS'
+                ];
+            }
+
             return [
                'success' => true,
-              'data' => $tagihan,
-              'message' => 'Tagihan berhasil diambil'
+               'data' => $tagihanArray,
+               'message' => 'Tagihan berhasil diambil'
             ];
         } catch (\Exception $e) {
             return [
