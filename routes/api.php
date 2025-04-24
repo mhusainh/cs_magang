@@ -17,6 +17,8 @@ use App\Http\Controllers\PekerjaanOrtuController;
 use App\Http\Controllers\PengajuanBiayaController;
 use App\Http\Controllers\KetentuanBerkasController;
 use App\Http\Controllers\BiayaPendaftaranController;
+use App\Http\Controllers\QrisController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -29,6 +31,8 @@ use App\Http\Controllers\BiayaPendaftaranController;
 */
 // Public routes (bisa diakses tanpa login)
 Route::get('home', [ImageController::class, 'getAllHomepage']);
+Route::post('check-status', [QrisController::class, 'checkStatus']);
+
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
