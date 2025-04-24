@@ -29,14 +29,14 @@ class AuthController extends Controller
 
             $user = User::where('no_telp', $data['no_telp'])->first();
             if (!$user) {
-                return $this->error('Pengguna tidak ditemukan', 409);
+                return $this->error('Pengguna tidak ditemukan', 200);
             }
             if ($user->status !== 1) {
                 $qr_data = $user->tagihan()
                     ->where('nama_tagihan', 'Registrasi')
                     ->first()
                     ?->qr_data;
-                return $this->error('Harap Membayar biaya pendaftaran akun', 401, $qr_data ? ['qr_data' => $qr_data] : null);
+                return $this->error('Harap Membayar biaya pendaftaran akun', 200, $qr_data ? ['qr_data' => $qr_data] : null);
             }
 
             $token = JWTAuth::fromUser($user);
@@ -93,23 +93,23 @@ class AuthController extends Controller
     public function refresh()
     {
         try {
-            $token = JWTAuth::refresh();
+            $token = JWTAuth::parseToken()->refresh();
             return $this->success([
                 'token' => $token,
                 'type' => 'bearer'
-            ], 'Token refreshed successfully');
+            ], 'Token berhasil diperbarui', 200);
         } catch (\Exception $e) {
-            return $this->error('Error refreshing token', 400, null);
+            return $this->error('Terjadi kesalahan saat memperbarui token', 400, null);
         }
     }
 
     public function logout()
     {
         try {
-            JWTAuth::invalidate(JWTAuth::getToken());
-            return $this->success(null, 'Logout successful', 200);
+            JWTAuth::parseToken()->invalidate();
+            return $this->success(null, 'Logout berhasil', 200);
         } catch (\Exception $e) {
-            return $this->error('Error logging out', 400, null);
+            return $this->error('Terjadi kesalahan saat logout', 400, null);
         }
     }
 

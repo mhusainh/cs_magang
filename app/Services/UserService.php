@@ -51,18 +51,26 @@ class UserService
                 'no_telp' => $data['no_telp']
             ]);
 
-            $this->pesertaRepository->create([
+            $result = $this->pesertaRepository->create([
                 'user_id' => $user->id,
                 'nama' => $data['nama'],
                 'no_telp' => $data['no_telp'],
                 'jenis_kelamin' => $data['jenis_kelamin'],
                 'jenjang_sekolah' => $data['jenjang_sekolah'],
             ]);
+            if (!$result) {
+                return [
+                   'success' => false,
+                   'message' => 'Gagal membuat peserta',
+                   'code' => 402
+                ];
+            }
 
             return [
                 'data'  => $user,
                 'success' => true,
-                'message' => 'Pendaftaran berhasil'
+                'message' => 'Pendaftaran berhasil',
+                'code' => 201
             ];
         } catch (\Exception $e) {
             return [

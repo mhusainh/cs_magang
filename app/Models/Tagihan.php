@@ -27,6 +27,8 @@ class Tagihan extends Model
         'qr_data',
         'created_time'
     ];
+
+    protected $table = 'tagihans';
     /**
      * Get the user that owns the tagihan
      *
