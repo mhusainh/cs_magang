@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('jenjang_sekolah');
             $table->integer('is_required');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
