@@ -45,6 +45,6 @@ class DataSiswaController extends Controller
                 'url_file' => 'tex.png'
             ],
         ];
-        return view('informasi-peserta', compact('data_siswa', 'data_berkas'));
+        return view('data-siswa', compact('data_siswa', 'data_berkas'));
     }
 }

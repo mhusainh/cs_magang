@@ -41,7 +41,7 @@ Route::get('/peringkat', function () {
     return view('peringkat');
 })->name('peringkat');
 
-Route::get('/informasi-peserta', [App\Http\Controllers\DataSiswaController::class, 'index'])->name('informasi-peserta');  
+Route::get('/data-siswa', [App\Http\Controllers\DataSiswaController::class, 'index'])->name('data-siswa');  
 
 Route::get('/riwayat', [App\Http\Controllers\RiwayatController::class, 'index'])->name('riwayat');
 

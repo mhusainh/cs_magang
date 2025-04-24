@@ -35,6 +35,7 @@
             <span>Jenjang</span>
             <span class="font-light text-xs" id="jenjang"></span>
         </div>
+        <div class="font-medium">Data Orang Tua</div>
         <!-- Nama Ayah -->
         <div class="text-sm font-medium flex flex-col pl-2 pr-2 pb-2 border-b border-gray-400">
             <span>Nama Ayah</span>
@@ -54,6 +55,12 @@
         <div class="text-sm font-medium flex flex-col pl-2 pr-2 pb-2 border-b border-gray-400">
             <span>Alamat</span>
             <span class="font-light text-xs" id="alamat"></span>
+        </div>
+        <!-- Berkas -->
+        <div class="font-medium">Berkas Siswa</div>
+        <div class="text-sm font-medium flex flex-col pl-2 pr-2 pb-2 border-b border-gray-400">
+            <span>KTP</span>
+            <span class="font-light text-xs" id="ktp">text.png</span>
         </div>
     </div>
 
@@ -116,81 +123,47 @@
     </button>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const infoDisplay = document.getElementById('info-display');
-            const editForm = document.getElementById('edit-form');
-            const editBtn = document.getElementById('edit-btn');
-            const simpanBtn = document.getElementById('simpan-btn');
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Ambil data peserta
+            const pesertaRes = await AwaitFetchApi('user/peserta', 'GET', null);
+            const pesertaData = pesertaRes.data;
 
-            let pesertaData = {}; 
-            AwaitFetchApi('user/peserta', 'GET', null)
-                .then(result => {
-                    // if (result.message === 'Unauthenticated.') {
-                    //     alert('Sesi Anda telah habis. Silakan login kembali.');
-                    //     return;
-                    // }
+            // Tampilkan data peserta ke elemen HTML
+            document.getElementById('nisn').textContent = pesertaData.nisn ?? '';
+            document.getElementById('nama').textContent = pesertaData.nama ?? '';
+            document.getElementById('tempat-tanggal-lahir').textContent =
+                `${pesertaData.tempat_lahir ?? ''}, ${pesertaData.tanggal_lahir ?? ''}`;
+            document.getElementById('no-telp').textContent = pesertaData.no_telp ?? '';
+            document.getElementById('jenis_kelamin').textContent = pesertaData.jenis_kelamin ?? '';
+            document.getElementById('jenjang').textContent = pesertaData.jenjang_sekolah ?? '';
+            document.getElementById('nama-ayah').textContent = pesertaData.biodata_ortu?.nama_ayah ?? '';
+            document.getElementById('nama-ibu').textContent = pesertaData.biodata_ortu?.nama_ibu ?? '';
+            document.getElementById('penghasilan-ayah').textContent = pesertaData.biodata_ortu
+                ?.penghasilan_ayah ?? '';
+            document.getElementById('alamat').textContent = pesertaData.alamat ?? '';
 
-                    const data = result.data;
-                    pesertaData = data;
+            // Ambil data berkas dari pesertaData
+            const berkasPeserta = pesertaData.berkas ?? [];
 
-                    document.getElementById('nisn').textContent = data.nisn ?? '';
-                    document.getElementById('nama').textContent = data.nama ?? '';
-                    document.getElementById('tempat-tanggal-lahir').textContent =
-                        `${data.tempat_lahir ?? ''}, ${data.tanggal_lahir ?? ''}`;
-                    document.getElementById('no-telp').textContent = data.no_telp ?? '';
-                    document.getElementById('jenis_kelamin').textContent = data.jenis_kelamin ?? '';
-                    document.getElementById('jenjang').textContent = data.jenjang_sekolah ?? '';
-                    document.getElementById('nama-ayah').textContent = data.biodata_ortu?.nama_ayah ?? '';
-                    document.getElementById('nama-ibu').textContent = data.biodata_ortu?.nama_ibu ?? '';
-                    document.getElementById('penghasilan-ayah').textContent = data.biodata_ortu
-                        ?.penghasilan_ayah ?? '';
-                    document.getElementById('alamat').textContent = data.alamat ?? '';
-                });
+            const container = document.getElementById('info-display');
+            const header = document.createElement('div');
+            header.classList.add('font-medium');
+            header.innerText = 'Berkas Siswa';
+            container.appendChild(header);
 
-            editBtn.addEventListener('click', () => {
-                infoDisplay.classList.add('hidden');
-                editForm.classList.remove('hidden');
+            berkasPeserta.forEach(berkas => {
+                const wrapper = document.createElement('div');
+                wrapper.className =
+                    'text-sm font-medium flex flex-col pl-2 pr-2 pb-2 border-b border-gray-400';
 
-                document.getElementById('edit-nisn').value = pesertaData.nisn ?? '';
-                document.getElementById('edit-nama').value = pesertaData.nama ?? '';
-                document.getElementById('edit-tempat-lahir').value = pesertaData.tempat_lahir ?? '';
-                document.getElementById('edit-tanggal-lahir').value = pesertaData.tanggal_lahir ?? '';
-                document.getElementById('edit-no-telp').value = pesertaData.no_telp ?? '';
-                document.getElementById('edit-jenis_kelamin').value = pesertaData.jenis_kelamin ?? '';
-                document.getElementById('edit-jenjang').value = pesertaData.jenjang_sekolah ?? '';
-                document.getElementById('edit-nama-ayah').value = pesertaData.biodata_ortu?.nama_ayah ?? '';
-                document.getElementById('edit-nama-ibu').value = pesertaData.biodata_ortu?.nama_ibu ?? '';
-                document.getElementById('edit-penghasilan-ayah').value = pesertaData.biodata_ortu
-                    ?.penghasilan_ayah ?? '';
-                document.getElementById('edit-alamat').value = pesertaData.alamat ?? '';
-            });
+                wrapper.innerHTML = `
+        <span>${berkas.nama_file.replace(/_/g, ' ')}</span>
+        <span class="font-light text-xs">
+            <a href="${berkas.url_file}" target="_blank">${berkas.nama_file}.png</a>
+        </span>
+    `;
 
-            simpanBtn.addEventListener('click', () => {
-                const dataBaru = {
-                    nisn: document.getElementById('edit-nisn').value,
-                    nama: document.getElementById('edit-nama').value,
-                    tempat_lahir: document.getElementById('edit-tempat-lahir').value,
-                    tanggal_lahir: document.getElementById('edit-tanggal-lahir').value,
-                    no_telp: document.getElementById('edit-no-telp').value,
-                    jenis_kelamin: document.getElementById('edit-jenis_kelamin').value,
-                    jenjang_sekolah: document.getElementById('edit-jenjang').value,
-                    alamat: document.getElementById('edit-alamat').value,
-                    biodata_ortu: {
-                        nama_ayah: document.getElementById('edit-nama-ayah').value,
-                        nama_ibu: document.getElementById('edit-nama-ibu').value,
-                        penghasilan_ayah: document.getElementById('edit-penghasilan-ayah').value,
-                    }
-                };
-
-                AwaitFetchApi('user/peserta', 'PUT', dataBaru)
-                    .then(result => {
-                        alert('Data berhasil diperbarui!');
-                        location.reload();
-                    })
-                    .catch(err => {
-                        console.error('Gagal update:', err);
-                        alert('Gagal memperbarui data.');
-                    });
+                container.appendChild(wrapper);
             });
         });
     </script>

@@ -1,6 +1,5 @@
 @extends('layouts.started')
 @section('started')
-@csrf
 <div class="p-4 space-y-4 bg-[#F8F8F8] min-h-screen font-semibold pt-32">
     <div class="text-2xl flex w-full justify-center text-[#048FBD] font-bold">Login</div>
     <div class="text-xs">
@@ -35,8 +34,7 @@
                 localStorage.setItem('token', response.data.token);
                 showNotification("Login berhasil!", "success", true); // notifikasi tersimpan
                 window.location.href = '/home';
-            } else {
-                showNotification(response.message || "Login gagal. Periksa nomor HP Anda.", "error");
+            
             }
         });
     });

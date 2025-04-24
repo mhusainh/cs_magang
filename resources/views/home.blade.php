@@ -37,8 +37,8 @@
     <!-- Konten lainnya tetap sama -->
     <div class="flex w-full max-w-sm justify-center">
         <div class="grid grid-cols-4 py-4 gap-8">
-            <a href="{{ route('informasi-peserta') }}"
-                class="text-center @if (request()->routeIs('informasi-peserta')) text-ppdb-green @else text-gray-500 @endif">
+            <a href="{{ route('data-siswa') }}"
+                class="text-center @if (request()->routeIs('data-siswa')) text-ppdb-green @else text-gray-500 @endif">
                 <div class="flex flex-col items-center">
                     <img src="{{ asset('assets/svg/Icon Data Siswa.svg') }}" alt="data siswa">
                 </div>
@@ -111,7 +111,7 @@
             var linedone = "{{ asset('assets/svg/Line-done.svg') }}";
             var linebefore = "{{ asset('assets/svg/Line-undone.svg') }}";
             var doneProgressIcon1 = "{{ asset('assets/svg/done-progress-icon.svg') }}";
-            var doneProgressIcon2 = "{{ asset('assets/svg/done-progress-icon 2.svg') }}";
+            var doneProgressIcon2 = "{{ asset('assets/svg/done-progress-icon-2.svg') }}";
             var doneProgressIcon3 = "{{ asset('assets/svg/done-progress-icon 3.svg') }}";
             var beforeProgressIcon2 = "{{ asset('assets/svg/before-progress-icon-2.svg') }}";
             var beforeProgressIcon3 = "{{ asset('assets/svg/before-progress-icon-3.svg') }}";
