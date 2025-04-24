@@ -48,12 +48,12 @@ class TagihanService
                 'created_time' => now()->format('s') . substr(now()->format('u'), 0, 6),
                 'va_number' => $_ENV['QRIS_VA_NUMBER'] . str_pad(random_int(1000000000, 9999999999), 10, '0', STR_PAD_LEFT),
             ];
-            
+
             $tagihan = $this->tagihanRepository->create($data);
             if (!$tagihan) {
                 return [
-                   'success' => false,
-                   'message' => 'Gagal membuat tagihan'
+                    'success' => false,
+                    'message' => 'Gagal membuat tagihan'
                 ];
             }
 
@@ -65,14 +65,14 @@ class TagihanService
 
             // Tambahkan data QRIS ke data transaksi
             $data['transaction_qr_id'] = $qrisResult['data']['transactionQrId'];
-            $data['qr_data'] = $qrisResult['data']['rawQrData'];
-            $transactionQrId = ['transaction_qr_id'=>$qrisResult['data']['transactionQrId']];
+            $data['rawQrData'] = $qrisResult['data']['rawQrData'];
+            $transactionQrId = ['transaction_qr_id' => $qrisResult['data']['transactionQrId']];
 
             $tagihan = $this->tagihanRepository->update($tagihan, $transactionQrId);
             if (!$tagihan) {
                 return [
-                  'success' => false,
-                  'message' => 'Gagal memperbarui tagihan'
+                    'success' => false,
+                    'message' => 'Gagal memperbarui tagihan'
                 ];
             }
 
@@ -112,8 +112,8 @@ class TagihanService
             $updated = $this->tagihanRepository->update($tagihan, $data);
             if (!$updated) {
                 return [
-                 'success' => false,
-                 'message' => 'Gagal memperbarui tagihan'
+                    'success' => false,
+                    'message' => 'Gagal memperbarui tagihan'
                 ];
             }
 
