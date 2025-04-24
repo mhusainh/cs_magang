@@ -27,8 +27,8 @@ return new class extends Migration
             $table->text('alamat')->nullable();
             $table->foreignId('jurusan1_id')->nullable()->constrained('jurusan');
             $table->foreignId('jurusan2_id')->nullable()->constrained('jurusan');
-            $table->int('pengajuan_biaya')->nullable();
-            $table->int('wakaf')->nullable();
+            $table->integer('pengajuan_biaya')->nullable();
+            $table->integer('wakaf')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
