@@ -65,7 +65,7 @@ class TagihanService
 
             // Tambahkan data QRIS ke data transaksi
             $data['transaction_qr_id'] = $qrisResult['data']['transactionQrId'];
-            $data['rawQrData'] = $qrisResult['data']['rawQrData'];
+            $data['qr_data'] = $qrisResult['data']['rawQrData'];
 
             $tagihan = $this->tagihanRepository->update($tagihan, $data);
             if (!$tagihan) {

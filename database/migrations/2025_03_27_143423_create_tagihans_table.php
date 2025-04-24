@@ -19,7 +19,7 @@ return new class extends Migration
             $table->boolean('status')->default(false);
             $table->string('va_number', 20)->nullable();
             $table->string('transaction_qr_id', 8)->nullable();
-            $table->string('raw_qr_data', 1000)->nullable();
+            $table->string('qr_data', 1000)->nullable();
             $table->string('created_time', 8)->nullable();
             $table->timestamps();
             $table->softDeletes();
