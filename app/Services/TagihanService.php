@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
-use App\Repositories\TagihanRepository;
+use App\Helpers\JWT;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\TagihanRepository;
 
 class TagihanService
 {
@@ -44,13 +46,38 @@ class TagihanService
                 'nama_tagihan' => $data['nama_tagihan'],
                 'total' => $data['total'],
                 'created_time' => now()->format('s') . substr(now()->format('u'), 0, 6),
-                'va_number' => $_ENV['VA_NUMBER'] . str_pad(random_int(1000000000, 9999999999), 10, '0', STR_PAD_LEFT),
+                'va_number' => $_ENV['QRIS_VA_NUMBER'] . str_pad(random_int(1000000000, 9999999999), 10, '0', STR_PAD_LEFT),
             ];
-
+            
             $tagihan = $this->tagihanRepository->create($data);
+            if (!$tagihan) {
+                return [
+                   'success' => false,
+                   'message' => 'Gagal membuat tagihan'
+                ];
+            }
+
+            // Generate QRIS terlebih dahulu
+            $qrisResult = $this->generateQris($data);
+            if (!$qrisResult['success']) {
+                return $qrisResult;
+            }
+
+            // Tambahkan data QRIS ke data transaksi
+            $data['transaction_qr_id'] = $qrisResult['data']['transactionQrId'];
+            $data['qr_data'] = $qrisResult['data']['rawQrData'];
+
+            $tagihan = $this->tagihanRepository->update($tagihan, $data['transaction_qr_id']);
+            if (!$tagihan) {
+                return [
+                  'success' => false,
+                  'message' => 'Gagal memperbarui tagihan'
+                ];
+            }
+
             return [
                 'success' => true,
-                'data' => $tagihan,
+                'data' => $data,
                 'message' => 'Tagihan berhasil dibuat'
             ];
         } catch (\Exception $e) {
@@ -82,6 +109,12 @@ class TagihanService
             }
 
             $updated = $this->tagihanRepository->update($tagihan, $data);
+            if (!$updated) {
+                return [
+                 'success' => false,
+                 'message' => 'Gagal memperbarui tagihan'
+                ];
+            }
 
             return [
                 'success' => true,
@@ -135,6 +168,47 @@ class TagihanService
             return [
                 'success' => false,
                 'message' => 'Gagal mengambil tagihan: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    private function generateQris(array $data): array
+    {
+        try {
+            $payload = [
+                'accountNo' => '3010206072',
+                'amount' => (string) $data['total'],
+                'mitraCustomerId' => $_ENV['QRIS_MITRA_CUSTOMER_ID'],
+                'transactionId' => $data['created_time'],
+                'tipeTransaksi' => $_ENV['QRIS_TIPE_TRANSAKSI'],
+                'vano' => $data['va_number']
+            ];
+
+            $token = JWT::encode($payload, 'TokenJWT_BMI_ICT', 'HS256');
+
+            $client = new Client();
+            $response = $client->post('http://103.23.103.43/apidevelopment/qris_dev/server_dev.php', [
+                'query' => ['token' => (string) $token]
+            ]);
+
+            $result = json_decode($response->getBody()->getContents(), true);
+
+            if ($result['responseCode'] === '00') {
+                return [
+                    'success' => true,
+                    'data' => $result['transactionDetail'],
+                    'message' => 'QRIS berhasil dibuat'
+                ];
+            }
+
+            return [
+                'success' => false,
+                'message' => 'Gagal membuat QRIS: ' . $result['responseMessage']
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal membuat QRIS: ' . $e->getMessage()
             ];
         }
     }

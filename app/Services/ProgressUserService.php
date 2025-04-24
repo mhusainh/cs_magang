@@ -86,10 +86,10 @@ class ProgressUserService
         }
     }
 
-    public function update(array $data): array
+    public function update(array $data, int $id): array
     {
         try {
-            $progressUser = $this->progressUserRepository->findById($data['id']);
+            $progressUser = $this->progressUserRepository->findById($id);
 
             if (!$progressUser) {
                 return [
@@ -113,6 +113,23 @@ class ProgressUserService
         }
     }
 
+    public function updateProgress($progressUser, array $data): array
+    {
+        try {
+            $updated = $this->progressUserRepository->update($progressUser, $data);
+
+            return [
+               'success' => true,
+                'data' => $updated,
+               'message' => 'Progress User berhasil diperbarui'
+            ];
+        }catch (\Exception $e) {
+            return [
+              'success' => false,
+              'message' => 'Gagal memperbarui progressUser: '. $e->getMessage()
+            ];
+        }
+    }
     public function delete(int $id): array
     {
         try {

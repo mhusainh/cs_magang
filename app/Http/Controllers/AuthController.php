@@ -83,7 +83,7 @@ class AuthController extends Controller
             return $this->error($pesan['message'], 400, null);
         }
 
-        return $this->success($data, $result['message'], 201);
+        return $this->success($tagihan['data'], $result['message'], 201);
     }
 
     public function refresh()

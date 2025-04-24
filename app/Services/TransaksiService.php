@@ -3,13 +3,14 @@
 namespace App\Services;
 
 use App\Repositories\TransaksiRepository;
+use App\Helpers\JWT;
+use GuzzleHttp\Client;
 
 class TransaksiService
 {
     public function __construct(
         private TransaksiRepository $transaksiRepository
-    ) {
-    }
+    ) {}
 
     public function getAll(int $userId): array
     {
@@ -32,7 +33,7 @@ class TransaksiService
     {
         try {
             $transaksi = $this->transaksiRepository->findUserById($id, $userId);
-            
+
             if (!$transaksi) {
                 return [
                     'success' => false,
@@ -74,7 +75,7 @@ class TransaksiService
     {
         try {
             $transaksi = $this->transaksiRepository->findById($data['id']);
-            
+
             if (!$transaksi) {
                 return [
                     'success' => false,
@@ -83,7 +84,7 @@ class TransaksiService
             }
 
             $updated = $this->transaksiRepository->update($transaksi, $data);
-            
+
             return [
                 'success' => true,
                 'data' => $updated,
@@ -101,7 +102,7 @@ class TransaksiService
     {
         try {
             $this->transaksiRepository->delete($id);
-            
+
             return [
                 'success' => true,
                 'message' => 'Transaksi berhasil dihapus'
@@ -113,5 +114,4 @@ class TransaksiService
             ];
         }
     }
-} 
-
+}
