@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-use App\Services\BerkasService;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\Berkas\UploadBerkasRequest;
-use App\Http\Requests\Berkas\UpdateBerkasRequest;
 use App\Services\PesanService;
+use App\Services\BerkasService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use App\Services\ProgressUserService;
+use App\Http\Requests\Berkas\UpdateBerkasRequest;
+use App\Http\Requests\Berkas\UploadBerkasRequest;
 
 class BerkasController extends Controller
 {
@@ -17,7 +18,8 @@ class BerkasController extends Controller
 
     public function __construct(
         private BerkasService $berkasService,
-        private PesanService $pesanService
+        private PesanService $pesanService,
+        private ProgressUserService $progressUserService,
     ) {}
 
     /**
@@ -120,14 +122,23 @@ class BerkasController extends Controller
                 // Tetap kembalikan sukses meskipun pesan gagal dibuat
                 return $this->success($results, 'Semua file berhasil diupload, tetapi notifikasi gagal dibuat', 200);
             }
-            
+
+            $progressUser = $this->progressUserService->getByUserId(Auth::user()->id);
+            if (!$progressUser['success']) {
+                return $this->error($progressUser['message'], 404, null);
+            }
+
+            $updateProgress = $this->progressUserService->updateProgress($progressUser, ['progress' => 2]);
+            if (!$updateProgress['success']) {
+                return $this->error($updateProgress['message'], 404, null);
+            }
+            // Jika sebagian file berhasil diupload
+            if ($successCount > 0) {
+                return $this->success($results, $successCount . ' dari ' . $totalFiles . ' file berhasil diupload', 200);
+            }
             return $this->success($results, 'Semua file berhasil diupload', 200);
         }
         
-        // Jika sebagian file berhasil diupload
-        if ($successCount > 0) {
-            return $this->success($results, $successCount . ' dari ' . $totalFiles . ' file berhasil diupload', 200);
-        }
         
         // Jika semua file gagal diupload
         return $this->error('Semua file gagal diupload', 422, $results);
