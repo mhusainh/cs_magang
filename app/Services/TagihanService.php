@@ -176,7 +176,7 @@ class TagihanService
     {
         try {
             $payload = [
-                'accountNo' => '3010206072',
+                'accountNo' => $_ENV['QRIS_ACCOUNT_NO'],
                 'amount' => (string) $data['total'],
                 'mitraCustomerId' => $_ENV['QRIS_MITRA_CUSTOMER_ID'],
                 'transactionId' => $data['created_time'],
