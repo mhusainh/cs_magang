@@ -32,7 +32,11 @@ class AuthController extends Controller
                 return $this->error('Pengguna tidak ditemukan', 409);
             }
             if ($user->status !== 1) {
-                return $this->error('Harap Membayar biaya pendaftaran akun', 401, $user->tagihan->qr_data);
+                $qr_data = $user->tagihan()
+                    ->where('nama_tagihan', 'Registrasi')
+                    ->first()
+                    ?->qr_data;
+                return $this->error('Harap Membayar biaya pendaftaran akun', 401, $qr_data ? ['qr_data' => $qr_data] : null);
             }
 
             $token = JWTAuth::fromUser($user);
@@ -66,7 +70,7 @@ class AuthController extends Controller
             'nama_tagihan' => 'Registrasi',
             'total' => 1,
         ];
-        
+
         $tagihan = $this->tagihanService->create($dataTagihan);
         if (!$tagihan['success']) {
             return $this->error($tagihan['message'], 400, null);
