@@ -184,34 +184,34 @@ class TagihanService
 
             if (!$tagihan) {
                 return [
-                   'success' => false,
-                   'message' => 'Tagihan tidak ditemukan'
+                    'success' => false,
+                    'message' => 'Tagihan tidak ditemukan'
                 ];
             }
 
             // Convert the Eloquent model to an array
             $tagihanArray = $tagihan->toArray();
-            
+
             // Make sure we have all the required fields for QRIS check
             if (!isset($tagihanArray['total']) || !isset($tagihanArray['created_time']) || !isset($tagihanArray['transaction_qr_id'])) {
                 // Debug the missing fields
                 // dd(['missing_fields' => true, 'tagihan_data' => $tagihanArray]);
-                
+
                 return [
-                   'success' => false,
-                   'message' => 'Data tagihan tidak lengkap untuk QRIS'
+                    'success' => false,
+                    'message' => 'Data tagihan tidak lengkap untuk QRIS'
                 ];
             }
 
             return [
-               'success' => true,
-               'data' => $tagihanArray,
-               'message' => 'Tagihan berhasil diambil'
+                'success' => true,
+                'data' => $tagihanArray,
+                'message' => 'Tagihan berhasil diambil'
             ];
         } catch (\Exception $e) {
             return [
-              'success' => false,
-              'message' => 'Gagal mengambil tagihan: '. $e->getMessage()
+                'success' => false,
+                'message' => 'Gagal mengambil tagihan: ' . $e->getMessage()
             ];
         }
     }

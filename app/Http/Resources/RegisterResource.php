@@ -20,4 +20,4 @@ class RegisterResource extends JsonResource
             'updated_at' => $this->updated_at,
         ];
     }
-} 
+}

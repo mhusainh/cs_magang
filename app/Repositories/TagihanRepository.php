@@ -7,17 +7,15 @@ use Illuminate\Database\Eloquent\Collection;
 
 class TagihanRepository
 {
-    public function __construct(private Tagihan $model)
-    {
-    }
+    public function __construct(private Tagihan $model) {}
 
-    public function findUserById(int $id, int $userId):?Tagihan
+    public function findUserById(int $id, int $userId): ?Tagihan
     {
         return $this->model->where('id', $id)
-                           ->where('user_id', $userId)
-                           ->first();
+            ->where('user_id', $userId)
+            ->first();
     }
-    public function findById(int $id):?Tagihan
+    public function findById(int $id): ?Tagihan
     {
         return $this->model->where('id', $id)->first();
     }
@@ -39,11 +37,11 @@ class TagihanRepository
     public function vaNumberExists(string $vaNumber, ?int $excludeId = null): bool
     {
         $query = $this->model->where('va_number', $vaNumber);
-        
+
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
-        
+
         return $query->exists();
     }
 
@@ -56,4 +54,4 @@ class TagihanRepository
     {
         return $this->model->where('qr_data', $qrData)->first();
     }
-} 
+}
