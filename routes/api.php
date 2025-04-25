@@ -32,6 +32,7 @@ use App\Http\Controllers\QrisController;
 // Public routes (bisa diakses tanpa login)
 Route::get('home', [ImageController::class, 'getAllHomepage']);
 Route::post('check-status', [QrisController::class, 'checkStatus']);
+Route::post('qris/webhook', [QrisController::class, 'webhook']);
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -76,9 +77,9 @@ Route::middleware('auth:api')->group(function () {
             Route::get('pengajuan-biaya', [PengajuanBiayaController::class, 'getOnTop']);
             Route::put('pengajuan-biaya/wakaf', [PengajuanBiayaController::class, 'wakaf']);
             Route::put('pengajuan-biaya/spp', [PengajuanBiayaController::class, 'spp']);
-            Route::put('pengajuan-biaya/book-vee', [PengajuanBiayaController::class,'bookVee']);
+            Route::put('pengajuan-biaya/book-vee', [PengajuanBiayaController::class, 'bookVee']);
             Route::put('pengajuan-biaya/reguler', [PengajuanBiayaController::class, 'reguler']);
-            
+
 
             // Biaya Pendaftaran Management
             Route::get('biaya-pendaftaran', [BiayaPendaftaranController::class, 'getOnTop']);
@@ -169,7 +170,7 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('ketentuan-berkas/{id}', [KetentuanBerkasController::class, 'delete']);
 
             // Berkas Peserta Management (untuk admin)
-            Route::get('berkas', [BerkasController::class,'getAllBerkas']);
+            Route::get('berkas', [BerkasController::class, 'getAllBerkas']);
             Route::delete('berkas/{id}', [BerkasController::class, 'deleteBerkas']);
 
             //COBA
@@ -194,7 +195,7 @@ Route::middleware('auth:api')->group(function () {
             Route::post('biaya-pendaftaran', [BiayaPendaftaranController::class, 'create']);
             Route::put('biaya-pendaftaran/{id}', [BiayaPendaftaranController::class, 'update']);
             Route::delete('biaya-pendaftaran/{id}', [BiayaPendaftaranController::class, 'delete']);
-            
+
             // Pesan Management
             Route::get('pesan', [PesanController::class, 'getAll']);
             Route::get('pesan/{id}', [PesanController::class, 'getById']);

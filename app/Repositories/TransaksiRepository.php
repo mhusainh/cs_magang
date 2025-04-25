@@ -52,6 +52,11 @@ class TransaksiRepository
     {
         return $this->model->where('id', $id)->first();
     }
+
+    public function findByQrId(string $transactionQrId)
+    {
+        return $this->model->where('transaction_qr_id', $transactionQrId)->first();
+    }
     public function create(array $data)
     {
         return $this->model->create($data);
