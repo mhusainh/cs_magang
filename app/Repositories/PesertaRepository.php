@@ -18,7 +18,6 @@ class PesertaRepository
     {
         return $this->model->with([
             'jurusan1',
-            'jurusan2',
             'biodataOrtu.pekerjaanAyah',
             'biodataOrtu.pekerjaanIbu',
             'biodataOrtu.penghasilanOrtu'
@@ -29,7 +28,6 @@ class PesertaRepository
     {
         return $this->model->with([
             'jurusan1',
-            'jurusan2',
             'biodataOrtu.pekerjaanAyah',
             'biodataOrtu.pekerjaanIbu',
             'biodataOrtu.penghasilanOrtu',
@@ -105,7 +103,6 @@ class PesertaRepository
 
         $paginator = $query->with([
             'jurusan1',
-            'jurusan2',
             'biodataOrtu.pekerjaanAyah',
             'biodataOrtu.pekerjaanIbu',
             'biodataOrtu.penghasilanOrtu'

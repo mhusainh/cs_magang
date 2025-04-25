@@ -86,7 +86,6 @@ class PesertaController extends Controller
             $request->validated('tanggal_lahir'),
             $request->validated('alamat'),
             $request->validated('jurusan1_id'),
-            $request->validated('jurusan2_id')
         );
 
         $peserta = $this->pesertaService->getByUserId(Auth::user()->id);
@@ -120,7 +119,6 @@ class PesertaController extends Controller
             $request->validated('tanggal_lahir'),
             $request->validated('alamat'),
             $request->validated('jurusan1_id'),
-            $request->validated('jurusan2_id')
         );
         $progressData = ProgressUserDTO::createProgressUserDTO(
             user_id: Auth::user()->id,

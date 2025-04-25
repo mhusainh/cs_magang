@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Jurusan\CreateRequest;
 use App\Http\Requests\Jurusan\UpdateRequest;
+use App\Http\Resources\Jurusan\GetUniqueJenjangSekolahResource;
 
 class JurusanController extends Controller
 {
@@ -67,7 +68,7 @@ class JurusanController extends Controller
     public function delete(int $id): JsonResponse
     {
         $result = $this->jurusanService->delete($id);
-        if  (!$result['success']) {
+        if (!$result['success']) {
             return $this->error($result['message'], 400, null);
         }
         return $this->success(null, $result['message'], 200);
@@ -80,5 +81,16 @@ class JurusanController extends Controller
             return $this->error($result['message'], 400, null);
         }
         return $this->success($result['data'], $result['message'], 200);
+    }
+
+    public function getUniqueJenjang(): JsonResponse
+    {
+        $result = $this->jurusanService->getAll();
+        if (!$result['success']) {
+            return $this->error($result['message'], 400, null);
+        }
+
+        $uniqueJenjang = GetUniqueJenjangSekolahResource::collection($result['data']);
+        return $this->success($uniqueJenjang, 'Daftar jenjang sekolah berhasil diambil', 200);
     }
 }

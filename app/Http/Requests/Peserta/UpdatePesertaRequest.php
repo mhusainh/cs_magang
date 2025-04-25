@@ -25,7 +25,6 @@ class UpdatePesertaRequest extends FormRequest
             'tanggal_lahir' => 'required|date',
             'alamat' => 'required|string|max:255',
             'jurusan1_id' => 'nullable|integer|exists:jurusan,id',
-            'jurusan2_id' => 'nullable|integer|exists:jurusan,id'
         ];
     }
 
