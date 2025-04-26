@@ -11,6 +11,8 @@ class PengajuanBiaya extends Model
 
     protected $table = 'pengajuan_biaya';
     protected $fillable = [
+        'nama',
         'nominal',
+        'jenjang_sekolah'
     ];
 }
