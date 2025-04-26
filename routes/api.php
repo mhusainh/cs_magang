@@ -32,7 +32,9 @@ use App\Http\Controllers\QrisController;
 // Public routes (bisa diakses tanpa login)
 Route::get('home', [ImageController::class, 'getAllHomepage']);
 Route::post('check-status', [QrisController::class, 'checkStatus']);
-Route::post('qris/webhook', [QrisController::class, 'webhook']);
+Route::post('webhook/qris', [QrisController::class, 'webhookQris']);
+Route::post('webhook/va', [QrisController::class, 'webhookvaNumber']);
+
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
