@@ -9,8 +9,7 @@ class JurusanService
 {
     public function __construct(
         private JurusanRepository $jurusanRepository
-    ) {
-    }
+    ) {}
 
     public function getAll(): array
     {
@@ -33,7 +32,7 @@ class JurusanService
     {
         try {
             $jurusan = $this->jurusanRepository->findById($id);
-            
+
             if (!$jurusan) {
                 return [
                     'success' => false,
@@ -75,7 +74,7 @@ class JurusanService
     {
         try {
             $jurusan = $this->jurusanRepository->findById($data['id']);
-            
+
             if (!$jurusan) {
                 return [
                     'success' => false,
@@ -84,7 +83,7 @@ class JurusanService
             }
 
             $updated = $this->jurusanRepository->update($jurusan, $data);
-            
+
             return [
                 'success' => true,
                 'data' => $updated,
@@ -102,7 +101,7 @@ class JurusanService
     {
         try {
             $jurusan = $this->jurusanRepository->findById($id);
-            
+
             if (!$jurusan) {
                 return [
                     'success' => false,
@@ -111,7 +110,7 @@ class JurusanService
             }
 
             $this->jurusanRepository->delete($jurusan);
-            
+
             return [
                 'success' => true,
                 'message' => 'Jurusan berhasil dihapus'
@@ -129,15 +128,15 @@ class JurusanService
         try {
             $jurusan = $this->jurusanRepository->findbyJenjangSekolah($jenjang);
             return [
-               'success' => true,
+                'success' => true,
                 'data' => GetDetailResource::collection($jurusan),
-               'message' => 'Daftar jurusan berhasil diambil'
-            ]; 
+                'message' => 'Daftar jurusan berhasil diambil'
+            ];
         } catch (\Exception $e) {
             return [
-              'success' => false,
-              'message' => 'Gagal mengambil daftar jurusan: '. $e->getMessage()
+                'success' => false,
+                'message' => 'Gagal mengambil daftar jurusan: ' . $e->getMessage()
             ];
         }
     }
-} 
+}

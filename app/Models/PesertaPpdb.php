@@ -32,7 +32,6 @@ class PesertaPpdb extends Model
         'jenjang_sekolah',
         'alamat',
         'jurusan1_id',
-        'jurusan2_id',
         'pengajuan_biaya',
         'wakaf',
         'spp',

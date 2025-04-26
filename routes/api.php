@@ -34,7 +34,7 @@ Route::get('home', [ImageController::class, 'getAllHomepage']);
 Route::post('check-status', [QrisController::class, 'checkStatus']);
 Route::post('webhook/qris', [QrisController::class, 'webhookQris']);
 Route::post('webhook/va', [QrisController::class, 'webhookvaNumber']);
-
+Route::get('jenjang', [JurusanController::class, 'getUniqueJenjang']);
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);

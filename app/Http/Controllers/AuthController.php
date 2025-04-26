@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\DTO\UserDTO;
 use App\Models\User;
+use App\Services\BiayaPendaftaranService;
 use App\Traits\ApiResponse;
 use App\Services\UserService;
 use App\Services\PesanService;
 use App\Services\TagihanService;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests\User\LoginRequest;
+use App\Repositories\BiayaPendaftaranRepository;
 use App\Http\Requests\Peserta\CreatePesertaRequest;
 
 class AuthController extends Controller
@@ -19,7 +21,8 @@ class AuthController extends Controller
     public function __construct(
         private UserService $userService,
         private PesanService $pesanService,
-        private TagihanService $tagihanService
+        private TagihanService $tagihanService,
+        private BiayaPendaftaranService $biayaPendaftaranService
     ) {}
 
     public function login(LoginRequest $request)
@@ -60,15 +63,19 @@ class AuthController extends Controller
             $request->validated('no_telp'),
             $request->validated('jenjang_sekolah')
         );
+        $biayaPendaftaran = $this->biayaPendaftaranService->getOnTop();
+        if (!$biayaPendaftaran['success']) {
+            return $this->error($biayaPendaftaran['message'], 400, null);
+        }
         $result = $this->userService->register($data);
-
         if (!$result['success']) {
             return $this->error($result['message'], 400, null);
         }
+
         $dataTagihan = [
             'user_id' => $result['data']->id,
             'nama_tagihan' => 'Registrasi',
-            'total' => 1,
+            'total' => $biayaPendaftaran['data']->nominal,
         ];
 
         $tagihan = $this->tagihanService->create($dataTagihan);

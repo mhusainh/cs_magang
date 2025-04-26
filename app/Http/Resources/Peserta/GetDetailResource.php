@@ -25,11 +25,6 @@ class GetDetailResource extends JsonResource
                 'jurusan' => $this->jurusan1->jurusan,
                 'jenjang_sekolah' => $this->jurusan1->jenjang_sekolah,
             ] : null,
-            'jurusan2' => $this->jurusan2 ? [
-                'id' => $this->jurusan2->id,
-                'jurusan' => $this->jurusan2->jurusan,
-                'jenjang_sekolah' => $this->jurusan2->jenjang_sekolah,
-            ] : null,
             'biodata_ortu' => $this->biodataOrtu ? [
                 'id' => $this->biodataOrtu->id,
                 'nama_ayah' => $this->biodataOrtu->nama_ayah,
