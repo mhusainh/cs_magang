@@ -33,7 +33,7 @@ class BiodataOrtuController extends Controller
 
     public function create(CreateRequest $request){
         $data = BiodataOrtuDTO::createBiodataOrtuDTO(
-            Auth::user()->id,
+            Auth::user()->peserta->id,
             $request->validated('nama_ayah'),
             $request->validated('nama_ibu'),
             $request->validated('no_telp'),
