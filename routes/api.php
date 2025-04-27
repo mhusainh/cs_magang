@@ -140,6 +140,7 @@ Route::middleware('auth:api')->group(function () {
             Route::put('pekerjaan-ortu/{id}', [PekerjaanOrtuController::class, 'update']);
             Route::delete('pekerjaan-ortu/{id}', [PekerjaanOrtuController::class, 'delete']);
             Route::get('pekerjaan-ortu/{id}', [PekerjaanOrtuController::class, 'getById']);
+            Route::get('pekerjaan-ortu', [PekerjaanOrtuController::class, 'getAll']);
 
             // Tagihan Management
             Route::get('tagihan', [TagihanController::class, 'getAll']);

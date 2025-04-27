@@ -18,7 +18,7 @@ class PekerjaanOrtu extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'pekerjaan',
+        'nama_pekerjaan',
     ];
 
     public function biodataOrtuAyah()
