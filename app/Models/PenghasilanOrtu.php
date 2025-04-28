@@ -18,8 +18,7 @@ class PenghasilanOrtu extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'kategori',
-        'range_penghasilan',
+        'penghasilan_ortu',
     ];
 
     public function biodataOrtu()

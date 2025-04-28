@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\QrisController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MediaController;
@@ -16,8 +17,8 @@ use App\Http\Controllers\BiodataOrtuController;
 use App\Http\Controllers\PekerjaanOrtuController;
 use App\Http\Controllers\PengajuanBiayaController;
 use App\Http\Controllers\KetentuanBerkasController;
+use App\Http\Controllers\PenghasilanOrtuController;
 use App\Http\Controllers\BiayaPendaftaranController;
-use App\Http\Controllers\QrisController;
 
 /*
 |--------------------------------------------------------------------------
@@ -101,6 +102,9 @@ Route::middleware('auth:api')->group(function () {
 
             // Tagihan Management
             Route::get('tagihan', [TagihanController::class, 'getByUser']);
+
+            // Penghasilan Ortu Management
+            Route::get('penghasilan-ortu', [PenghasilanOrtuController::class, 'getAll']);
         });
     });
 
@@ -219,6 +223,13 @@ Route::middleware('auth:api')->group(function () {
             Route::get('biodata-ortu/{id}', [BiodataOrtuController::class, 'getById']);
             Route::put('biodata-ortu/{id}', [BiodataOrtuController::class, 'update']);
             Route::delete('biodata-ortu/{id}', [BiodataOrtuController::class, 'delete']);
+
+            // Penghasilan Ortu Management
+            Route::get('penghasilan-ortu', [PenghasilanOrtuController::class, 'getAll']);
+            Route::get('penghasilan-ortu/{id}', [PenghasilanOrtuController::class, 'getById']);
+            Route::post('penghasilan-ortu', [PenghasilanOrtuController::class, 'create']);
+            Route::put('penghasilan-ortu/{id}', [PenghasilanOrtuController::class, 'update']);
+            Route::delete('penghasilan-ortu/{id}', [PenghasilanOrtuController::class, 'delete']);
         });
     });
 });

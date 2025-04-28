@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('pengajuan_biaya', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
             $table->integer('nominal');
+            $table->string('jurusan');
             $table->string('jenjang_sekolah');
             $table->timestamps();
         });
