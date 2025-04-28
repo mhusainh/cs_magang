@@ -59,9 +59,6 @@ class PesertaRepository
                     ->orWhereHas('jurusan1', function ($q) use ($search) {
                         $q->where('nama', 'like', "%{$search}%");
                     })
-                    ->orWhereHas('jurusan2', function ($q) use ($search) {
-                        $q->where('nama', 'like', "%{$search}%");
-                    })
                     ->orWhereHas('biodataOrtu', function ($q) use ($search) {
                         $q->where('nama_ayah', 'like', "%{$search}%")
                             ->orWhere('nama_ibu', 'like', "%{$search}%")
