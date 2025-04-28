@@ -4,10 +4,11 @@ namespace App\Services;
 
 use Exception;
 use App\Helpers\JWT;
-use App\Http\Resources\Transaksi\PeringkatResource;
-use App\Http\Resources\Transaksi\RiwayatResource;
 use GuzzleHttp\Client;
 use App\Repositories\TransaksiRepository;
+use App\Http\Resources\Transaksi\RiwayatResource;
+use App\Http\Resources\Transaksi\GetDetailResource;
+use App\Http\Resources\Transaksi\PeringkatResource;
 
 class TransaksiService
 {
@@ -48,7 +49,7 @@ class TransaksiService
 
             return [
                 'success' => true,
-                'data' => $transaksi,
+                'data' => GetDetailResource::collection($transaksi),
                 'pagination' => $pagination,
                 'current_filters' => $currentFilters,
                 'message' => 'Daftar transaksi berhasil diambil'
