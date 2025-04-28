@@ -17,7 +17,9 @@ class JurusanService
             $jurusan = $this->jurusanRepository->getAll();
             return [
                 'success' => true,
-                'data' => GetDetailResource::collection($jurusan),
+                'data' => $jurusan->map(function ($item) {
+                    return new GetDetailResource($item);
+                }),
                 'message' => 'Daftar jurusan berhasil diambil'
             ];
         } catch (\Exception $e) {
@@ -127,9 +129,20 @@ class JurusanService
     {
         try {
             $jurusan = $this->jurusanRepository->findbyJenjangSekolah($jenjang);
+            
+            if ($jurusan->isEmpty()) {
+                return [
+                    'success' => true,
+                    'data' => [],
+                    'message' => 'Tidak ada jurusan ditemukan untuk jenjang ini'
+                ];
+            }
+            
             return [
                 'success' => true,
-                'data' => GetDetailResource::collection($jurusan),
+                'data' => $jurusan->map(function ($item) {
+                    return new GetDetailResource($item);
+                }),
                 'message' => 'Daftar jurusan berhasil diambil'
             ];
         } catch (\Exception $e) {

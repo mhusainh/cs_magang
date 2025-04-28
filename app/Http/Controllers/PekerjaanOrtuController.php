@@ -21,7 +21,7 @@ class PekerjaanOrtuController extends Controller
         if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }
-        return $this->success($result, $result['message'], 200);
+        return $this->success($result['data'], $result['message'], 200);
     }
 
     public function getById(int $id): JsonResponse
@@ -31,7 +31,7 @@ class PekerjaanOrtuController extends Controller
         if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }
-        return $this->success($result, $result['message'], 200);
+        return $this->success($result['data'], $result['message'], 200);
     }
 
     public function create(CreateRequest $request): JsonResponse
@@ -44,7 +44,7 @@ class PekerjaanOrtuController extends Controller
         if (!$result['success']) {
             return $this->error($result['message'], 400, null);
         }
-        return $this->success($result, $result['message'], 200);
+        return $this->success($result['data'], $result['message'], 200);
     }
 
     public function update(UpdateRequest $request, int $id): JsonResponse
@@ -59,7 +59,7 @@ class PekerjaanOrtuController extends Controller
         if (!$result['success']) {
             return $this->error($result['message'], 400, null);  
         }
-        return $this->success($result, $result['message'], 200);
+        return $this->success($result['data'], $result['message'], 200);
     }
 
     public function delete(int $id): JsonResponse
