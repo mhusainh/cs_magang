@@ -56,15 +56,16 @@ Route::middleware('auth:api')->group(function () {
             Route::get('home', [HomeController::class, 'index']);
 
             // Berita
-            Route::get('berita', [ImageController::class, 'getBeritaByUser']);
+            Route::get('berita', [ImageController::class, 'getAllBerita']);
 
             // Berkas Management
             Route::get('berkas', [KetentuanBerkasController::class, 'getByJenjang']);
             Route::post('berkas/upload', [BerkasController::class, 'uploadBerkas']); // Menerima array files dan ketentuan_berkas_ids dalam request body
             Route::post('berkas/{id}', [BerkasController::class, 'updateBerkas']);
 
-            // Media ({$nama} = jadwal || pengajuan_biaya)
-            Route::get('media/{nama}', [MediaController::class, 'GetByUser']);
+            // Media Management
+            Route::get('media/jadwal', [MediaController::class, 'GetJadwalByUser']);
+            Route::get('media/pengajuan_biaya', [MediaController::class, 'GetPengajuanBiayaByUser']);
 
             // User profile
             Route::get('profile', [AuthController::class, 'me']);
@@ -96,7 +97,10 @@ Route::middleware('auth:api')->group(function () {
 
             // Transaksi Management
             Route::get('riwayat', [TransaksiController::class, 'riwayat']);
-            Route::get('peringkat', [TransaksiController::class, 'getPeringkat']);
+            Route::get('peringkat', [TransaksiController::class, 'getPeringkatByUser']);
+
+            // Tagihan Management
+            Route::get('tagihan', [TagihanController::class, 'getByUser']);
         });
     });
 
@@ -119,7 +123,8 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/peserta/{id}', [PesertaController::class, 'delete']);
             Route::get('/peserta/user/{userId}', [PesertaController::class, 'getByUserId']);
             Route::post('/peserta', [PesertaController::class, 'create']);
-
+            Route::put('/peserta/{id}', [PesertaController::class, 'updateStatus']);
+            
             // Tagihan Management
             Route::put('tagihan/{id}', [TagihanController::class, 'update']);
             Route::delete('tagihan/{id}', [TagihanController::class, 'delete']);
@@ -147,8 +152,10 @@ Route::middleware('auth:api')->group(function () {
 
             // Transaksi Management
             Route::get('transaksi', [TransaksiController::class, 'getAll']);
+            Route::get('transaksi/user/{userId}', [TransaksiController::class, 'getByUserId']);
             Route::get('transaksi/{id}', [TransaksiController::class, 'getById']);
             Route::post('transaksi', [TransaksiController::class, 'create']);
+            Route::get('peringkat', [TransaksiController::class, 'getPeringkat']);
 
             // Homepage Management
             Route::post('homepage', [ImageController::class, 'uploadHomepage']);

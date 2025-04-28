@@ -60,16 +60,6 @@ class ImageController extends Controller
         return $this->success($result, 'Berhasil mendapatkan semua gambar berita', 200);
     }
 
-    public function getBeritaByUser()
-    {
-        $images = $this->imageService->getBeritaByUser(Auth::user()->peserta->jenjang_sekolah);
-        if (!$images) {
-            return $this->error('Gagal mendapatkan semua gambar berita', 404, null);
-        }
-
-        return $this->success($images, 'Berhasil mendapatkan semua gambar berita', 200);
-    }
-
     public function GetHomepageById($id)
     {
         $image = $this->imageService->GetHomepageById($id);

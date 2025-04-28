@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Media\CreateJadwalRequest;
+use App\Http\Requests\Media\CreatePengajuanBiayaRequest;
 use App\Http\Requests\Media\CreateRequest;
 use App\Http\Requests\Media\UpdateRequest;
 use App\Traits\ApiResponse;
@@ -45,16 +47,25 @@ class MediaController extends Controller
         return $this->success($result['data'], $result['message'], 200);
     }
 
-    public function GetByUser(string $nama): JsonResponse
+    public function GetJadwalByUser(): JsonResponse
     {
-        $result = $this->mediaService->GetByUser($nama);
+        $result = $this->mediaService->GetJadwalByUser('jadwal');
         if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }
         return $this->success($result['data'], $result['message'], 200);
     }
 
-    public function uploadJadwal(CreateRequest $request): JsonResponse
+    public function GetPengajuanBiayaByUser(): JsonResponse
+    {
+        $result = $this->mediaService->GetPengajuanBiayaByUser('pengajuan_biaya');
+        if (!$result['success']) {
+            return $this->error($result['message'], 404, null);
+        }
+        return $this->success($result['data'], $result['message'], 200);
+    }
+
+    public function uploadJadwal(CreateJadwalRequest $request): JsonResponse
     {
         $image = $request->validated('image');
         $data = [
@@ -69,13 +80,14 @@ class MediaController extends Controller
         return $this->success($result['data'], $result['message'], 201);
     }
 
-    public function uploadPengajuanBiaya(CreateRequest $request): JsonResponse
+    public function uploadPengajuanBiaya(CreatePengajuanBiayaRequest $request): JsonResponse
     {
         $image = $request->validated('image');
         $data = [
             'nama' => 'pengajuan_biaya',
             'image' => $image,
             'jenjang_sekolah' => $request->validated('jenjang_sekolah'),
+            'jurusan' => $request->validated('jurusan')
         ];
         $result = $this->mediaService->create($data);
         if (!$result['success']) {
@@ -90,6 +102,7 @@ class MediaController extends Controller
         $image = $request->validated('image');
         $data = [
             'jenjang_sekolah' => $request->validated('jenjang_sekolah'),
+            'jurusan' => $request->validated('jurusan'),
         ];
         $result = $this->mediaService->update($image, $data, $id);
         if (!$result['success']) {

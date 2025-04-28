@@ -20,7 +20,6 @@ class BeritaResource extends JsonResource
              'urutan' => $this->urutan,
              'url' => $this->url,
              'public_id' => $this->public_id,
-             'jenjang_sekolah' => $this->jenjang_sekolah,
         ];
     }
 }

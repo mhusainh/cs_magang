@@ -7,13 +7,17 @@ use GuzzleHttp\Client;
 use App\Helpers\Logger;
 use GuzzleHttp\Exception;
 use App\Repositories\TransaksiRepository;
+use App\Repositories\TagihanRepository;
+use App\Repositories\UserRepository;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 
 class QrisService
 {
     public function __construct(
-        private TransaksiRepository $transaksiRepository
+        private TransaksiRepository $transaksiRepository,
+        private TagihanRepository $tagihanRepository,
+        private UserRepository $userRepository
     ) {}
     public function generateQris(array $data): array
     {
@@ -130,7 +134,7 @@ class QrisService
         }
     }
 
-    public function processWebhook(string $token, array $requestData): array
+    public function processWebhook(string $token, string $method): array
     {
         try {
             // Verifikasi token JWT
@@ -142,41 +146,66 @@ class QrisService
             }
 
             // Log data webhook yang diterima
-            Logger::log('webhook_qris', ['token' => $token, 'request' => $requestData], null, null, time());
+            Logger::log('webhook_qris', $decodedToken, null, null, $decodedToken->data->transactionId);
 
             // Pastikan response code adalah 00 (sukses)
-            if ($requestData['responseCode'] !== '00') {
+            if ($decodedToken->responseCode !== '00') {
                 return ['success' => false, 'message' => 'Response code tidak valid'];
             }
 
             // Ambil data transaksi dari payload
-            $transactionData = $requestData['data'] ?? null;
+            $transactionData = $decodedToken->data ?? null;
             if (!$transactionData) {
                 return ['success' => false, 'message' => 'Data transaksi tidak ditemukan'];
             }
 
             // Cari transaksi berdasarkan transaction_qr_id
-            $transaksi = $this->transaksiRepository->findByQrId($transactionData['transactionQrId']);
-            if (!$transaksi) {
+            $tagihan = $this->tagihanRepository->getByQrId($transactionData->transactionQrId);
+            if (!$tagihan) {
                 return ['success' => false, 'message' => 'Transaksi tidak ditemukan'];
             }
 
-            // Update status transaksi menjadi sukses
-            $updateData = [
-                'id' => $transaksi->id,
-                'status' => 'success',
-                'payment_date' => now()->format('Y-m-d H:i:s'),
-                'description' => $transactionData['description'] ?? 'Pembayaran QRIS berhasil'
+            $updatedTagihan = $this->tagihanRepository->update($tagihan, ['status' => 1]);
+            if (!$updatedTagihan) {
+                return ['success' => false,'message' => 'Gagal memperbarui transaksi'];
+            }
+
+           $transaksiData = [
+                'user_id' => $tagihan->user_id,
+                'tagihan_id' => $tagihan->id,
+                'status' => 1,
+                'total' => $transactionData->amount,
+                'created_time' => $transactionData->transactionId,
+                'va_number' => $transactionData->vano,
+                'transaction_qr_id' => $transactionData->transactionQrId,
+                'method' => $method,
+                'ref_no' => $decodedToken->transactionId,
             ];
+            $transaksi = $this->transaksiRepository->create($transaksiData);
+            if (!$transaksi) {
+                return ['success' => false,'message' => 'Gagal membuat transaksi'];
+            }
 
-            $this->transaksiRepository->update($transaksi, $updateData);
-
+           if ($tagihan->nama_tagihan === 'Registrasi') {
+                $user = $this->userRepository->findById($tagihan->user_id);
+                if (!$user) {
+                    return ['success' => false,'message' => 'User tidak ditemukan'];
+                }
+                $updatedUser = $this->userRepository->update($user, ['status' => '1']);
+                if (!$updatedUser) {   
+                    return ['success' => false,'message' => 'Gagal memperbarui user'];
+                }
+            }            // Log transaksi yang berhasil dibuat
             return [
                 'success' => true,
-                'message' => 'Transaksi berhasil diperbarui'
+                'message' => 'Transaksi berhasil diperbarui',
+                'transactionId' => $transactionData->transactionId,
+                'requesetData' => $decodedToken,
+
+
             ];
         } catch (\Exception $e) {
-            Logger::log('webhook_qris', ['token' => $token, 'request' => $requestData], null, 'Error: ' . $e->getMessage(), time());
+            // Logger::log('webhook_qris', $decodedToken, null, 'Error: ' . $e->getMessage(), time());
             return ['success' => false, 'message' => 'Error sistem: ' . $e->getMessage()];
         }
     }

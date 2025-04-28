@@ -14,10 +14,16 @@ class MediaRepository
         return $this->model->where('id', $id)->first();
     }
 
-    public function findByUser(string $nama, string $jenjang_sekolah): Collection
-    {
-        return $this->model->where('nama', $nama)
-            ->where('jenjang_sekolah', $jenjang_sekolah)->get();
+    public function findByUser(string $nama, string $jenjang_sekolah, string $jurusan = null): Collection 
+    { 
+        $query = $this->model->where('nama', $nama)
+            ->where('jenjang_sekolah', $jenjang_sekolah);
+        
+        if ($jurusan !== null) {
+            $query->where('jurusan', $jurusan);
+        }
+        
+        return $query->get();
     }
 
     public function create(array $data): Media

@@ -29,7 +29,6 @@ class ImageRepository
         $data = [
             'url' => $cloudinary->getSecurePath(),
             'public_id' => $cloudinary->getPublicId(),
-            'jenjang_sekolah' => $data['jenjang_sekolah'],
             'urutan' => $data['urutan'],
         ];
         return $this->berita->create($data);
@@ -45,12 +44,7 @@ class ImageRepository
         return $this->berita->orderBy('urutan', 'asc')->get();
     }
 
-    public function getBeritaByUser(string $jenjang_sekolah): Collection
-    {
-        return $this->berita->where('jenjang_sekolah', $jenjang_sekolah)->orderBy('urutan', 'asc')->get();
-    }
-
-    public function updateHomepage(?object $cloudinary, $urutan, int $id): bool
+     public function updateHomepage(?object $cloudinary, $urutan, int $id): bool
     {
         $data = ['urutan' => $urutan];
         if ($cloudinary) {

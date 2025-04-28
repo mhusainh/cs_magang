@@ -16,7 +16,6 @@ return new class extends Migration
             $table->integer('urutan')->nullable()->unique();
             $table->string('url');
             $table->string('public_id');
-            $table->string('jenjang_sekolah'); 
             $table->timestamps();
         });
     }

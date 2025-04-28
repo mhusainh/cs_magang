@@ -11,10 +11,10 @@ class TagihanService
         private QrisService $qrisService
     ) {}
 
-    public function getById(int $id, int $userId): array
+    public function getById(int $id): array
     {
         try {
-            $tagihan = $this->tagihanRepository->findUserById($id, $userId);
+            $tagihan = $this->tagihanRepository->findById($id);
 
             if (!$tagihan) {
                 return [
@@ -156,19 +156,69 @@ class TagihanService
         }
     }
 
-    public function getAll(int $userId): array
+    public function getAll($filters = []): array
     {
         try {
-            $tagihans = $this->tagihanRepository->getAll($userId);
+            $tagihans = $this->tagihanRepository->getAll($filters);
+            if($tagihans->isEmpty()) {
+                return [
+                   'success' => false,
+                   'message' => 'Tagihan tidak ditemukan'
+                ];
+            }
+
+            $pagination = [
+              'page' => $tagihans->currentPage(),
+              'per_page' => $tagihans->perPage(),
+              'total_items' => $tagihans->total(),
+              'total_pages' => $tagihans->lastPage(),
+            ];
+
+            $currentFilters = [
+                'search' => $filters['search'] ?? '',
+                'start_date' => $filters['start_date']?? '',
+               'end_date' => $filters['end_date']?? '',
+               'status' => $filters['status']?? '',
+               'sort_by' => $filters['sort_by']?? '',
+               'sort_direction' => $filters['sort_direction']?? '',
+               'nama_tagihan' => $filters['nama_tagihan']?? '',
+               'total_min' => $filters['total_min']?? '',
+               'total_max' => $filters['total_max']?? '',
+            ];
             return [
                 'success' => true,
                 'data' => $tagihans,
+                'pagination' => $pagination,
+                'current_filters' => $currentFilters,
                 'message' => 'Tagihan user berhasil diambil'
             ];
         } catch (\Exception $e) {
             return [
                 'success' => false,
                 'message' => 'Gagal mengambil tagihan: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function getByUserId (int $userId): array
+    {
+        try {
+            $tagihans = $this->tagihanRepository->getByUserId($userId);
+            if (!$tagihans) {
+                return [
+                   'success' => false,
+                   'message' => 'Tagihan tidak ditemukan'
+                ];
+            }
+            return [
+               'success' => true,
+                'data' => $tagihans,
+               'message' => 'Tagihan user berhasil diambil'
+            ];
+        } catch (\Exception $e) {
+            return [
+               'success' => false,
+               'message' => 'Gagal mengambil tagihan: '. $e->getMessage()
             ];
         }
     }

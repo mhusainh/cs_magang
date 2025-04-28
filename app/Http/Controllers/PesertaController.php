@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTO\PesertaDTO;
+use App\Http\Requests\Peserta\UpdateStatusRequest;
 use App\Traits\ApiResponse;
 use App\DTO\ProgressUserDTO;
 use Illuminate\Http\Request;
@@ -182,5 +183,15 @@ class PesertaController extends Controller
         }
 
         return $this->success($result['data'], $result['message'], $result['code'], $result['pagination'], $result['current_filters']);
+    }
+
+    public function updateStatus(int $id, UpdateStatusRequest $request)
+    {
+        $result = $this->pesertaService->update($id, ['status' => $request->validated('status')]);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+
+        return $this->success($result['data'], $result['message'], 200);
     }
 }

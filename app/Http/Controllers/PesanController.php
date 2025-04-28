@@ -18,9 +18,19 @@ class PesanController extends Controller
         private PesanService $pesanService
     ) {}
 
-    public function getAll()
+    public function getAll(Request $request)
     {
-        $result = $this->pesanService->getAll();
+        $filters = [
+            'search' => $request->search,
+            'start_date' => $request->start_date,
+           'end_date' => $request->end_date,
+           'per_page' => $request->per_page,
+           'sort_by' => $request->sort_by,
+           'sort_direction' => $request->order_by,
+           'is_read' => $request->is_read,
+        ];
+
+        $result = $this->pesanService->getAll($filters);
         if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }

@@ -21,6 +21,7 @@ class Media extends Model
         'nama',
         'url',
         'public_id',
-        'jenjang_sekolah'
+        'jenjang_sekolah',
+        'jurusan'
     ];
 }

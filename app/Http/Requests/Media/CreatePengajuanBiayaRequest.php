@@ -5,7 +5,7 @@ namespace App\Http\Requests\Media;
 use App\Traits\FormRequestTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends FormRequest
+class CreatePengajuanBiayaRequest extends FormRequest
 {
     use FormRequestTrait;
     /**
@@ -24,22 +24,25 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
-            'jenjang_sekolah' => 'sometimes|string|max:255',
-            'jurusan' =>'sometimes|string|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+            'jenjang_sekolah' => 'required|string|max:255',
+            'jurusan' => 'required|string|max:255'
         ];
     }
 
     public function messages(): array
     {
         return [
+            'image.required' => 'Gambar harus diisi',
             'image.image' => 'File harus berupa gambar',
             'image.mimes' => 'File harus berupa jpeg, png, jpg, gif, svg',
             'image.max' => 'File tidak boleh lebih dari 5 MB',
-            'jenjang_sekolah.string' => 'Jenjang sekolah harus berupa string',
-            'jenjang_sekolah.max' => 'Jenjang sekolah tidak boleh lebih dari 255 karakter',
-            'jurusan.string' => 'Jurusan harus berupa string',
-            'jurusan.max' => 'Jurusan tidak boleh lebih dari 255 karakter',
+            'jenjang_sekolah.required' => 'jenjang_sekolah harus diisi',
+            'jenjang_sekolah.string' => 'jenjang_sekolah harus berupa string',
+            'jenjang_sekolah.max' => 'jenjang_sekolah tidak boleh lebih dari 255 karakter',
+            'jurusan.required' => 'jurusan harus diisi',
+            'jurusan.string' => 'jurusan harus berupa string',
+            'jurusan.max' => 'jurusan tidak boleh lebih dari 255 karakter'
         ];
     }
 }

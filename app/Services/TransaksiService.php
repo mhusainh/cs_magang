@@ -15,13 +15,42 @@ class TransaksiService
         private TransaksiRepository $transaksiRepository
     ) {}
 
-    public function getAll(int $userId): array
+    public function getAll(array $filters): array
     {
         try {
-            $transaksi = $this->transaksiRepository->getAll($userId);
+            $transaksi = $this->transaksiRepository->getAll($filters);
+            if ($transaksi->isEmpty())
+            {
+                return [
+                   'success' => false,
+                   'message' => 'Transaksi tidak ditemukan'
+                ];
+            }
+
+            $pagination = [
+               'page' => $transaksi->currentPage(),
+                'per_page' => $transaksi->perPage(),
+                'total_items' => $transaksi->total(),
+                'total_pages' => $transaksi->lastPage()
+            ];
+
+            $currentFilters = [
+                'search' => $filters['search']?? '',
+                'start_date' => $filters['start_date']?? '',
+                'end_date' => $filters['end_date']?? '',
+                'status' => $filters['status']?? '',
+                'sort_by' => $filters['sort_by']?? '',
+                'sort_direction' => $filters['sort_direction']?? '',
+                'method' => $filters['method']?? '',
+                'total_min' => $filters['total_min']?? '',
+                'total_max' => $filters['total_max']?? '',
+            ];
+
             return [
                 'success' => true,
                 'data' => $transaksi,
+                'pagination' => $pagination,
+                'current_filters' => $currentFilters,
                 'message' => 'Daftar transaksi berhasil diambil'
             ];
         } catch (\Exception $e) {
@@ -152,10 +181,10 @@ class TransaksiService
         }
     }
 
-    public function getAllBookVee(): array
+    public function getAllBookVee(int $jurusan1_id): array
     {
         try {
-            $transaksi = $this->transaksiRepository->findBookVeeWithPeserta();
+            $transaksi = $this->transaksiRepository->findBookVeeWithPeserta($jurusan1_id);
             if ($transaksi->isEmpty()) {
                 return [
                     'success' => false,

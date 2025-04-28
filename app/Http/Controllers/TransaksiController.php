@@ -6,6 +6,7 @@ use App\DTO\TransaksiDTO;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use App\Services\TransaksiService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Transaksi\CreateRequest;
 use App\Http\Requests\Transaksi\UpdateRequest;
@@ -16,9 +17,36 @@ class TransaksiController extends Controller
 
     public function __construct(private TransaksiService $transaksiService) {}
 
-    public function getAll(): JsonResponse
+    public function getAll(Request $request): JsonResponse
     {
-        $result = $this->transaksiService->getAll(Auth::user()->id);
+        $filters = [
+            'search' => $request->search,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'status' => $request->status,
+            'sort_by' => $request->sort_by,
+            'sort_direction' => $request->order_by,
+            'method' => $request->method,
+            'total_min' => $request->total_min,
+            'total_max' => $request->total_max,
+            'per_page' => $request->per_page,
+        ];
+
+        $result = $this->transaksiService->getAll($filters);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success($result['data'], $result['message'], 200, $result['pagination'], $result['current_filters']);
+    }
+
+    public function getByUserId(int $userId, Request $request): JsonResponse
+    {
+        $filters = [
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ];
+
+        $result = $this->transaksiService->getByUserId($userId, $filters);
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
@@ -27,8 +55,7 @@ class TransaksiController extends Controller
 
     public function getById(int $id): JsonResponse
     {
-        $userId = Auth::user()->id;
-        $result = $this->transaksiService->getById($id, $userId);
+        $result = $this->transaksiService->getById($id);
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
@@ -84,21 +111,35 @@ class TransaksiController extends Controller
         return $this->success(null, $result['message'], 200);
     }
 
-    public function riwayat(): JsonResponse
+    public function riwayat(Request $request): JsonResponse
     {
-        $result = $this->transaksiService->getByUserId(Auth::user()->id);
+        $filters = [
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ];
+
+        $result = $this->transaksiService->getByUserId(Auth::user()->id, $filters);
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
         return $this->success($result['data'], $result['message'], 200);
     }
 
-    public function getPeringkat(): JsonResponse
+    public function getPeringkatByUser(): JsonResponse
     {
-        $result = $this->transaksiService->getAllBookVee();
+        $result = $this->transaksiService->getAllBookVee(Auth::user()->peserta->jurusan1_id);
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
-        return $this->success($result['data'], $result['message'], 200, $result['pagination']);
+        return $this->success($result['data'], $result['message'], 200);
+    }
+
+    public function getPeringkat(Request $request): JsonResponse
+    {
+        $result = $this->transaksiService->getAllBookVee($request->jurusan_id);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success($result['data'], $result['message'], 200);
     }
 }

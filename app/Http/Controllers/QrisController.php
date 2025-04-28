@@ -9,6 +9,7 @@ use App\Services\TransaksiService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Helpers\Logger;
 
 class QrisController extends Controller
 {
@@ -34,7 +35,7 @@ class QrisController extends Controller
         return $this->success($result['data'], $result['message'], 200);
     }
 
-    public function webhook(Request $request): JsonResponse
+    public function webhookQris(Request $request): JsonResponse
     {
         $token = $request->query('token');
         if (empty($token)) {
@@ -46,13 +47,38 @@ class QrisController extends Controller
             ], 400);
         }
 
-        $result = $this->qrisService->processWebhook($token, $request->all());
-
-        return response()->json([
+        $result = $this->qrisService->processWebhook($token, 'QRIS');
+        $responseData = [
             'responseCode' => $result['success'] ? '00' : '01',
             'responseMessage' => $result['success'] ? 'TRANSACTION SUCCESS' : 'TRANSACTION FAILED',
             'responseTimestamp' => now()->format('Y-m-d H:i:s.u'),
-            'transactionId' => $request->input('transactionId', '')
-        ], $result['success'] ? 200 : 400);
+            'transactionId' => $result['transactionId']
+        ];
+        Logger::log('webhook_qris', $result['requesetData'], $responseData, null, $result['transactionId']);
+        return response()->json($responseData, $result['success'] ? 200 : 400);
+    }
+    public function webhookVaNumber(Request $request): JsonResponse
+    {
+        $token = $request->query('token');
+        if (empty($token)) {
+            return response()->json([
+                'responseCode' => '01',
+                'responseMessage' => 'TOKEN INVALID',
+                'responseTimestamp' => now()->format('Y-m-d H:i:s.u'),
+                'transactionId' => $request->input('transactionId', '')
+            ], 400);
+        }
+
+        $result = $this->qrisService->processWebhook($token, 'VA_NUMBER');
+        $responseData = [
+            'responseCode' => $result['success'] ? '00' : '01',
+            'responseMessage' => $result['success'] ? 'TRANSACTION SUCCESS' : 'TRANSACTION FAILED',
+            'responseTimestamp' => now()->format('Y-m-d H:i:s.u'),
+            'transactionId' => $result['transactionId']
+        ];
+        Logger::log('webhook_qris', $result['requesetData'], $responseData, null, $result['transactionId']);
+        return response()->json($responseData, $result['success'] ? 200 : 400);
     }
 }
+
+

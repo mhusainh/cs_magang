@@ -38,6 +38,7 @@ class MediaService
                 'public_id' => $result->getPublicId(),
                 'url' => $result->getSecurePath(),
                 'jenjang_sekolah' => $data['jenjang_sekolah'],
+                'jurusan' => $data['jurusan'] ?? null,
             ];
 
             $media = $this->mediaRepository->create($dataMedia);
@@ -122,9 +123,25 @@ class MediaService
         ];
     }
 
-    public function GetByUser($nama): array
+    public function GetJadwalByUser(string $nama): array
     {
         $media = $this->mediaRepository->findByUser($nama, Auth::user()->peserta->jenjang_sekolah);
+        if (!$media) {
+            return [
+                'success' => false,
+                'message' => 'Gambar tidak ditemukan',
+            ];
+        }
+        return [
+            'success' => true,
+            'data' => GetResource::collection($media),
+            'message' => 'Berhasil mendapatkan gambar',
+        ];
+    }
+
+    public function GetPengajuanBiayaByUser(string $nama): array
+    {
+        $media = $this->mediaRepository->findByUser($nama, Auth::user()->peserta->jenjang_sekolah, Auth::user()->peserta->jurusan->nama);
         if (!$media) {
             return [
                 'success' => false,

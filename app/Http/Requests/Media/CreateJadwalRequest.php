@@ -5,7 +5,7 @@ namespace App\Http\Requests\Media;
 use App\Traits\FormRequestTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRequest extends FormRequest
+class CreateJadwalRequest extends FormRequest
 {
     use FormRequestTrait;
     /**
@@ -25,7 +25,7 @@ class CreateRequest extends FormRequest
     {
         return [
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
-            'jenjang_sekolah' => 'required|string|max:255'
+            'jenjang_sekolah' => 'required|string|max:255',
         ];
     }
 

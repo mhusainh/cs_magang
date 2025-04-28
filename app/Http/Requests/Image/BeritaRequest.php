@@ -27,7 +27,6 @@ class BeritaRequest extends FormRequest
         return [
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
             'urutan' => 'required|integer',
-            'jenjang_sekolah' =>'required|string|max:5',
         ];
     }
 
@@ -45,9 +44,6 @@ class BeritaRequest extends FormRequest
             'image.max' => 'Ukuran gambar tidak boleh melebihi 5 MB.',
             'urutan.required' => 'Urutan wajib diisi',
             'urutan.integer' => 'Urutan harus berupa angka',
-            'jenjang_sekolah.required' => 'Jenjang sekolah wajib diisi',
-            'jenjang_sekolah.string' => 'Jenjang sekolah harus berupa string',
-            'jenjang_sekolah.max' => 'Jenjang sekolah tidak boleh melebihi 5 karakter'
         ];
     }
 }

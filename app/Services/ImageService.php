@@ -142,22 +142,6 @@ class ImageService
         }      
     }
 
-    public function getBeritaByUser($jenjang): array
-    {
-        $images = $this->imageRepository->getBeritaByUser($jenjang);
-        if (!$images) {
-            return [
-             'success' => false,
-             'message' => 'Gagal mendapatkan semua gambar berita',
-            ]; 
-        }
-        return [
-            'success' => true,
-            'data' => BeritaResource::collection($images),
-            'message' => 'Berhasil mendapatkan semua gambar berita',
-        ];
-    }
-
     public function GetHomepageById($id): array
     {
         $image = $this->imageRepository->findHomepageById($id);

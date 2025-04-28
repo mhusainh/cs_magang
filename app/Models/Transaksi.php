@@ -16,6 +16,7 @@ class Transaksi extends Model
      *
      * @var array<int, string>
      */
+    protected $table = "transaksis";
     protected $fillable = [
         'user_id',
         'tagihan_id',

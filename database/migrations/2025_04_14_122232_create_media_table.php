@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('url');
             $table->string('public_id');
             $table->string('jenjang_sekolah');
+            $table->string('jurusan')->nullable();
             $table->timestamps();
         });
     }

@@ -13,7 +13,6 @@ class MediaBerita extends Model
         'urutan',
         'url',
         'public_id',
-        'jenjang_sekolah',
     ];
     protected $table = 'media_berita';
 }

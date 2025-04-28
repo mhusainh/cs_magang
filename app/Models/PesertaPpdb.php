@@ -49,11 +49,6 @@ class PesertaPpdb extends Model
         return $this->belongsTo(Jurusan::class, 'jurusan1_id');
     }
 
-    public function jurusan2(): BelongsTo
-    {
-        return $this->belongsTo(Jurusan::class, 'jurusan2_id');
-    }
-
     public function biodataOrtu(): HasOne
     {
         return $this->hasOne(BiodataOrtu::class, 'peserta_id');

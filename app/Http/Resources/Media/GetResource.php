@@ -20,6 +20,7 @@ class GetResource extends JsonResource
             'url' => $this->url,
             'public_id' => $this->public_id,
             'jenjang_sekolah' => $this->jenjang_sekolah,
+            'jurusan' => $this->jurusan,
         ];
     }
 }
