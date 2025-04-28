@@ -16,8 +16,15 @@ class GetDetailResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'tagihan_id' => $this->tagihan_id ? [
+            'user' => $this->user ? [
+                'id' => $this->user->id,
+                'no_telp' => $this->user->no_telp,
+                'peserta' => $this->user->peserta ? [
+                    'id' => $this->user->peserta->id,
+                    'nama' => $this->user->peserta->nama,
+                ] : null,
+            ] : null,   
+            'tagihan' => $this->tagihan ? [
                 'id' => $this->tagihan->id,
                 'nama_tagihan' => $this->tagihan->nama_tagihan,
                 'total' => $this->tagihan->total,
@@ -31,11 +38,7 @@ class GetDetailResource extends JsonResource
             'method' => $this->method,
             'ref_no' => $this->ref_no,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
 
-            // Optional: Include relationships
-            'user' => $this->whenLoaded('user'),
-            'tagihan' => $this->whenLoaded('tagihan')
         ];
     }
 }

@@ -22,11 +22,11 @@ class TransaksiRepository
                     ->orWhere('total', 'like', "%{$search}%")
                     ->orWhere('va_number', 'like', "%{$search}%")
                     ->orWhere('transaction_qr_id', 'like', "%{$search}%")
+                    ->orWhereHas('user.peserta', function ($q) use ($search) {
+                        $q->where('nama', 'like', "%{$search}%");
+                    })
                     ->orWhereHas('tagihan', function ($q) use ($search) {
-                        $q->where('nama_tagian', 'like', "%{$search}%")
-                            ->orWhereHas('user.peserta', function ($q) use ($search) {
-                                $q->where('nama', 'like', "%{$search}%");
-                            });
+                        $q->where('nama_tagihan', 'like', "%{$search}%");
                     });
             });
         }
@@ -66,7 +66,7 @@ class TransaksiRepository
             $query->orderBy('created_at', 'desc');
         }
 
-        $paginator = $query->paginate($filters['per_page'] ?? 10);
+        $paginator = $query->with('tagihan', 'user.peserta')->paginate($filters['per_page'] ?? 10);
         return $paginator->appends(request()->query());
     }
 
