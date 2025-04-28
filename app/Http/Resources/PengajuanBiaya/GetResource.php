@@ -17,6 +17,8 @@ class GetResource extends JsonResource
         return 
         [
             'id' => $this->id,
+            'jurusan' => $this->jurusan,
+            'jenjang_sekolah' => $this->jenjang_sekolah,
             'nominal' => $this->nominal,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

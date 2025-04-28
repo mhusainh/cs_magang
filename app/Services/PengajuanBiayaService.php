@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Resources\PengajuanBiaya\GetResource;
 use App\Repositories\PengajuanBiayaRepository;
+use Illuminate\Support\Facades\Auth;
 
 class PengajuanBiayaService
 {
@@ -111,9 +112,9 @@ class PengajuanBiayaService
         ];
     }
 
-    public function getOnTop(): array
+    public function getByUser(string $jenjang_sekolah, string $jurusan): array
     {
-        $result = $this->pengajuanBiayaRepository->getOnTop();
+        $result = $this->pengajuanBiayaRepository->getByUser($jenjang_sekolah, $jurusan);
         if (!$result) {
             return [
                 'success' => false,

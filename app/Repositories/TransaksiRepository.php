@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Transaksi;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
 
 class TransaksiRepository
@@ -42,7 +43,7 @@ class TransaksiRepository
         if (isset($filters['status']) && $filters['status'] !== '') {
             $query->where('status', $filters['status']);
         }
-        
+
         if (isset($filters['method']) && $filters['method'] !== '') {
             $query->where('method', $filters['method']);
         }
@@ -103,11 +104,11 @@ class TransaksiRepository
         }
 
         return $query->select(
-                'transaksis.*',
-                'peserta_ppdbs.id as peserta_id',
-                'peserta_ppdbs.nama as peserta_nama',
-                'peserta_ppdbs.wakaf as wakaf'
-            )
+            'transaksis.*',
+            'peserta_ppdbs.id as peserta_id',
+            'peserta_ppdbs.nama as peserta_nama',
+            'peserta_ppdbs.wakaf as wakaf'
+        )
             ->orderBy('wakaf', 'desc')
             ->orderBy('transaksis.created_at', 'asc');
     }
@@ -135,5 +136,15 @@ class TransaksiRepository
     public function delete(int $id)
     {
         return $this->model->where('id', $id)->delete();
+    }
+
+    public function findBookVee()
+    {
+        return $this->model
+            ->whereHas('tagihan', function ($query) {
+                $query->where('nama_tagihan', 'book_vee');
+            })
+            ->where('user_id', Auth::user()->id)
+            ->get();
     }
 }

@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use App\Services\PesertaService;
+use App\Services\TransaksiService;
 use Illuminate\Support\Facades\Auth;
 use App\Services\PengajuanBiayaService;
 use App\Http\Requests\PengajuanBiaya\SppRequest;
 use App\Http\Requests\PengajuanBiaya\WakafRequest;
 use App\Http\Requests\PengajuanBiaya\CreateRequest;
+use App\Http\Requests\PengajuanBiaya\UpdateRequest;
 use App\Http\Requests\PengajuanBiaya\BookVeeRequest;
 
 class PengajuanBiayaController extends Controller
@@ -18,12 +20,15 @@ class PengajuanBiayaController extends Controller
 
     public function __construct(
         private PengajuanBiayaService $pengajuanBiayaService,
-        private PesertaService $pesertaService
+        private PesertaService $pesertaService,
+        private TransaksiService $transaksiService,
     ) {}
 
     public function create(CreateRequest $request)
     {
         $data = [
+            'jurusan' => $request->validated('jurusan'),
+            'jenjang_sekolah' => $request->validated('jenjang_sekolah'),
             'nominal' => $request->validated('nominal'),
         ];
         $result = $this->pengajuanBiayaService->create($data);
@@ -42,9 +47,11 @@ class PengajuanBiayaController extends Controller
         return $this->success($result['data'], $result['message'], 200);
     }
 
-    public function update(CreateRequest $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         $data = [
+            'jurusan' => $request->validated('jurusan'),
+            'jenjang_sekolah' => $request->validated('jenjang_sekolah'),
             'nominal' => $request->validated('nominal'),
         ];
         $result = $this->pengajuanBiayaService->update($id, $data);
@@ -72,9 +79,9 @@ class PengajuanBiayaController extends Controller
         return $this->success($result['data'], $result['message'], 200);
     }
 
-    public function getOnTop()
+    public function getByUser()
     {
-        $result = $this->pengajuanBiayaService->getOnTop();
+        $result = $this->pengajuanBiayaService->getByUser(Auth::user()->jenjang_sekolah, Auth::user()->jurusan);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }
@@ -83,11 +90,11 @@ class PengajuanBiayaController extends Controller
 
     public function reguler()
     {
-        $biaya = $this->pengajuanBiayaService->getOnTop();
+        $biaya = $this->pengajuanBiayaService->getByUser(Auth::user()->jenjang_sekolah, Auth::user()->jurusan);
         if (!$biaya['success']) {
             return $this->error($biaya['message'], 422, null);
         }
-        $result = $this->pesertaService->update(Auth::user()->id, ['wakaf' => $biaya['data']['nominal']]);
+        $result = $this->pesertaService->update(Auth::user()->id, ['pengajuan_biaya' => $biaya['data']['nominal']]);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }
@@ -96,6 +103,10 @@ class PengajuanBiayaController extends Controller
 
     public function wakaf(WakafRequest $request)
     {
+        $bookVee = $this->transaksiService->getUserBookVee();
+        if (!$bookVee['success']) {
+            return $this->error('Silahkan membayar Book Vee terlebih dahulu', 422, null);
+        }
         $result = $this->pesertaService->update(Auth::user()->id, ['wakaf' => $request->validated('wakaf')]);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
@@ -112,9 +123,13 @@ class PengajuanBiayaController extends Controller
         return $this->success($result['data'], $result['message'], 200);
     }
 
-    public function bookVee(BookVeeRequest $request)
+    public function bookVee()
     {
-        $result = $this->pesertaService->update(Auth::user()->id, ['book_vee' => $request->validated('book_vee')]);
+        $biaya = $this->pengajuanBiayaService->getByUser(Auth::user()->jenjang_sekolah, Auth::user()->jurusan);
+        if (!$biaya['success']) {
+            return $this->error($biaya['message'], 422, null);
+        }
+        $result = $this->pesertaService->update(Auth::user()->id, ['book_vee' => $biaya['data']['nominal']]);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }

@@ -69,7 +69,7 @@ class PesertaRepository
                                 $q->where('nama', 'like', "%{$search}%");
                             })
                             ->orWhereHas('penghasilanOrtu', function ($q) use ($search) {
-                                $q->where('nama', 'like', "%{$search}%");
+                                $q->where('penghasilan_ortu', 'like', "%{$search}%");
                             });
                     });
             });

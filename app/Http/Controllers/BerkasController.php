@@ -175,6 +175,19 @@ class BerkasController extends Controller
             return $this->error($result['message'], 400, null);
         }
         
+        $dataPesan = [
+            'user_id' => Auth::user()->id,
+            'judul' => " Update Berkas ",
+            'deskripsi' => 'Halo ' . Auth::user()->peserta->nama . ', berkas Anda telah berhasil diupdate. Terima kasih!',
+        ];
+
+        $pesan = $this->pesanService->create($dataPesan);
+        
+        if (!$pesan['success']) {
+            // Tetap kembalikan sukses meskipun pesan gagal dibuat
+            return $this->success($result, 'Semua file berhasil diupload, tetapi notifikasi gagal dibuat', 200);
+        }
+
         return $this->success($result['data'], $result['message'], 200);
     }
 }

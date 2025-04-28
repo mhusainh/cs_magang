@@ -5,7 +5,7 @@ namespace App\Http\Requests\PengajuanBiaya;
 use App\Traits\FormRequestTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use FormRequestTrait;
     /**
@@ -24,20 +24,18 @@ class CreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'jurusan' => 'required|string',
-            'jenjang_sekolah' =>'required|string',
-            'nominal' => 'required|numeric',
+            'jurusan' => 'sometimes|string',
+            'jenjang_sekolah' =>'sometimes|string',
+            'nominal' => 'sometimes|integer',
         ];
     }
+
     public function messages(): array
     {
         return [
-            'jurusan.required' => 'Jurusan tidak boleh kosong',
             'jurusan.string' => 'Jurusan harus berupa string',
-            'jenjang_sekolah.required' => 'Jenjang sekolah tidak boleh kosong',
-            'jenjang_sekolah.string' => 'Jenjang sekolah harus berupa string',
-            'nominal.required' => 'Nominal tidak boleh kosong',
-            'nominal.numeric' => 'Nominal harus berupa angka',
+            'jenjang_sekolah.string' => 'Jenjang Sekolah harus berupa string',
+            'nominal.integer' => 'Nominal harus berupa integer',
         ];
     }
 }

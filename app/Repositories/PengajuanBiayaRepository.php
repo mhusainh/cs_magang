@@ -34,8 +34,12 @@ class PengajuanBiayaRepository
         return $this->model->all();
     }
 
-    public function getOnTop(): ?PengajuanBiaya
+    public function getByUser(string $jenjang_sekolah, string $jurusan): ?PengajuanBiaya
     {
-        return $this->model->orderBy('created_at', 'desc')->first();
+        return $this->model
+            ->where('jenjang_sekolah', $jenjang_sekolah)
+            ->where('jurusan', $jurusan)
+            ->orderBy('created_at', 'desc')
+            ->first();
     }
-} 
+}

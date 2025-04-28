@@ -19,31 +19,30 @@ class TransaksiService
     {
         try {
             $transaksi = $this->transaksiRepository->getAll($filters);
-            if ($transaksi->isEmpty())
-            {
+            if ($transaksi->isEmpty()) {
                 return [
-                   'success' => false,
-                   'message' => 'Transaksi tidak ditemukan'
+                    'success' => false,
+                    'message' => 'Transaksi tidak ditemukan'
                 ];
             }
 
             $pagination = [
-               'page' => $transaksi->currentPage(),
+                'page' => $transaksi->currentPage(),
                 'per_page' => $transaksi->perPage(),
                 'total_items' => $transaksi->total(),
                 'total_pages' => $transaksi->lastPage()
             ];
 
             $currentFilters = [
-                'search' => $filters['search']?? '',
-                'start_date' => $filters['start_date']?? '',
-                'end_date' => $filters['end_date']?? '',
-                'status' => $filters['status']?? '',
-                'sort_by' => $filters['sort_by']?? '',
-                'sort_direction' => $filters['sort_direction']?? '',
-                'method' => $filters['method']?? '',
-                'total_min' => $filters['total_min']?? '',
-                'total_max' => $filters['total_max']?? '',
+                'search' => $filters['search'] ?? '',
+                'start_date' => $filters['start_date'] ?? '',
+                'end_date' => $filters['end_date'] ?? '',
+                'status' => $filters['status'] ?? '',
+                'sort_by' => $filters['sort_by'] ?? '',
+                'sort_direction' => $filters['sort_direction'] ?? '',
+                'method' => $filters['method'] ?? '',
+                'total_min' => $filters['total_min'] ?? '',
+                'total_max' => $filters['total_max'] ?? '',
             ];
 
             return [
@@ -202,6 +201,29 @@ class TransaksiService
                     'total_items' => $transaksi->total(),
                     'total_pages' => $transaksi->lastPage()
                 ]
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mengambil detail transaksi: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function getUserBookVee(): array
+    {
+        try {
+            $transaksi = $this->transaksiRepository->findBookVee();
+            if (!$transaksi) {
+                return [
+                    'success' => false,
+                    'message' => 'Transaksi tidak ditemukan'
+                ];
+            }
+            return [
+                'success' => true,
+                'data' => $transaksi,
+                'message' => 'Detail transaksi berhasil diambil'
             ];
         } catch (Exception $e) {
             return [
