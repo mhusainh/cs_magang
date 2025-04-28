@@ -30,7 +30,6 @@ class ImageController extends Controller
         $uploadedImage = $request->validated('image');
         $data = [
             'urutan' => $request->validated('urutan'),
-            'jenjang_sekolah' => $request->validated('jenjang_sekolah')
         ];
 
         $result = $this->imageService->createBerita($uploadedImage, $data);
