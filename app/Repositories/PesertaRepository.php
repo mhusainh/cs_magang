@@ -27,10 +27,22 @@ class PesertaRepository
     public function findByUserId(int $userId): ?Peserta
     {
         return $this->model->with([
-            'jurusan1',
-            'biodataOrtu.pekerjaanAyah',
-            'biodataOrtu.pekerjaanIbu',
-            'biodataOrtu.penghasilanOrtu',
+            'jurusan1' => function ($query) {
+                $query->withTrashed();
+            },
+            'biodataOrtu' => function ($query) {
+                $query->withTrashed()->with([
+                    'pekerjaanAyah' => function ($q) {
+                        $q->withTrashed();
+                    },
+                    'pekerjaanIbu' => function ($q) {
+                        $q->withTrashed();
+                    },
+                    'penghasilanOrtu' => function ($q) {
+                        $q->withTrashed();
+                    }
+                ]);
+            },
             'berkas'
         ])->withTrashed()->where('user_id', $userId)->first();
     }
