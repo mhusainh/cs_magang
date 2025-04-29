@@ -172,7 +172,7 @@ class QrisService
                 'tagihan_id' => $tagihan->id,
                 'status' => 1,
                 'total' => $transactionData->amount,
-                'created_time' => $transactionData->transactionId,
+                'created_time' => $tagihan->created_time,
                 'va_number' => $transactionData->vano ?? $transactionData->vano1,
                 'transaction_qr_id' => $transactionData->transactionQrId,
                 'method' => $method,
@@ -193,6 +193,7 @@ class QrisService
                     return ['success' => false, 'message' => 'Gagal memperbarui user'];
                 }
             }
+
             $servernamelog = '10.99.23.20';
             $usernamelog = 'root';
             $passwordlog = 'Smartpay1ct';
