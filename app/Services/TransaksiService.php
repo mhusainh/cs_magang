@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use Exception;
-use App\Helpers\JWT;
-use GuzzleHttp\Client;
 use App\Repositories\TransaksiRepository;
 use App\Http\Resources\Transaksi\RiwayatResource;
 use App\Http\Resources\Transaksi\GetDetailResource;

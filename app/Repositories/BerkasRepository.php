@@ -84,8 +84,8 @@ class BerkasRepository
         }
 
         $paginator = $query->with([
-            'ketentuanBerkas',
-            'peserta'
+            'ketentuanBerkas' => function ($query) {$query->withTrashed();},
+            'peserta' => function ($query) {$query->withTrashed();}
         ])->paginate($filters['per_page'] ?? 10);
         return $paginator->appends(request()->query());
     }

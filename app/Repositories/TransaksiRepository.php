@@ -143,7 +143,7 @@ class TransaksiRepository
     {
         return $this->model
             ->whereHas('tagihan', function ($query) {
-                $query->where('nama_tagihan', 'book_vee');
+                $query->withTrashed()->where('nama_tagihan', 'book_vee');
             })
             ->where('user_id', Auth::user()->id)
             ->get();

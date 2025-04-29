@@ -78,7 +78,7 @@ Route::middleware('auth:api')->group(function () {
             Route::put('peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']);
 
             // Pengajuan Biaya Management
-            Route::get('pengajuan-biaya', [PengajuanBiayaController::class, 'getOnTop']);
+            Route::get('pengajuan-biaya', [PengajuanBiayaController::class, 'getByUser']);
             Route::put('pengajuan-biaya/wakaf', [PengajuanBiayaController::class, 'wakaf']);
             Route::put('pengajuan-biaya/spp', [PengajuanBiayaController::class, 'spp']);
             Route::put('pengajuan-biaya/book-vee', [PengajuanBiayaController::class, 'bookVee']);

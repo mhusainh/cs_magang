@@ -72,13 +72,12 @@ class UserRepository
     {
         return $user->delete();
     }
-    public function findByIdCard(int $id):?user
+    public function findByIdCard(int $id): ?user
     {
-        return $this->model->with(
-            'peserta',
-            'progressUser',
-            'pesan'
-        )->where('id', $id)->first();
+        return $this->model->with([
+            'peserta' => function ($query) {$query->withTrashed();},
+            'progressUser' => function ($query) {$query->withTrashed();},
+            'pesan' => function ($query) {$query->withTrashed();}
+        ])->where('id', $id)->first();
     }
-
 }
