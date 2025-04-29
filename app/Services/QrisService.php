@@ -210,7 +210,7 @@ class QrisService
             $GetValue = (string) ($transactionData->amount + $NOMINALFee1 + $NOMINALFee2); // Nominal Gabungan
             $accountNoLog = '5080010295'; // Account No QRIS
             $mitraCustomerId = 'ISLAMIC CENTER SMG451061'; // Mitra ID
-            $vanoLog = $transactionData->vano ?? '-';
+            $vanoLog = $transactionData->vano ?? $transactionData->vano1;
             $transactionIdLog = $transactionData->transactionId;
             $transactionQrIdLog = $transactionData->transactionQrId;
 
