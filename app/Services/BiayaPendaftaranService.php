@@ -48,6 +48,15 @@ class BiayaPendaftaranService
 
     public function create($data): array
     {
+        $result = $this->biayaPendaftaranRepository->getOnTop();
+        if ($result) {
+            return [
+                'success' => false,
+                'message' => 'Data sudah ada, silahkan ubah data yang sudah ada',
+                'data' => null,
+            ];
+        }
+
         $result = $this->biayaPendaftaranRepository->create($data);
         if (!$result) {
             return [
