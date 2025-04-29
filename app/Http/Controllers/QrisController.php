@@ -56,7 +56,7 @@ class QrisController extends Controller
             'responseTimestamp' => now()->format('Y-m-d H:i:s.u'),
             'transactionId' => $result['transactionId'],
         ];
-        Logger::log('webhook_qris', $result['requesetData'], $responseData, null, $result['transactionId']);
+        Logger::log('webhook_qris', $result['requestData'], $responseData, null, $result['transactionId']);
         $dataPesan = [
             'user_id' => $result['userId'],
             'judul' => 'Pembayaran',
@@ -91,7 +91,7 @@ class QrisController extends Controller
             'responseTimestamp' => now()->format('Y-m-d H:i:s.u'),
             'transactionId' => $result['transactionId']
         ];
-        Logger::log('webhook_qris', $result['requesetData'], $responseData, null, $result['transactionId']);
+        Logger::log('webhook_qris', $result['requestData'], $responseData, null, $result['transactionId']);
         $dataPesan = [
             'user_id' => $result['userId'],
             'judul' => 'Pembayaran',

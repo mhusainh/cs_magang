@@ -222,7 +222,7 @@ class QrisService
                 'success' => true,
                 'message' => 'Transaksi berhasil diperbarui',
                 'transactionId' => $transactionData->transactionId,
-                'requesetData' => $decodedToken,
+                'requestData' => $decodedToken,
                 'userId' => $tagihan->user_id,
                 'total' => $transactionData->amount,
 
