@@ -87,7 +87,8 @@ class TransaksiRepository
             $query->whereDate('created_at', '<=', $filters['end_date']);
         }
 
-        return $query->orderBy('created_at', 'desc')
+        return $query->with('tagihan')
+            ->orderBy('created_at', 'desc')
             ->paginate(10)
             ->appends(request()->query());
     }
