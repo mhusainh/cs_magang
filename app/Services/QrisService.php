@@ -222,7 +222,8 @@ class QrisService
                 'success' => true,
                 'message' => 'Transaksi berhasil diperbarui',
                 'transactionId' => $transactionData->transactionId,
-                'requesetData' => $decodedToken,
+                'requestData' => $decodedToken,
+                'created_time' => $tagihan->created_time,
 
             ];
         } catch (\Exception $e) {
