@@ -54,7 +54,7 @@ class QrisController extends Controller
             'responseTimestamp' => now()->format('Y-m-d H:i:s.u'),
             'transactionId' => $result['transactionId']
         ];
-        Logger::log('webhook_qris', $result['requesetData'], $responseData, null, $result['transactionId']);
+        Logger::log('webhook_qris', $result['requestData'], $responseData, null, $result['created_time']);
         return response()->json($responseData, $result['success'] ? 200 : 400);
     }
     public function webhookVaNumber(Request $request): JsonResponse
@@ -76,7 +76,7 @@ class QrisController extends Controller
             'responseTimestamp' => now()->format('Y-m-d H:i:s.u'),
             'transactionId' => $result['transactionId']
         ];
-        Logger::log('webhook_qris', $result['requesetData'], $responseData, null, $result['transactionId']);
+        Logger::log('webhook_qris', $result['requestData'], $responseData, null, $result['created_time']);
         return response()->json($responseData, $result['success'] ? 200 : 400);
     }
 }
