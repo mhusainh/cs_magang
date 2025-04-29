@@ -176,7 +176,7 @@ class QrisService
                 'va_number' => $transactionData->vano ?? $transactionData->vano1,
                 'transaction_qr_id' => $transactionData->transactionQrId,
                 'method' => $method,
-                'ref_no' => $decodedToken->transactionId,
+                'ref_no' => $transactionData->transactionId,
             ];
             $transaksi = $this->transaksiRepository->create($transaksiData);
             if (!$transaksi) {
@@ -222,8 +222,10 @@ class QrisService
                 'success' => true,
                 'message' => 'Transaksi berhasil diperbarui',
                 'transactionId' => $transactionData->transactionId,
-                'requestData' => $decodedToken,
-                'created_time' => $tagihan->created_time,
+                'requesetData' => $decodedToken,
+                'userId' => $tagihan->user_id,
+                'total' => $transactionData->amount,
+
 
             ];
         } catch (\Exception $e) {
