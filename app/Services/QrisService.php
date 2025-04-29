@@ -145,9 +145,6 @@ class QrisService
                 return ['success' => false, 'message' => 'Token tidak valid'];
             }
 
-            // Log data webhook yang diterima
-            Logger::log('webhook_qris', $decodedToken, null, null, $decodedToken->data->transactionId);
-
             // Pastikan response code adalah 00 (sukses)
             if ($decodedToken->responseCode !== '00') {
                 return ['success' => false, 'message' => 'Response code tidak valid'];
