@@ -17,40 +17,22 @@ class PesertaRepository
     public function findById(int $id): ?Peserta
     {
         return $this->model->with([
-            'jurusan1' => function ($query) {
-                $query->withTrashed();
-            },
-            'biodataOrtu.pekerjaanAyah'  => function ($query) {
-                $query->withTrashed();
-            },
-            'biodataOrtu.pekerjaanIbu'  => function ($query) {
-                $query->withTrashed();
-            },
-            'biodataOrtu.penghasilanOrtu'  => function ($query) {
-                $query->withTrashed();
-            }
-        ])->where('id', $id)->first();
+            'jurusan1',
+            'biodataOrtu.pekerjaanAyah',
+            'biodataOrtu.pekerjaanIbu',
+            'biodataOrtu.penghasilanOrtu'
+        ])->withTrashed()->where('id', $id)->first();
     }
 
     public function findByUserId(int $userId): ?Peserta
     {
         return $this->model->with([
-            'jurusan1' => function ($query) {
-                $query->withTrashed();
-            },
-            'biodataOrtu.pekerjaanAyah'  => function ($query) {
-                $query->withTrashed();
-            },
-            'biodataOrtu.pekerjaanIbu' => function ($query) {
-                $query->withTrashed();
-            },
-            'biodataOrtu.penghasilanOrtu'  => function ($query) {
-                $query->withTrashed();
-            },
-            'berkas' => function ($query) {
-                $query->withTrashed();
-            }
-        ])->where('user_id', $userId)->first();
+            'jurusan1',
+            'biodataOrtu.pekerjaanAyah',
+            'biodataOrtu.pekerjaanIbu',
+            'biodataOrtu.penghasilanOrtu',
+            'berkas'
+        ])->withTrashed()->where('user_id', $userId)->first();
     }
 
     public function update(Peserta $peserta, array $data): bool
@@ -117,19 +99,11 @@ class PesertaRepository
         }
 
         $paginator = $query->with([
-            'jurusan1' => function ($query) {
-                $query->withTrashed();
-            },
-            'biodataOrtu.pekerjaanAyah'  => function ($query) {
-                $query->withTrashed();
-            },
-            'biodataOrtu.pekerjaanIbu'  => function ($query) {
-                $query->withTrashed();
-            },
-            'biodataOrtu.penghasilanOrtu'  => function ($query) {
-                $query->withTrashed();
-            }
-        ])->paginate($filters['per_page'] ?? 10);
+            'jurusan1',
+            'biodataOrtu.pekerjaanAyah',
+            'biodataOrtu.pekerjaanIbu',
+            'biodataOrtu.penghasilanOrtu'
+        ])->withTrashed()->paginate($filters['per_page'] ?? 10);
         return $paginator->appends(request()->query());
     }
 }
