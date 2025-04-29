@@ -176,7 +176,7 @@ class QrisService
                 'va_number' => $transactionData->vano,
                 'transaction_qr_id' => $transactionData->transactionQrId,
                 'method' => $method,
-                'ref_no' => $decodedToken->transactionId,
+                'ref_no' => $transactionData->transactionId,
             ];
             $transaksi = $this->transaksiRepository->create($transaksiData);
             if (!$transaksi) {
@@ -198,6 +198,8 @@ class QrisService
                 'message' => 'Transaksi berhasil diperbarui',
                 'transactionId' => $transactionData->transactionId,
                 'requesetData' => $decodedToken,
+                'userId' => $tagihan->user_id,
+                'total' => $transactionData->amount,
 
 
             ];
