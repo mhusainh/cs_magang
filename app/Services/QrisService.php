@@ -173,7 +173,7 @@ class QrisService
                 'status' => 1,
                 'total' => $transactionData->amount,
                 'created_time' => $transactionData->transactionId,
-                'va_number' => $transactionData->vano,
+                'va_number' => $transactionData->vano ?? $transactionData->vano1,
                 'transaction_qr_id' => $transactionData->transactionQrId,
                 'method' => $method,
                 'ref_no' => $decodedToken->transactionId,
@@ -222,7 +222,6 @@ class QrisService
                 'message' => 'Transaksi berhasil diperbarui',
                 'transactionId' => $transactionData->transactionId,
                 'requesetData' => $decodedToken,
-
 
             ];
         } catch (\Exception $e) {
