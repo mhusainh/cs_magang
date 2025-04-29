@@ -17,10 +17,22 @@ class PesertaRepository
     public function findById(int $id): ?Peserta
     {
         return $this->model->with([
-            'jurusan1',
-            'biodataOrtu.pekerjaanAyah',
-            'biodataOrtu.pekerjaanIbu',
-            'biodataOrtu.penghasilanOrtu'
+            'jurusan1' => function ($query) {
+                $query->withTrashed();
+            },
+            'biodataOrtu' => function ($query) {
+                $query->withTrashed()->with([
+                    'pekerjaanAyah' => function ($q) {
+                        $q->withTrashed();
+                    },
+                    'pekerjaanIbu' => function ($q) {
+                        $q->withTrashed();
+                    },
+                    'penghasilanOrtu' => function ($q) {
+                        $q->withTrashed();
+                    }
+                ]);
+            }
         ])->withTrashed()->where('id', $id)->first();
     }
 
@@ -111,10 +123,22 @@ class PesertaRepository
         }
 
         $paginator = $query->with([
-            'jurusan1',
-            'biodataOrtu.pekerjaanAyah',
-            'biodataOrtu.pekerjaanIbu',
-            'biodataOrtu.penghasilanOrtu'
+            'jurusan1' => function ($query) {
+                $query->withTrashed();
+            },
+            'biodataOrtu' => function ($query) {
+                $query->withTrashed()->with([
+                    'pekerjaanAyah' => function ($q) {
+                        $q->withTrashed();
+                    },
+                    'pekerjaanIbu' => function ($q) {
+                        $q->withTrashed();
+                    },
+                    'penghasilanOrtu' => function ($q) {
+                        $q->withTrashed();
+                    }
+                ]);
+            }
         ])->withTrashed()->paginate($filters['per_page'] ?? 10);
         return $paginator->appends(request()->query());
     }
