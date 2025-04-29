@@ -28,7 +28,7 @@ class QrisService
                 'amount' => (string) $data['total'],
                 'mitraCustomerId' => $_ENV['QRIS_MITRA_CUSTOMER_ID'],
                 'transactionId' => $data['created_time'],
-                'tipeTransaksi' => $_ENV['QRIS_TIPE_TRANSAKSI'],
+                'tipeTransaksi' => "MTR-GENERATE-QRIS-DYNAMIC",
                 'vano' => $data['va_number']
             ];
 
@@ -90,7 +90,7 @@ class QrisService
             'mitraCustomerId' => $_ENV['QRIS_MITRA_CUSTOMER_ID'],
             'transactionId' => $data['created_time'],
             'transactionQrId' => $data['transaction_qr_id'],
-            'tipeTransaksi' => $_ENV['QRIS_TIPE_TRANSAKSI'],
+            'tipeTransaksi' => "MTR-CHECK-STATUS",
         ];
         try {
             $token = JWT::encode($payload, $_ENV['QRIS_JWT_SECRET'], 'HS256');
