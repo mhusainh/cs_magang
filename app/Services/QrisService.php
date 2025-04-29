@@ -164,10 +164,10 @@ class QrisService
 
             $updatedTagihan = $this->tagihanRepository->update($tagihan, ['status' => 1]);
             if (!$updatedTagihan) {
-                return ['success' => false,'message' => 'Gagal memperbarui transaksi'];
+                return ['success' => false, 'message' => 'Gagal memperbarui transaksi'];
             }
 
-           $transaksiData = [
+            $transaksiData = [
                 'user_id' => $tagihan->user_id,
                 'tagihan_id' => $tagihan->id,
                 'status' => 1,
@@ -180,19 +180,43 @@ class QrisService
             ];
             $transaksi = $this->transaksiRepository->create($transaksiData);
             if (!$transaksi) {
-                return ['success' => false,'message' => 'Gagal membuat transaksi'];
+                return ['success' => false, 'message' => 'Gagal membuat transaksi'];
             }
 
-           if ($tagihan->nama_tagihan === 'Registrasi') {
+            if ($tagihan->nama_tagihan === 'Registrasi') {
                 $user = $this->userRepository->findById($tagihan->user_id);
                 if (!$user) {
-                    return ['success' => false,'message' => 'User tidak ditemukan'];
+                    return ['success' => false, 'message' => 'User tidak ditemukan'];
                 }
                 $updatedUser = $this->userRepository->update($user, ['status' => '1']);
-                if (!$updatedUser) {   
-                    return ['success' => false,'message' => 'Gagal memperbarui user'];
+                if (!$updatedUser) {
+                    return ['success' => false, 'message' => 'Gagal memperbarui user'];
                 }
-            }            // Log transaksi yang berhasil dibuat
+            }
+            $servernamelog = '10.99.23.20';
+            $usernamelog = 'root';
+            $passwordlog = 'Smartpay1ct';
+            $databaselog = 'farrelep_broadcaster';
+
+            $dbTraffic = mysqli_connect($servernamelog, $usernamelog, $passwordlog, $databaselog);
+            if ($dbTraffic->connect_errno) {
+                echo json_encode("Failed to connect to MySQL: " . $dbTraffic->connect_error);
+                exit();
+            }
+
+            $CUSTNM = 'SEMARANG_WALISONGO';
+            $NOMINALFee1 = (int) round($transactionData->amount * 0.007, 0, PHP_ROUND_HALF_UP); // Biaya QRIS
+            $NOMINALFee2 = 0; // Biaya Admin ICT
+            $GetValue = (string) ($transactionData->amount + $NOMINALFee1 + $NOMINALFee2); // Nominal Gabungan
+            $accountNoLog = '5080010295'; // Account No QRIS
+            $mitraCustomerId = 'ISLAMIC CENTER SMG451061'; // Mitra ID
+            $vanoLog = $transactionData->vano ?? '-';
+            $transactionIdLog = $transactionData->transactionId;
+            $transactionQrIdLog = $transactionData->transactionQrId;
+
+            $queryLog = "CALL LogPaymentQR ('" . $CUSTNM . "', '" . $mitraCustomerId . "' , '" . $accountNoLog . "' , '" . $transactionIdLog . "', '" . $transactionData->transactionId . "' , '" . $transactionQrIdLog . "' , '" . $vanoLog . "' , '" . $GetValue . "' ,'" . $transactionData->amount . "' ,'" . $NOMINALFee1 . "' ,'" . $NOMINALFee2 . "' ,'" . $token . "','-')";
+            $dbTraffic->query($queryLog);
+            
             return [
                 'success' => true,
                 'message' => 'Transaksi berhasil diperbarui',
