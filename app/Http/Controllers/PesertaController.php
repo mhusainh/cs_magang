@@ -191,6 +191,20 @@ class PesertaController extends Controller
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
+        
+        $dataPesan = [
+            'user_id' => $id,
+            'judul' => 'Pengumuman Hasil PPDB',
+            'deskripsi' => $result['status'] === '1' ? 'Selamat ' . $result['nama_peserta']. ', Anda telah di terima menjadi siswa '. $result['jenjang_sekolah'] .' Walisongo !' 
+                            : 'Maaf '. $result['nama_peserta']. ', anda dinyatakan tidak lolos seleksi ppdb Walisongo!'
+        ];
+
+        $pesan = $this->pesanService->create($dataPesan);
+        
+        if (!$pesan['success']) {
+            // Tetap kembalikan sukses meskipun pesan gagal dibuat
+            return $this->success($result, 'Semua file berhasil diupload, tetapi notifikasi gagal dibuat', 200);
+        }
 
         return $this->success(null, $result['message'], 200);
     }

@@ -92,7 +92,10 @@ class PesertaService
 
             return [
                 'success' => true,
-                'message' => 'Peserta berhasil diperbarui'
+                'message' => 'Peserta berhasil diperbarui',
+                'nama_peserta' => $peserta->nama,
+                'jenjang_sekolah' => $peserta->jenjang_sekolah,
+                'status' => $data['status'],
             ];
         } catch (\Exception $e) {
             return [
