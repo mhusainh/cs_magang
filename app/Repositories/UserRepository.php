@@ -78,9 +78,7 @@ class UserRepository
             'peserta' => function ($query) {
                 $query->withTrashed();
             },
-            'progressUser' => function ($query) {
-                $query->withTrashed();
-            },
+            'progressUser',
             'pesan' => function ($query) {
                 $query->withTrashed();
             }
