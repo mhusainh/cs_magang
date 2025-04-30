@@ -16,7 +16,7 @@ class CreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'jurusan' => 'required|string|max:255|unique:jurusan,jurusan',
+            'jurusan' => 'required|string|max:255',
             'jenjang_sekolah' => 'nullable|string|max:50'
         ];
     }
@@ -26,7 +26,6 @@ class CreateRequest extends FormRequest
         return [
             'jurusan.required' => 'Nama jurusan wajib diisi',
             'jurusan.max' => 'Nama jurusan maksimal 255 karakter',
-            'jurusan.unique' => 'Jurusan sudah terdaftar',
             'jenjang_sekolah.max' => 'Jenjang sekolah maksimal 50 karakter',
             'jenjang_sekolah.string' => 'Jenjang sekolah harus berupa teks'
         ];

@@ -98,4 +98,34 @@ class KetentuanBerkasController extends Controller
 
         return $this->success(null, $result['message'], 200);
     }
+
+    public function getDeleted(Request $request)
+    {
+        $filters = [
+            'search' => $request->search,
+            'jenjang' => $request->jenjang,
+            'is_required' => $request->is_required,
+            'sort_by' => $request->sort_by,
+            'sort_direction' => $request->order_by,
+            'per_page' => $request->per_page
+        ];
+
+        $result = $this->ketentuanBerkasService->getDeleted($filters);
+        if (!$result['success']) {
+            return $this->error($result['message'], 404, null);
+        }
+
+        return $this->success($result['data'], $result['message'], 200, $result['pagination']);
+    }
+
+    public function restore($id)
+    {
+        $result = $this->ketentuanBerkasService->restore($id);
+
+        if (!$result['success']) {
+            return $this->error($result['message'], 422, null);
+        }
+
+        return $this->success($result['data'], $result['message'], 200);
+    }
 }

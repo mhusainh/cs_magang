@@ -51,6 +51,22 @@ class PenghasilanOrtuController extends Controller
         if(!$result['success']){
             return $this->error($result['message'], 400);
         }
+        return $this->success(null, $result['message'], 200);
+    }
+    
+    public function getDeleted(){
+        $result = $this->penghasilanOrtuService->getDeleted();
+        if(!$result['success']){
+            return $this->error($result['message'], 400);
+        }
         return $this->success($result['data'], $result['message'], 200);
+    }
+
+    public function restore($id){
+        $result = $this->penghasilanOrtuService->restore($id);
+        if(!$result['success']){
+            return $this->error($result['message'], 400);
+        }
+        return $this->success(null, $result['message'], 200);
     }
 }

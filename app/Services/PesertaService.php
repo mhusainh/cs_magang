@@ -177,4 +177,77 @@ class PesertaService
             ];
         }
     }
+
+    public function getDeleted($filters = []): array
+    {
+        try {
+            $peserta = $this->pesertaRepository->getTrash($filters);
+            if ($peserta->isEmpty()) {
+                return [
+                    'code' => 200,
+                    'success' => false,
+                    'message' => 'Tidak ada data peserta'
+                ];
+            }
+
+            // Set pagination data
+            $pagination = [
+                'page' => $peserta->currentPage(),
+                'per_page' => $peserta->perPage(),
+                'total_items' => $peserta->total(),
+                'total_pages' => $peserta->lastPage()
+            ];
+
+            // Set current filters untuk response
+            $currentFilters = [
+                'search' => $filters['search'] ?? '',
+                'start_date' => $filters['start_date'] ?? '',
+                'end_date' => $filters['end_date'] ?? '',
+                'jenjang_sekolah' => $filters['jenjang_sekolah'] ?? '',
+                'sort_by' => $filters['sort_by'] ?? '',
+                'sort_direction' => $filters['sort_direction'] ?? ''
+            ];
+
+            return [
+                'code' => 200,
+                'success' => true,
+                'data' => GetResource::collection($peserta),
+                'message' => 'Data peserta berhasil diambil',
+                'pagination' => $pagination,
+                'current_filters' => $currentFilters
+            ];
+        } catch (\Exception $e) {
+            return [
+                'code' => 500,
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengambil data peserta'
+            ];
+        }
+    }
+
+    public function restore(int $id): array
+    {
+        $peserta = $this->pesertaRepository->findById($id);
+
+        if (!$peserta) {
+            return [
+               'success' => false,
+               'message' => 'Peserta tidak ditemukan'
+            ];
+        }
+
+        $result = $this->pesertaRepository->restore($peserta);
+        if (!$result) {
+            return [
+               'success' => false,
+               'message' => 'Peserta gagal dikembalikan'
+            ];
+        }
+
+        return [
+            'success' => true,
+            'data' => new GetDetailResource($peserta),
+            'message' => 'Peserta berhasil dikembalikan'
+        ];
+    }
 }

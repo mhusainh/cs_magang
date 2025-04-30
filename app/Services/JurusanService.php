@@ -129,7 +129,7 @@ class JurusanService
     {
         try {
             $jurusan = $this->jurusanRepository->findbyJenjangSekolah($jenjang);
-            
+
             if ($jurusan->isEmpty()) {
                 return [
                     'success' => true,
@@ -137,7 +137,7 @@ class JurusanService
                     'message' => 'Tidak ada jurusan ditemukan untuk jenjang ini'
                 ];
             }
-            
+
             return [
                 'success' => true,
                 'data' => $jurusan->map(function ($item) {
@@ -151,5 +151,48 @@ class JurusanService
                 'message' => 'Gagal mengambil daftar jurusan: ' . $e->getMessage()
             ];
         }
+    }
+
+    public function getDeleted(): array
+    {
+        try {
+            $jurusan = $this->jurusanRepository->getTrash();
+            return [
+                'success' => true,
+                'data' => $jurusan->map(function ($item) {
+                    return new GetDetailResource($item);
+                }),
+                'message' => 'Daftar jurusan berhasil diambil'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mengambil daftar jurusan: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function restore(int $id): array
+    {
+        $jurusan = $this->jurusanRepository->findById($id);
+
+        if (!$jurusan) {
+            return [
+                'success' => false,
+                'message' => 'Jurusan tidak ditemukan'
+            ];
+        }
+        $result = $this->jurusanRepository->restore($jurusan);
+
+        if ($result) {
+            return [
+                'success' => true,
+                'message' => 'Jurusan berhasil dipulihkan'
+            ];
+        }
+        return [
+            'success' => false,
+            'message' => 'Gagal memulihkan jurusan',
+        ];
     }
 }

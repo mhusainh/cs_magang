@@ -107,4 +107,37 @@ class TagihanController extends Controller
         }
         return $this->success(null, $result['message'], 200);
     }
+
+    public function getDeleted(Request $request): JsonResponse
+    {
+        $filters = [
+            'search' => $request->search,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'status' => $request->status,
+            'per_page' => $request->per_page,
+            'nama_tagihan' => $request->nama,
+            'sort_by' => $request->sort_by,
+            'sort_direction' => $request->order_by,
+            'total_min' => $request->total_min,
+            'total_max' => $request->total_max,
+        ];
+
+        $result = $this->tagihanService->getDeleted($filters);
+
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+
+        return $this->success($result['data'], $result['message'], 200, $result['pagination'], $result['current_filters']);
+    }
+
+    public function restore(int $id): JsonResponse
+    {
+        $result = $this->tagihanService->restore($id);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success(null, $result['message'], 200);
+    }
 }

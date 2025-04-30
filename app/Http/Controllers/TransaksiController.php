@@ -142,4 +142,35 @@ class TransaksiController extends Controller
         }
         return $this->success($result['data'], $result['message'], 200);
     }
+
+    public function getDeleted(Request $request): JsonResponse
+    {
+        $filters = [
+            'search' => $request->search,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'status' => $request->status,
+            'sort_by' => $request->sort_by,
+            'sort_direction' => $request->order_by,
+            'method' => $request->method,
+            'total_min' => $request->total_min,
+            'total_max' => $request->total_max,
+            'per_page' => $request->per_page,
+        ];
+
+        $result = $this->transaksiService->getDeleted($filters);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success($result['data'], $result['message'], 200, $result['pagination'], $result['current_filters']);
+    }
+
+    public function restore(int $id): JsonResponse
+    {
+        $result = $this->transaksiService->restore($id);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success(null, $result['message'], 200);
+    }
 }

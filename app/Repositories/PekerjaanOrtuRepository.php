@@ -16,7 +16,7 @@ class PekerjaanOrtuRepository
 
     public function findById(int $id): ?PekerjaanOrtu
     {
-        return $this->model->where('id', $id)->first();
+        return $this->model->withTrashed()->where('id', $id)->first();
     }
 
     public function create(array $data): PekerjaanOrtu
@@ -29,9 +29,18 @@ class PekerjaanOrtuRepository
         return $pekerjaanOrtu->update($data);
     }
 
-
     public function delete(PekerjaanOrtu $pekerjaanOrtu): bool
     {
         return $pekerjaanOrtu->delete();
+    }
+
+    public function getTrash(): Collection
+    {
+        return $this->model->onlyTrashed()->get();
+    }
+
+    public function restore(PekerjaanOrtu $pekerjaanOrtu): bool
+    {
+        return $pekerjaanOrtu->restore();
     }
 } 

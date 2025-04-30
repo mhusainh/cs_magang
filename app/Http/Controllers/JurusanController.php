@@ -93,4 +93,22 @@ class JurusanController extends Controller
         $uniqueJenjang = GetUniqueJenjangSekolahResource::collection($result['data']);
         return $this->success($uniqueJenjang, 'Daftar jenjang sekolah berhasil diambil', 200);
     }
+
+    public function getDeleted(): JsonResponse
+    {
+        $result = $this->jurusanService->getDeleted();
+        if (!$result['success']) {
+            return $this->error($result['message'], 400, null);
+        }
+        return $this->success($result['data'], $result['message'], 200);
+    }
+
+    public function restore(int $id): JsonResponse
+    {
+        $result = $this->jurusanService->restore($id);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400, null);
+        }
+        return $this->success(null, $result['message'], 200);
+    }
 }

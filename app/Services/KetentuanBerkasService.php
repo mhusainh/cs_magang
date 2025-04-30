@@ -198,4 +198,78 @@ class KetentuanBerkasService
             ];
         }
     }
+
+    public function getDeleted(array $filters = [])
+    {
+        try {
+            $result = $this->ketentuanBerkasRepository->getTrash($filters);
+            if (!$result) {
+                return [
+                    'success' => false,
+                    'message' => 'Ketentuan berkas tidak ditemukan',
+                    'data' => null
+                ];
+            }
+
+            $totalItems = $result->total();
+            $totalPages = $result->lastPage();
+            $currentPage = $result->currentPage();
+            $perPage = $result->perPage();
+
+            $currentFilters = [
+                'search' => $filters['search'] ?? '',
+                'jenjang_sekolah' => $filters['jenjang'] ?? '',
+                'is_required' => $filters['is_required'] ?? '',
+                'sort_by' => $filters['sort_by'] ?? '',
+                'sort_direction' => $filters['sort_direction'] ?? ''
+            ];
+
+            // Set pagination data
+            $pagination = [
+                'page' => $currentPage,
+                'per_page' => $perPage,
+                'total_items' => $totalItems,
+                'total_pages' => $totalPages
+            ];
+
+            return [
+                'success' => true,
+                'message' => 'Berhasil mendapatkan semua ketentuan berkas',
+                'data' => [
+                    'ketentuan_berkas' => GetAllKetentuanBerkasResource::collection($result),
+                    'current_filters' => $currentFilters
+                ],
+                'pagination' => $pagination
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mendapatkan ketentuan berkas: ' . $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+
+    public function restore($id)
+    {
+        $ketentuanBerkas = $this->ketentuanBerkasRepository->getKetentuanBerkasById($id);
+        if (!$ketentuanBerkas) {
+            return [
+                'success' => false,
+                'message' => 'Ketentuan berkas tidak ditemukan',
+            ];
+        }
+        $result = $this->ketentuanBerkasRepository->restore($ketentuanBerkas);
+        if (!$result) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mengembalikan ketentuan berkas',
+            ];
+        }
+        return [
+            'success' => true,
+            'message' => 'Berhasil mengembalikan ketentuan berkas',
+            'data' => $ketentuanBerkas
+        ];
+    }
 }

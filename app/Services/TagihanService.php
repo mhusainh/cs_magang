@@ -265,4 +265,81 @@ class TagihanService
             ];
         }
     }
+
+    public function getDeleted($filters = []): array
+    {
+        try {
+            $tagihans = $this->tagihanRepository->getTrash($filters);
+            if($tagihans->isEmpty()) {
+                return [
+                   'success' => false,
+                   'message' => 'Tagihan tidak ditemukan'
+                ];
+            }
+
+            $pagination = [
+              'page' => $tagihans->currentPage(),
+              'per_page' => $tagihans->perPage(),
+              'total_items' => $tagihans->total(),
+              'total_pages' => $tagihans->lastPage(),
+            ];
+
+            $currentFilters = [
+                'search' => $filters['search'] ?? '',
+                'start_date' => $filters['start_date']?? '',
+               'end_date' => $filters['end_date']?? '',
+               'status' => $filters['status']?? '',
+               'sort_by' => $filters['sort_by']?? '',
+               'sort_direction' => $filters['sort_direction']?? '',
+               'nama_tagihan' => $filters['nama_tagihan']?? '',
+               'total_min' => $filters['total_min']?? '',
+               'total_max' => $filters['total_max']?? '',
+            ];
+            return [
+                'success' => true,
+                'data' => $tagihans,
+                'pagination' => $pagination,
+                'current_filters' => $currentFilters,
+                'message' => 'Tagihan user berhasil diambil'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mengambil tagihan: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function restore(int $id): array
+    {
+        try {
+            $tagihan = $this->tagihanRepository->findById($id);
+
+            if (!$tagihan) {
+                return [
+                   'success' => false,
+                   'message' => 'Tagihan tidak ditemukan'
+                ];
+            }
+
+            $result = $this->tagihanRepository->restore($tagihan);
+            if (!$result) {
+                return [
+                 'success' => false,
+                 'message' => 'Gagal memulihkan tagihan'
+                ];
+            }
+
+            return [
+               'success' => true,
+               'message' => 'Tagihan berhasil dipulihkan'
+            ];
+        } catch (\Exception $e) {
+            return [
+              'success' => false,
+              'data' => $tagihan,
+              'message' => 'Gagal memulihkan tagihan: '. $e->getMessage()
+            ];
+        }
+    }
 }

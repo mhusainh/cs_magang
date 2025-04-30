@@ -18,6 +18,10 @@ class RiwayatResource extends JsonResource
             'ref_no' => $this->ref_no,
             'total' => $this->total,
             'method' => $this->method,
+            'tagihan' => $this->tagihan ? [
+                'id' => $this->tagihan->id,
+                'nama_tagihan' => $this->tagihan->nama_tagihan,
+            ]: null,
             'created_at' => $this->created_at,
         ];
     }

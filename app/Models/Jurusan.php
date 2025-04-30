@@ -34,9 +34,4 @@ class Jurusan extends Model
         return $this->hasMany(Peserta::class, 'jurusan2_id');
     }
 
-    public function hasil(): HasOne
-    {
-        return $this->hasOne(Hasil::class);
-    }
-    
 }
