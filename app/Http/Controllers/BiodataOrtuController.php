@@ -89,7 +89,7 @@ class BiodataOrtuController extends Controller
         if (!$result['success']) {
             return $this->error($result['message'], 400, null);
         }
-        return $this->success($result['data'], $result['message'], 200);
+        return $this->success(null, $result['message'], 200);
     }
 
     public function getDeleted(){
