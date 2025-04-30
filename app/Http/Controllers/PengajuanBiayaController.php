@@ -8,12 +8,11 @@ use App\Services\PesertaService;
 use App\Services\TagihanService;
 use App\Services\TransaksiService;
 use Illuminate\Support\Facades\Auth;
+use App\Services\ProgressUserService;
 use App\Services\PengajuanBiayaService;
 use App\Http\Requests\PengajuanBiaya\SppRequest;
 use App\Http\Requests\PengajuanBiaya\WakafRequest;
-use App\Http\Requests\PengajuanBiaya\CreateRequest;
 use App\Http\Requests\PengajuanBiaya\UpdateRequest;
-use App\Http\Requests\PengajuanBiaya\BookVeeRequest;
 use App\Http\Requests\PengajuanBiaya\CreateBookVeeRequest;
 use App\Http\Requests\PengajuanBiaya\CreateRegulerRequest;
 
@@ -25,7 +24,8 @@ class PengajuanBiayaController extends Controller
         private PengajuanBiayaService $pengajuanBiayaService,
         private PesertaService $pesertaService,
         private TransaksiService $transaksiService,
-        private TagihanService $tagihanService
+        private TagihanService $tagihanService,
+        private ProgressUserService $progressUserService,
     ) {}
 
     public function createBookVee(CreateBookVeeRequest $request)
@@ -114,9 +114,9 @@ class PengajuanBiayaController extends Controller
     {
         $jurusan = Auth::user()->peserta->jurusan1->jurusan;
         $jenjang = Auth::user()->peserta->jenjang_sekolah;
-        if($jurusan != 'reguler'){
-            $jurusan='unggulan';
-            $jenjang=null;
+        if ($jurusan != 'reguler') {
+            $jurusan = 'unggulan';
+            $jenjang = null;
         }
         $result = $this->pengajuanBiayaService->getByUser($jenjang, $jurusan);
         if (!$result['success']) {
@@ -128,26 +128,39 @@ class PengajuanBiayaController extends Controller
 
     public function reguler()
     {
-        if(Auth::user()->peserta->jurusan1->jurusan !='reguler'){
+        if (Auth::user()->peserta->jurusan1->jurusan != 'reguler') {
             return $this->error('Anda tidak dapat mengajukan biaya reguler', 422, null);
         }
-
-        $biaya = $this->pengajuanBiayaService->getByUser(Auth::user()->peserta->jenjang_sekolah, Auth::user()->peserta->jurusan1_id);
+        $biaya = $this->pengajuanBiayaService->getByUser(Auth::user()->peserta->jenjang_sekolah, Auth::user()->peserta->jurusan1->jurusan);
         if (!$biaya['success']) {
             return $this->error($biaya['message'], 422, null);
         }
 
-        $result = $this->pesertaService->update(Auth::user()->id, ['pengajuan_biaya' => $biaya['data']['nominal']]);
+        $data = [
+            'pengajuan_biaya' => $biaya['data']['nominal'],
+            'status' => 'diproses'
+        ];
+        $result = $this->pesertaService->update(Auth::user()->id, $data);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }
 
-        return $this->success($result['data'], $result['message'], 200);
+        $progressUser = $this->progressUserService->getByUserId(Auth::user()->id);
+        if (!$progressUser['success']) {
+            return $this->error($progressUser['message'], 404, null);
+        }
+
+        $updateProgress = $this->progressUserService->updateProgress($progressUser['data'], ['progress' => 3]);
+        if (!$updateProgress['success']) {
+            return $this->error($updateProgress['message'], 404, null);
+        }
+
+        return $this->success(null, $result['message'], 200);
     }
 
     public function wakaf(WakafRequest $request)
     {
-        if(Auth::user()->peserta->jurusan1->jurusan =='reguler'){
+        if (Auth::user()->peserta->jurusan1->jurusan == 'reguler') {
             return $this->error('Anda tidak dapat mengajukan biaya unggulan', 422, null);
         }
 
@@ -155,36 +168,51 @@ class PengajuanBiayaController extends Controller
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }
-        
-        return $this->success($result['data'], $result['message'], 200);
+
+        return $this->success(null, $result['message'], 200);
     }
 
     public function spp(SppRequest $request)
     {
-        if(Auth::user()->peserta->jurusan1->jurusan =='reguler'){
+        if (Auth::user()->peserta->jurusan1->jurusan == 'reguler') {
             return $this->error('Anda tidak dapat mengajukan biaya unggulan', 422, null);
         }
 
-        $result = $this->pesertaService->update(Auth::user()->id, ['spp' => $request->validated('spp')]);
+        $data = [
+            'spp' => $request->validated('spp'),
+            'status' => 'diproses'
+        ];
+
+        $result = $this->pesertaService->update(Auth::user()->id, $data);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }
 
-        return $this->success($result['data'], $result['message'], 200);
+        $progressUser = $this->progressUserService->getByUserId(Auth::user()->id);
+        if (!$progressUser['success']) {
+            return $this->error($progressUser['message'], 404, null);
+        }
+
+        $updateProgress = $this->progressUserService->updateProgress($progressUser['data'], ['progress' => 3]);
+        if (!$updateProgress['success']) {
+            return $this->error($updateProgress['message'], 404, null);
+        }
+
+        return $this->success(null, $result['message'], 200);
     }
 
     public function bookVee()
     {
-        if(Auth::user()->peserta->jurusan1->jurusan =='reguler'){
+        if (Auth::user()->peserta->jurusan1->jurusan == 'reguler') {
             return $this->error('Anda tidak dapat mengajukan biaya unggulan', 422, null);
         }
 
-        if(Auth::user()->tagihan->where('nama_tagihan', 'book_vee')->count() > 0){
+        if (Auth::user()->tagihan->where('nama_tagihan', 'book_vee')->count() > 0) {
             return $this->error('Anda sudah mengajukan biaya book vee', 422, null);
         }
 
         $biaya = $this->pengajuanBiayaService->getBookVee();
-        if (!$biaya['success']) { 
+        if (!$biaya['success']) {
             return $this->error($biaya['message'], 422, null);
         }
 
