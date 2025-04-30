@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('nominal');
             $table->string('jurusan');
-            $table->string('jenjang_sekolah');
+            $table->string('jenjang_sekolah')->nullable();
             $table->timestamps();
         });
     }

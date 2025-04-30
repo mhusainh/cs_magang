@@ -73,6 +73,10 @@ class PengajuanBiayaService
                 'data' => null,
             ];
         }
+        if ($pengajuanBiaya->jurusan != 'reguler' && isset($data['jenjang_sekolah'])) {
+            unset($data['jenjang_sekolah']);
+        }
+
         $result = $this->pengajuanBiayaRepository->update($pengajuanBiaya, $data);
         if (!$result) {
             return [
@@ -112,9 +116,26 @@ class PengajuanBiayaService
         ];
     }
 
-    public function getByUser(string $jenjang_sekolah, string $jurusan): array
+    public function getByUser(string $jenjang_sekolah=null, $jurusan): array
     {
         $result = $this->pengajuanBiayaRepository->getByUser($jenjang_sekolah, $jurusan);
+        if (!$result) {
+            return [
+                'success' => false,
+                'message' => 'Data tidak ditemukan',
+                'data' => null,
+            ];
+        }
+        return [
+            'success' => true,
+            'message' => 'Pengajuan Biaya berhasil ditemukan',
+            'data' => new GetResource($result),
+        ];
+    }
+
+    public function getBookVee(): array
+    {
+        $result = $this->pengajuanBiayaRepository->getBookVee();
         if (!$result) {
             return [
                 'success' => false,
