@@ -97,7 +97,7 @@ class PengajuanBiayaController extends Controller
             return $this->error($result['message'], 422, null);
         }
 
-        return $this->success($result['data'], $result['message'], 200);
+        return $this->success(null, $result['message'], 200);
     }
 
     public function getById($id)

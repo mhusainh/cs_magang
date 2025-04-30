@@ -60,7 +60,7 @@ class BiodataOrtuController extends Controller
             $request->validated('penghasilan_ortu_id')
         );
 
-        $result = $this->biodataOrtuService->update($data, $id);
+        $result = $this->biodataOrtuService->update($data);
         if (!$result['success']) {
             return $this->error($result['message'], 400, null);
         }
@@ -77,7 +77,7 @@ class BiodataOrtuController extends Controller
             $request->validated('pekerjaan_ibu_id'),
             $request->validated('penghasilan_ortu_id')
         );
-        $result = $this->biodataOrtuService->update($data, Auth::user()->peserta->biodataOrtu->id);
+        $result = $this->biodataOrtuService->update($data);
         if (!$result['success']) {
             return $this->error($result['message'], 400, null);
         }
