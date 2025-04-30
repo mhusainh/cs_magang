@@ -123,4 +123,45 @@ class PekerjaanOrtuService
             ];
         }
     }
+
+    public function getDeleted(): array
+    {
+        try {
+            $data = $this->pekerjaanOrtuRepository->getTrash();
+            return [
+                'success' => true,
+                'data' => GetResource::collection($data),
+                'message' => 'Daftar pekerjaan ortu berhasil diambil'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mengambil data: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function restore(int $id): array
+    {
+        $pekerjaanOrtu = $this->pekerjaanOrtuRepository->findById($id);
+
+        if (!$pekerjaanOrtu) {
+            return [
+               'success' => false,
+               'message' => 'Data tidak ditemukan'
+            ];
+        }
+        $result = $this->pekerjaanOrtuRepository->restore($pekerjaanOrtu);
+        if (!$result) {
+            return [
+              'success' => false,
+              'message' => 'Gagal mengembalikan data'
+            ];
+        }
+        return [
+          'success' => true,
+          'data' => new GetResource($pekerjaanOrtu),
+          'message' => 'Data berhasil dikembalikan'
+        ];
+    }
 } 

@@ -111,4 +111,32 @@ class PesanController extends Controller
         }
         return $this->success($result['data'], $result['message'], 200);
     }
+
+    public function getDeleted(Request $request)
+    {
+        $filters = [
+            'search' => $request->search,
+            'start_date' => $request->start_date,
+           'end_date' => $request->end_date,
+           'per_page' => $request->per_page,
+           'sort_by' => $request->sort_by,
+           'sort_direction' => $request->order_by,
+           'is_read' => $request->is_read,
+        ];
+
+        $result = $this->pesanService->getDeleted($filters);
+        if (!$result['success']) {
+            return $this->error($result['message'], 404, null);
+        }
+        return $this->success($result['data'], $result['message'], 200); 
+    }
+
+    public function restore($id)
+    {
+        $result = $this->pesanService->restore($id);
+        if (!$result['success']) {
+            return $this->error($result['message'], 404, null);
+        }
+        return $this->success($result['data'], $result['message'], 200);
+    }
 }

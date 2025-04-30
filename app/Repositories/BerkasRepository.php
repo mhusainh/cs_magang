@@ -21,10 +21,10 @@ class BerkasRepository
             $query->where(function ($q) use ($search) {
                 $q->where('nama_file', 'like', "%{$search}%")
                     ->orWhereHas('ketentuanBerkas', function ($q) use ($search) {
-                        $q->where('nama', 'like', "%{$search}%");
+                        $q->withTrashed()->where('nama', 'like', "%{$search}%");
                     })
                     ->orWhereHas('peserta', function ($q) use ($search) {
-                        $q->where('nama', 'like', "%{$search}%")
+                        $q->withTrashed()->where('nama', 'like', "%{$search}%")
                             ->orWhere('nisn', 'like', "%{$search}%")
                             ->orWhere('no_telp', 'like', "%{$search}%");
                     });
@@ -47,21 +47,21 @@ class BerkasRepository
         // Filter by jenjang sekolah
         if (isset($filters['jenjang_sekolah']) && $filters['jenjang_sekolah'] !== '') {
             $query->whereHas('ketentuanBerkas', function ($q) use ($filters) {
-                $q->where('jenjang_sekolah', $filters['jenjang_sekolah']);
+                $q->withTrashed()->where('jenjang_sekolah', $filters['jenjang_sekolah']);
             });
         }
 
         // Filter by nama ketentuan
         if (isset($filters['nama_ketentuan']) && $filters['nama_ketentuan'] !== '') {
             $query->whereHas('ketentuanBerkas', function ($q) use ($filters) {
-                $q->where('nama', 'like', "%{$filters['nama_ketentuan']}%");
+                $q->withTrashed()->where('nama', 'like', "%{$filters['nama_ketentuan']}%");
             });
         }
 
         // Filter by is_required
         if (isset($filters['is_required']) && $filters['is_required'] !== '') {
             $query->whereHas('ketentuanBerkas', function ($q) use ($filters) {
-                $q->where('is_required', $filters['is_required']);
+                $q->withTrashed()->where('is_required', $filters['is_required']);
             });
         }
 

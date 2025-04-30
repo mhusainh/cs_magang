@@ -9,8 +9,7 @@ class BiodataOrtuService
 {
     public function __construct(
         private BiodataOrtuRepository $biodataOrtuRepository
-    ) {
-    }
+    ) {}
 
     public function getAll(): array
     {
@@ -33,7 +32,7 @@ class BiodataOrtuService
     {
         try {
             $biodataOrtu = $this->biodataOrtuRepository->findById($id);
-            
+
             if (!$biodataOrtu) {
                 return [
                     'success' => false,
@@ -75,7 +74,7 @@ class BiodataOrtuService
     {
         try {
             $biodataOrtu = $this->biodataOrtuRepository->findById($data['id']);
-            
+
             if (!$biodataOrtu) {
                 return [
                     'success' => false,
@@ -86,11 +85,11 @@ class BiodataOrtuService
             $updated = $this->biodataOrtuRepository->update($biodataOrtu, $data);
             if (!$updated) {
                 return [
-                   'success' => false,
-                   'message' => 'Gagal memperbarui biodataOrtu'
+                    'success' => false,
+                    'message' => 'Gagal memperbarui biodataOrtu'
                 ];
             }
-            
+
             return [
                 'success' => true,
                 'data' => $data,
@@ -108,7 +107,7 @@ class BiodataOrtuService
     {
         try {
             $biodataOrtu = $this->biodataOrtuRepository->findById($id);
-            
+
             if (!$biodataOrtu) {
                 return [
                     'success' => false,
@@ -117,7 +116,7 @@ class BiodataOrtuService
             }
 
             $this->biodataOrtuRepository->delete($biodataOrtu);
-            
+
             return [
                 'success' => true,
                 'message' => 'biodataOrtu berhasil dihapus'
@@ -129,4 +128,46 @@ class BiodataOrtuService
             ];
         }
     }
-} 
+
+    public function getDeleted(): array
+    {
+        try {
+            $biodataOrtu = $this->biodataOrtuRepository->getTrash();
+            return [
+                'success' => true,
+                'data' => GetDetailResource::collection($biodataOrtu),
+                'message' => 'Daftar biodataOrtu berhasil diambil'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mengambil daftar biodataOrtu: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function restore(int $id): array
+    {
+        $biodataOrtu = $this->biodataOrtuRepository->findById($id);
+
+        if (!$biodataOrtu) {
+            return [
+                'success' => false,
+                'message' => 'biodataOrtu tidak ditemukan'
+            ];
+        }
+        $result = $this->biodataOrtuRepository->restore($biodataOrtu);
+
+        if (!$result) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mengembalikan biodataOrtu'
+            ];
+        }
+        return [
+            'success' => true,
+            'data' => new GetDetailResource($biodataOrtu),
+            'message' => 'biodataOrtu berhasil dikembalikan'
+        ];
+    }
+}

@@ -11,7 +11,7 @@ class JurusanRepository
 
     public function findById(int $id): ?Jurusan
     {
-        return $this->model->where('id', $id)->first();
+        return $this->model->withTrashed()->where('id', $id)->first();
     }
 
     public function findbyJenjangSekolah(string $jenjang_sekolah): Collection
@@ -39,4 +39,13 @@ class JurusanRepository
         return $this->model->all();
     }
 
+    public function getTrash(): Collection
+    {
+        return $this->model->onlyTrashed()->get();
+    }
+
+    public function restore(Jurusan $jurusan): bool
+    {
+        return $jurusan->restore();
+    }
 } 

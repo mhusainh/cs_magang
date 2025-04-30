@@ -70,4 +70,22 @@ class PekerjaanOrtuController extends Controller
         }
         return $this->success(null, $result['message'], 200);
     }
+
+    public function getDeleted(): JsonResponse
+    {
+        $result = $this->service->getDeleted();
+        if (!$result['success']) {
+            return $this->error($result['message'], 404, null);
+        }
+        return $this->success($result['data'], $result['message'], 200);
+    }
+
+    public function restore(int $id): JsonResponse
+    {
+        $result = $this->service->restore($id);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400, null);
+        }
+        return $this->success($result['data'], $result['message'], 200);
+    }
 }

@@ -71,7 +71,7 @@ class KetentuanBerkasRepository
      */
     public function getKetentuanBerkasById($id): ?KetentuanBerkas
     {
-        return $this->model->where('id', $id)->first();
+        return $this->model->withTrashed()->where('id', $id)->first();
     }
 
     /**
@@ -93,5 +93,55 @@ class KetentuanBerkasRepository
     public function deleteKetentuanBerkas($id): bool
     {
         return $this->model->where('id', $id)->delete();
+    }
+
+    public function getTrash(array $filters = [])
+    {
+        $query = $this->model->onlyTrashed()->query();
+
+        // Search functionality
+        if (isset($filters['search']) && $filters['search'] !== '') {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('jenjang_sekolah', 'like', "%{$search}%");
+            });
+        }
+
+        // Jenjang sekolah filter
+        if (isset($filters['jenjang']) && $filters['jenjang'] !== '') {
+            $query->where('jenjang_sekolah', $filters['jenjang']);
+        }
+
+        // Is required filter
+        if (isset($filters['is_required']) && $filters['is_required'] !== '') {
+            $query->where('is_required', $filters['is_required']);
+        }
+
+        // Sorting functionality
+        if (isset($filters['sort_by']) && $filters['sort_by'] !== '') {
+            $sortField = $filters['sort_by'];
+            $sortDirection = isset($filters['sort_direction']) && strtolower($filters['sort_direction']) === 'desc' ? 'desc' : 'asc';
+
+            // Handle sorting for related field
+            if (strpos($sortField, '.') !== false) {
+                [$relation, $field] = explode('.', $sortField);
+                $query->join($relation, $relation . '.id', '=', 'ketentuan_berkas.' . $relation . '_id')
+                    ->orderBy($relation . '.' . $field, $sortDirection);
+            } else {
+                $query->orderBy($sortField, $sortDirection);
+            }
+        } else {
+            // Default sorting by created_at in descending order
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $paginator = $query->paginate($filters['per_page'] ?? 10);
+        return $paginator->appends(request()->query());
+    }
+
+    public function restore(KetentuanBerkas $ketentuanBerkas): bool
+    {
+        return $ketentuanBerkas->restore();
     }
 }

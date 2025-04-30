@@ -59,8 +59,8 @@ class PenghasilanOrtuService
             $penghasilanOrtu = $this->penghasilanOrtuRepository->create($data);
             if (!$penghasilanOrtu) {
                 return [
-                   'success' => false,
-                   'message' => 'penghasilanOrtu gagal dibuat'
+                    'success' => false,
+                    'message' => 'penghasilanOrtu gagal dibuat'
                 ];
             }
             return [
@@ -76,10 +76,10 @@ class PenghasilanOrtuService
         }
     }
 
-    public function update(array $data): array
+    public function update(int $id, array $data): array
     {
         try {
-            $penghasilanOrtu = $this->penghasilanOrtuRepository->findById($data['id']);
+            $penghasilanOrtu = $this->penghasilanOrtuRepository->findById($id);
 
             if (!$penghasilanOrtu) {
                 return [
@@ -127,5 +127,47 @@ class PenghasilanOrtuService
                 'message' => 'Gagal menghapus penghasilanOrtu: ' . $e->getMessage()
             ];
         }
+    }
+
+    public function getDeleted(): array
+    {
+        try {
+            $penghasilanOrtu = $this->penghasilanOrtuRepository->getTrash();
+            return [
+                'success' => true,
+                'data' => GetDetailResource::collection($penghasilanOrtu),
+                'message' => 'Daftar penghasilanOrtu berhasil diambil'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mengambil daftar penghasilanOrtu: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function restore(int $id): array
+    {
+        $penghasilanOrtu = $this->penghasilanOrtuRepository->findById($id);
+
+        if (!$penghasilanOrtu) {
+            return [
+                'success' => false,
+                'message' => 'penghasilanOrtu tidak ditemukan'
+            ];
+        }
+
+        $result = $this->penghasilanOrtuRepository->restore($penghasilanOrtu);
+        if ($result) {
+            return [
+                'success' => true,
+                'message' => 'penghasilanOrtu berhasil dikembalikan'
+            ];
+        }
+        return [
+            'success' => false,
+            'message' => 'penghasilanOrtu gagal dikembalikan',
+            'data' => new GetDetailResource($penghasilanOrtu)
+        ];
     }
 }

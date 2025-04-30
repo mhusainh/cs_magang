@@ -78,4 +78,35 @@ class UserController extends Controller
 
         return $this->success($result['data'], $result['message'], 200);
     }
+
+    public function getTrash(Request $request)
+    {
+        $filters = [
+            'search' => $request->search,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'status' => $request->status,
+            'per_page' => $request->per_page,
+            'sort_by' => $request->sort_by,
+            'sort_direction' => $request->order_by
+        ];
+        $result = $this->userService->getDeleted($filters);
+
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+
+        return $this->success($result['data'], $result['message'], 200, $result['pagination'], $result['current_filters']);
+    }
+
+    public function restore(int $id)
+    {
+        $result = $this->userService->restore($id);
+
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+
+        return $this->success($result['data'], $result['message'], 200);
+    }
 }

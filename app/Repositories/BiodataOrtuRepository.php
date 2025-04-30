@@ -11,7 +11,7 @@ class BiodataOrtuRepository
 
     public function findById(int $id): ?BiodataOrtu
     {
-        return $this->model->where('id', $id)->first();
+        return $this->model->withTrashed()->where('id', $id)->first();
     }
 
     public function create(array $data): BiodataOrtu
@@ -34,4 +34,13 @@ class BiodataOrtuRepository
         return $this->model->all();
     }
 
+    public function getTrash(): Collection
+    {
+        return $this->model->onlyTrashed()->get();
+    }
+
+    public function restore(BiodataOrtu $biodataOrtu): bool
+    {
+        return $biodataOrtu->restore();
+    }
 } 

@@ -11,7 +11,7 @@ class PenghasilanOrtuRepository
 
     public function findById(int $id): ?PenghasilanOrtu
     {
-        return $this->model->where('id', $id)->first();
+        return $this->model->withTrashed()->where('id', $id)->first();
     }
 
     public function create(array $data): PenghasilanOrtu
@@ -34,4 +34,13 @@ class PenghasilanOrtuRepository
         return $this->model->all();
     }
 
+    public function getTrash(): Collection
+    {
+        return $this->model->onlyTrashed()->get();
+    }
+
+    public function restore(PenghasilanOrtu $penghasilanOrtu): bool
+    {
+        return $penghasilanOrtu->restore();
+    }
 } 

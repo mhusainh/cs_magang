@@ -208,4 +208,66 @@ class UserService
             'message' => 'User berhasil diambil'
         ];
     }
+
+    public function getDeleted($filters = []): array
+    {
+        $users = $this->userRepository->getTrash($filters);
+        if (!$users) {
+            return [
+                'success' => false,
+                'message' => 'User tidak tersedia'
+            ];
+        }
+        
+        // Set pagination data
+        $pagination = [
+            'page' => $users->currentPage(),
+            'per_page' => $users->perPage(),
+            'total_items' => $users->total(),
+            'total_pages' => $users->lastPage()
+        ];
+
+        // Set current filters untuk response
+        $currentFilters = [
+            'search' => $filters['search'] ?? '',
+            'start_date' => $filters['start_date'] ?? '',
+            'end_date' => $filters['end_date'] ?? '',
+            'status' => $filters['status']?? '',
+            'sort_by' => $filters['sort_by'] ?? '',
+            'sort_direction' => $filters['sort_direction'] ?? '',
+        ];
+
+        return [
+            'success' => true,
+            'data' => GetResource::collection($users),
+            'message' => 'User berhasil diambil',
+            'pagination' => $pagination,
+            'current_filters' => $currentFilters
+        ];
+    }
+
+    public function restore(int $id): array
+    {
+        $user = $this->userRepository->findById($id);
+        if (!$user) {
+            return [
+               'success' => false,
+               'message' => 'User tidak ditemukan'
+            ];
+        }
+        
+        $result = $this->userRepository->restore($user);
+        if (!$result) {
+            return [
+             'success' => false,
+             'message' => 'User gagal dikembalikan'
+            ];
+        }
+
+        return [
+          'success' => true,
+          'data' => $user,
+          'message' => 'User berhasil dikembalikan'
+        ];
+    }
 }
