@@ -15,6 +15,7 @@ class GetDetailResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'penghasilan_ortu' => $this->penghasilan_ortu
         ];
     }
