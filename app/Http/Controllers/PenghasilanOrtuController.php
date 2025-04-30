@@ -51,7 +51,7 @@ class PenghasilanOrtuController extends Controller
         if(!$result['success']){
             return $this->error($result['message'], 400);
         }
-        return $this->success($result['data'], $result['message'], 200);
+        return $this->success(null, $result['message'], 200);
     }
     
     public function getDeleted(){
@@ -67,6 +67,6 @@ class PenghasilanOrtuController extends Controller
         if(!$result['success']){
             return $this->error($result['message'], 400);
         }
-        return $this->success($result['data'], $result['message'], 200);
+        return $this->success(null, $result['message'], 200);
     }
 }
