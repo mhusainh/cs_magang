@@ -147,7 +147,7 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('jurusan/{id}', [JurusanController::class, 'delete']);
             Route::get('jurusan', [JurusanController::class, 'getAll']);
             Route::get('jurusan/{id}', [JurusanController::class, 'getById']);
-            Route::get('jurusan/trash', [JurusanController::class, 'getDeleted']);
+            Route::get('jurusans/trash', [JurusanController::class, 'getDeleted']);
             Route::put('jurusan/{id}/restore', [JurusanController::class,'restore']);
 
             // Pekerjaan Ortu Management
@@ -214,7 +214,8 @@ Route::middleware('auth:api')->group(function () {
             // Pengajuan Biaya Management
             Route::get('pengajuan-biaya', [PengajuanBiayaController::class, 'getAll']);
             Route::get('pengajuan-biaya/{id}', [PengajuanBiayaController::class, 'getById']);
-            Route::post('pengajuan-biaya', [PengajuanBiayaController::class, 'create']);
+            Route::post('pengajuan-biaya/reguler', [PengajuanBiayaController::class, 'createReguler']);
+            Route::post('pengajuan-biaya/book-vee', [PengajuanBiayaController::class, 'createBookVee']);
             Route::put('pengajuan-biaya/{id}', [PengajuanBiayaController::class, 'update']);
             Route::delete('pengajuan-biaya/{id}', [PengajuanBiayaController::class, 'delete']);
 

@@ -299,12 +299,12 @@ class TransaksiService
 
             return [
                 'success' => true,
+                'data' => $transaksi,
                 'message' => 'Transaksi berhasil dipulihkan'
             ];
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'data' => $transaksi,
                 'message' => 'Gagal mengambil daftar transaksi: ' . $e->getMessage()
             ];
         }
