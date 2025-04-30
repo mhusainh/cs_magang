@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\PesertaPpdb as Peserta;
 use Illuminate\Database\Eloquent\Collection;
 
+
 class PesertaRepository
 {
     public function __construct(private Peserta $model) {}
@@ -249,7 +250,7 @@ class PesertaRepository
             // Kemudian urutkan berdasarkan book_vee, wakaf, dan created_at
             ->orderBy('wakaf', 'desc')
             ->orderBy('tagihans.created_at', 'asc')
-            ->paginate(10);
+            ->get();
     }
 
     public function restore(Peserta $peserta): bool

@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Transaksi;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Collection;
+
 
 class TransaksiRepository
 {

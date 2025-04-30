@@ -251,7 +251,7 @@ class PesertaService
         ];
     }
 
-    public function getPeringkat(int $jurusan1_id, int $jenjang_sekolah): array
+    public function getPeringkat(int $jurusan1_id, string $jenjang_sekolah): array
     {
         try {
             // Gunakan current_user_id untuk mendapatkan peringkat user saat ini
