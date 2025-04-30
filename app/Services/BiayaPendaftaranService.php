@@ -123,12 +123,12 @@ class BiayaPendaftaranService
     }
 
     public function getOnTop(): array
-    {
+    {   
         $result = $this->biayaPendaftaranRepository->getOnTop();
         if (!$result) {
             return [
                 'success' => false,
-                'message' => 'Data tidak ditemukan',
+                'message' => 'Biaya pendaftaran belum disi',
                 'data' => null,
             ];
         }

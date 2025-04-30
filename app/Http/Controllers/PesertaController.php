@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\ProgressUserService;
 use App\Http\Requests\Peserta\UpdatePesertaRequest;
 use App\Http\Requests\Peserta\InputFormPesertaRequest;
+use Illuminate\Http\JsonResponse;
 
 class PesertaController extends Controller
 {
@@ -237,6 +238,25 @@ class PesertaController extends Controller
             return $this->error($result['message'], 400);
         }
 
+        return $this->success($result['data'], $result['message'], 200);
+    }
+
+    public function getPeringkatByUser(): JsonResponse
+    {
+        $jenjang_sekolah = Auth::user()->peserta->jenjang_sekolah;
+        $result = $this->pesertaService->getPeringkat(Auth::user()->peserta->jurusan1_id, $jenjang_sekolah);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+        return $this->success($result['data'], $result['message'], 200);
+    }
+
+    public function getPeringkat(Request $request)
+    {
+        $result = $this->pesertaService->getPeringkat($request->jurusan_id, $request->jenjang_sekolah);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
         return $this->success($result['data'], $result['message'], 200);
     }
 }

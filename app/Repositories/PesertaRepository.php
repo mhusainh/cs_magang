@@ -217,6 +217,41 @@ class PesertaRepository
         return $paginator->appends(request()->query());
     }
     
+    public function GetPeringkat(int $jurusan1_id, $jenjang_sekolah): Collection
+    {
+        // Dapatkan jurusan dan jenjang sekolah dari user saat ini
+
+        $query = $this->model
+            ->leftJoin('tagihans', function ($join) {
+                $join->on('peserta_ppdbs.user_id', '=', 'tagihans.user_id')
+                    ->where('tagihans.nama_tagihan', 'book_vee')
+                    ->where('tagihans.status', 1 ); // filter langsung saat join
+                })
+                ->whereNotNull('peserta_ppdbs.wakaf');
+            
+        // Filter berdasarkan jurusan dan jenjang sekolah
+        if ($jurusan1_id !== null) {
+            $query->where('peserta_ppdbs.jurusan1_id', $jurusan1_id)
+                ->where('peserta_ppdbs.jenjang_sekolah', $jenjang_sekolah);
+        }
+
+        $selectColumns = [
+            'tagihans.*',
+            'peserta_ppdbs.id as peserta_id',
+            'peserta_ppdbs.nama as peserta_nama',
+            'peserta_ppdbs.wakaf as wakaf',
+            'peserta_ppdbs.book_vee as book_vee'
+        ];
+
+        return $query->select($selectColumns)
+            // Urutkan peserta dengan book_vee di tagihan terlebih dahulu (tidak null)
+            ->orderByRaw('CASE WHEN tagihans.id IS NOT NULL THEN 1 ELSE 0 END DESC')
+            // Kemudian urutkan berdasarkan book_vee, wakaf, dan created_at
+            ->orderBy('wakaf', 'desc')
+            ->orderBy('tagihans.created_at', 'asc')
+            ->paginate(10);
+    }
+
     public function restore(Peserta $peserta): bool
     {
         return $peserta->restore();

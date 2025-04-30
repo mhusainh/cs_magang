@@ -103,27 +103,6 @@ class TransaksiRepository
             ->appends(request()->query());
     }
 
-    public function findBookVeeWithPeserta(?int $jurusan1_id = null)
-    {
-        $query = $this->model
-            ->join('tagihans', 'transaksis.tagihan_id', '=', 'tagihans.id')
-            ->join('peserta_ppdbs', 'tagihans.user_id', '=', 'peserta_ppdbs.user_id')
-            ->where('tagihans.nama_tagihan', 'book_vee');
-
-        if ($jurusan1_id !== null) {
-            $query->where('peserta_ppdbs.jurusan1_id', $jurusan1_id);
-        }
-
-        return $query->select(
-            'transaksis.*',
-            'peserta_ppdbs.id as peserta_id',
-            'peserta_ppdbs.nama as peserta_nama',
-            'peserta_ppdbs.wakaf as wakaf'
-        )
-            ->orderBy('wakaf', 'desc')
-            ->orderBy('transaksis.created_at', 'asc');
-    }
-
     public function findById(int $id)
     {
         return $this->model->withTrashed()->where('id', $id)->first();

@@ -76,6 +76,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('peserta', [PesertaController::class, 'getByUser']); // Mengambil data peserta dan berkas berdasarkan user_id
             Route::put('peserta', [PesertaController::class, 'updateByUser']);
             Route::put('peserta/form-peserta', [PesertaController::class, 'inputFormPeserta']);
+            Route::get('peringkat', [PesertaController::class, 'getPeringkatByUser']);
 
             // Pengajuan Biaya Management
             Route::get('pengajuan-biaya', [PengajuanBiayaController::class, 'getByUser']);
@@ -98,7 +99,7 @@ Route::middleware('auth:api')->group(function () {
 
             // Transaksi Management
             Route::get('riwayat', [TransaksiController::class, 'riwayat']);
-            Route::get('peringkat', [TransaksiController::class, 'getPeringkatByUser']);
+            
 
             // Tagihan Management
             Route::get('tagihan', [TagihanController::class, 'getByUser']);
@@ -132,6 +133,7 @@ Route::middleware('auth:api')->group(function () {
             Route::put('/peserta/{id}', [PesertaController::class, 'updateStatus']);
             Route::get('/pesertas/trash', [PesertaController::class, 'getDeleted']);
             Route::put('/peserta/{id}/restore', [PesertaController::class,'restore']);
+            Route::get('peringkat', [PesertaController::class, 'getPeringkat']);
             
             // Tagihan Management
             Route::put('tagihan/{id}', [TagihanController::class, 'update']);
@@ -171,7 +173,6 @@ Route::middleware('auth:api')->group(function () {
             Route::get('transaksi/user/{userId}', [TransaksiController::class, 'getByUserId']);
             Route::get('transaksi/{id}', [TransaksiController::class, 'getById']);
             Route::post('transaksi', [TransaksiController::class, 'create']);
-            Route::get('peringkat', [TransaksiController::class, 'getPeringkat']);
             Route::get('transaksis/trash', [TransaksiController::class, 'getDeleted']);
             Route::put('transaksi/{id}/restore', [TransaksiController::class,'restore']);
 

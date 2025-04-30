@@ -125,23 +125,6 @@ class TransaksiController extends Controller
         return $this->success($result['data'], $result['message'], 200);
     }
 
-    public function getPeringkatByUser(): JsonResponse
-    {
-        $result = $this->transaksiService->getAllBookVee(Auth::user()->peserta->jurusan1_id);
-        if (!$result['success']) {
-            return $this->error($result['message'], 400);
-        }
-        return $this->success($result['data'], $result['message'], 200);
-    }
-
-    public function getPeringkat(Request $request): JsonResponse
-    {
-        $result = $this->transaksiService->getAllBookVee($request->jurusan_id);
-        if (!$result['success']) {
-            return $this->error($result['message'], 400);
-        }
-        return $this->success($result['data'], $result['message'], 200);
-    }
 
     public function getDeleted(Request $request): JsonResponse
     {

@@ -7,6 +7,7 @@ use App\Repositories\PesertaRepository;
 use App\Http\Resources\Peserta\GetDetailResource;
 use App\Http\Resources\Peserta\GetResource;
 use App\Repositories\JurusanRepository;
+use App\Http\Resources\Transaksi\PeringkatResource;
 
 class PesertaService
 {
@@ -248,5 +249,29 @@ class PesertaService
             'data' => new GetDetailResource($peserta),
             'message' => 'Peserta berhasil dikembalikan'
         ];
+    }
+
+    public function getPeringkat(int $jurusan1_id, int $jenjang_sekolah): array
+    {
+        try {
+            // Gunakan current_user_id untuk mendapatkan peringkat user saat ini
+            $transaksi = $this->pesertaRepository->GetPeringkat($jurusan1_id, $jenjang_sekolah);            
+            if (!$transaksi) {
+                return [
+                    'success' => false,
+                    'message' => 'Peringkat tidak ditemukan'
+                ];
+            }
+            return [
+                'success' => true,
+                'data' => PeringkatResource::collection($transaksi),
+                'message' => 'Detail transaksi berhasil diambil',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mengambil detail transaksi: ' . $e->getMessage()
+            ];
+        }
     }
 }

@@ -6,12 +6,14 @@ use Exception;
 use App\Repositories\TransaksiRepository;
 use App\Http\Resources\Transaksi\RiwayatResource;
 use App\Http\Resources\Transaksi\GetDetailResource;
-use App\Http\Resources\Transaksi\PeringkatResource;
+
+use App\Repositories\PesertaRepository;
 
 class TransaksiService
 {
     public function __construct(
-        private TransaksiRepository $transaksiRepository
+        private TransaksiRepository $transaksiRepository,
+        private PesertaRepository $pesertaPpdbRepository
     ) {}
 
     public function getAll(array $filters): array
@@ -171,36 +173,6 @@ class TransaksiService
                     'end_date' => $filters['end_date'] ?? '',
                 ]
             ];
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'message' => 'Gagal mengambil detail transaksi: ' . $e->getMessage()
-            ];
-        }
-    }
-
-    public function getAllBookVee(int $jurusan1_id): array
-    {
-        try {
-            $transaksi = $this->transaksiRepository->findBookVeeWithPeserta($jurusan1_id);
-            if ($transaksi->isEmpty()) {
-                return [
-                    'success' => false,
-                    'message' => 'Transaksi tidak ditemukan'
-                ];
-            }
-
-            return [
-                'success' => true,
-                'data' => PeringkatResource::collection($transaksi->items()),
-                'message' => 'Detail transaksi berhasil diambil',
-                'pagination' => [
-                    'page' => $transaksi->currentPage(),
-                    'per_page' => $transaksi->perPage(),
-                    'total_items' => $transaksi->total(),
-                    'total_pages' => $transaksi->lastPage()
-                ]
-            ];
         } catch (Exception $e) {
             return [
                 'success' => false,
@@ -208,6 +180,8 @@ class TransaksiService
             ];
         }
     }
+
+    
 
     public function getUserBookVee(): array
     {
