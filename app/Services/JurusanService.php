@@ -182,7 +182,6 @@ class JurusanService
                 'message' => 'Jurusan tidak ditemukan'
             ];
         }
-
         $result = $this->jurusanRepository->restore($jurusan);
 
         if ($result) {
@@ -194,7 +193,6 @@ class JurusanService
         return [
             'success' => false,
             'message' => 'Gagal memulihkan jurusan',
-            'data' => new GetDetailResource($jurusan)
         ];
     }
 }
