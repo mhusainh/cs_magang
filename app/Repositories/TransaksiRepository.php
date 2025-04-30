@@ -161,7 +161,7 @@ class TransaksiRepository
 
     public function getTrash(array $filters = [])
     {
-        $query = $this->model->onlyTrashed()->query();
+        $query = $this->model->query();
 
         // Search functionality
         if (isset($filters['search']) && $filters['search'] !== '') {
@@ -225,7 +225,7 @@ class TransaksiRepository
             'user.peserta' => function ($query) {
                 $query->withTrashed();
             }
-        ])->paginate($filters['per_page'] ?? 10);
+        ])->onlyTrashed()->paginate($filters['per_page'] ?? 10);
         return $paginator->appends(request()->query());
     }
 
