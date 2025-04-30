@@ -88,7 +88,7 @@ class PengajuanBiayaService
         return [
             'success' => true,
             'message' => 'Pengajuan Biaya berhasil diupdate',
-            'data' => new GetResource($result),
+            'data' => null,
         ];
     }
 
