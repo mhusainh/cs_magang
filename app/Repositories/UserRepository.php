@@ -76,7 +76,10 @@ class UserRepository
     {
         return $this->model->with([
             'peserta' => function ($query) {
-                $query->withTrashed();
+                $query->withTrashed()
+                    ->with(['jurusan1' => function ($query) {
+                        $query->withTrashed();
+                    }]);
             },
             'progressUser',
             'pesan' => function ($query) {

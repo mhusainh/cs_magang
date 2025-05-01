@@ -25,6 +25,11 @@ class CardResource extends JsonResource
                 'jenis_kelamin' => $this->peserta->jenis_kelamin,
                 'jenjang_sekolah' => $this->peserta->jenjang_sekolah,
                 'status' => $this->peserta->status,
+                'jurusan1' => $this->peserta->jurusan1 ? [
+                    'id' => $this->peserta->jurusan1->id,
+                    'jurusan' => $this->peserta->jurusan1->jurusan,
+                    'jenjang_sekolah' => $this->peserta->jurusan1->jenjang_sekolah,
+                ] : null,
             ] : null,
             'progressUser' => $this->progressUser ? [
                 'id' => $this->progressUser->id,
