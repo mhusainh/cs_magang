@@ -101,7 +101,7 @@ Route::middleware('auth:api')->group(function () {
 
             // Transaksi Management
             Route::get('riwayat', [TransaksiController::class, 'riwayat']);
-            
+
 
             // Tagihan Management
             Route::get('tagihan', [TagihanController::class, 'getByUser']);
@@ -125,6 +125,7 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/user/{id}', [UserController::class, 'delete']);
             Route::get('/users/trash', [UserController::class, 'getDeleted']);
             Route::put('/user/{id}/restore', [UserController::class, 'restore']);
+            Route::get('/user/progressPayment/{id}', [UserController::class, 'progressPayment']);
 
             // Peserta management
             Route::get('/pesertas', [PesertaController::class, 'getAll']);
@@ -134,9 +135,9 @@ Route::middleware('auth:api')->group(function () {
             Route::post('/peserta', [PesertaController::class, 'create']);
             Route::put('/peserta/{id}', [PesertaController::class, 'updateStatus']);
             Route::get('/pesertas/trash', [PesertaController::class, 'getDeleted']);
-            Route::put('/peserta/{id}/restore', [PesertaController::class,'restore']);
+            Route::put('/peserta/{id}/restore', [PesertaController::class, 'restore']);
             Route::get('peringkat', [PesertaController::class, 'getPeringkat']);
-            
+
             // Tagihan Management
             Route::put('tagihan/{id}', [TagihanController::class, 'update']);
             Route::delete('tagihan/{id}', [TagihanController::class, 'delete']);
@@ -152,7 +153,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('jurusan', [JurusanController::class, 'getAll']);
             Route::get('jurusan/{id}', [JurusanController::class, 'getById']);
             Route::get('jurusans/trash', [JurusanController::class, 'getDeleted']);
-            Route::put('jurusan/{id}/restore', [JurusanController::class,'restore']);
+            Route::put('jurusan/{id}/restore', [JurusanController::class, 'restore']);
 
             // Pekerjaan Ortu Management
             Route::post('pekerjaan-ortu', [PekerjaanOrtuController::class, 'create']);
@@ -161,14 +162,14 @@ Route::middleware('auth:api')->group(function () {
             Route::get('pekerjaan-ortu/{id}', [PekerjaanOrtuController::class, 'getById']);
             Route::get('pekerjaan-ortu', [PekerjaanOrtuController::class, 'getAll']);
             Route::get('pekerjaan-ortus/trash', [PekerjaanOrtuController::class, 'getDeleted']);
-            Route::put('pekerjaan-ortu/{id}/restore', [PekerjaanOrtuController::class,'restore']);
+            Route::put('pekerjaan-ortu/{id}/restore', [PekerjaanOrtuController::class, 'restore']);
 
             // Tagihan Management
             Route::get('tagihan', [TagihanController::class, 'getAll']);
             Route::get('tagihan/{id}', [TagihanController::class, 'getById']);
             Route::delete('tagihan/{id}', [TagihanController::class, 'delete']);
             Route::get('tagihans/trash', [TagihanController::class, 'getDeleted']);
-            Route::put('tagihan/{id}/restore', [TagihanController::class,'restore']);
+            Route::put('tagihan/{id}/restore', [TagihanController::class, 'restore']);
 
             // Transaksi Management
             Route::get('transaksi', [TransaksiController::class, 'getAll']);
@@ -176,7 +177,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('transaksi/{id}', [TransaksiController::class, 'getById']);
             Route::post('transaksi', [TransaksiController::class, 'create']);
             Route::get('transaksis/trash', [TransaksiController::class, 'getDeleted']);
-            Route::put('transaksi/{id}/restore', [TransaksiController::class,'restore']);
+            Route::put('transaksi/{id}/restore', [TransaksiController::class, 'restore']);
 
             // Homepage Management
             Route::post('homepage', [ImageController::class, 'uploadHomepage']);
@@ -199,7 +200,7 @@ Route::middleware('auth:api')->group(function () {
             Route::put('ketentuan-berkas/{id}', [KetentuanBerkasController::class, 'update']);
             Route::delete('ketentuan-berkas/{id}', [KetentuanBerkasController::class, 'delete']);
             Route::get('ketentuan-berkass/trash', [KetentuanBerkasController::class, 'getDeleted']);
-            Route::put('ketentuan-berkas/{id}/restore', [KetentuanBerkasController::class,'restore']);
+            Route::put('ketentuan-berkas/{id}/restore', [KetentuanBerkasController::class, 'restore']);
 
             // Berkas Peserta Management (untuk admin)
             Route::get('berkas', [BerkasController::class, 'getAllBerkas']);
@@ -237,7 +238,7 @@ Route::middleware('auth:api')->group(function () {
             Route::put('pesan/{id}', [PesanController::class, 'update']);
             Route::delete('pesan/{id}', [PesanController::class, 'delete']);
             Route::get('pesans/trash', [PesanController::class, 'getDeleted']);
-            Route::put('pesan/{id}/restore', [PesanController::class,'restore']);
+            Route::put('pesan/{id}/restore', [PesanController::class, 'restore']);
 
             // Biodata Ortu Management
             Route::get('biodata-ortu', [BiodataOrtuController::class, 'getAll']);
@@ -245,7 +246,7 @@ Route::middleware('auth:api')->group(function () {
             Route::put('biodata-ortu/{id}', [BiodataOrtuController::class, 'update']);
             Route::delete('biodata-ortu/{id}', [BiodataOrtuController::class, 'delete']);
             Route::get('biodata-ortus/trash', [BiodataOrtuController::class, 'getDeleted']);
-            Route::put('biodata-ortu/{id}/restore', [BiodataOrtuController::class,'restore']);
+            Route::put('biodata-ortu/{id}/restore', [BiodataOrtuController::class, 'restore']);
 
             // Penghasilan Ortu Management
             Route::get('penghasilan-ortu', [PenghasilanOrtuController::class, 'getAll']);
@@ -254,7 +255,7 @@ Route::middleware('auth:api')->group(function () {
             Route::put('penghasilan-ortu/{id}', [PenghasilanOrtuController::class, 'update']);
             Route::delete('penghasilan-ortu/{id}', [PenghasilanOrtuController::class, 'delete']);
             Route::get('penghasilan-ortus/trash', [PenghasilanOrtuController::class, 'getDeleted']);
-            Route::put('penghasilan-ortu/{id}/restore', [PenghasilanOrtuController::class,'restore']);
+            Route::put('penghasilan-ortu/{id}/restore', [PenghasilanOrtuController::class, 'restore']);
         });
     });
 });

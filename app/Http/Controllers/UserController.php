@@ -79,6 +79,16 @@ class UserController extends Controller
         return $this->success($result['data'], $result['message'], 200);
     }
 
+    public function progressPayment(int $id)
+    {
+        $result = $this->userService->progressPayment($id);
+
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+
+        return $this->success($result['data'], $result['message'], 200);
+    }
     public function getTrash(Request $request)
     {
         $filters = [
