@@ -85,7 +85,8 @@ Route::middleware('auth:api')->group(function () {
             Route::put('pengajuan-biaya/spp', [PengajuanBiayaController::class, 'spp']);
             Route::put('pengajuan-biaya/book-vee', [PengajuanBiayaController::class, 'bookVee']);
             Route::put('pengajuan-biaya/reguler', [PengajuanBiayaController::class, 'reguler']);
-
+            Route::post('pengajuan-biaya/bayar/wakaf', [PengajuanBiayaController::class, 'createTagihanWakaf']);
+            Route::post('pengajuan-biaya/bayar/reguler', [PengajuanBiayaController::class, 'createTagihanPengajuanBiaya']);
 
             // Biaya Pendaftaran Management
             Route::get('biaya-pendaftaran', [BiayaPendaftaranController::class, 'getOnTop']);

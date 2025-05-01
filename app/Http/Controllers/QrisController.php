@@ -60,8 +60,8 @@ class QrisController extends Controller
         $dataPesan = [
             'user_id' => $result['userId'],
             'judul' => 'Pembayaran',
-            'deskripsi' => $responseData['responseMessage'] === 'TRANSACTION SUCCESS' ?  'Halo ' . $result['userId']. ', Traksaksi sebesar Rp.' . $result['total'] . 'melalui Qris telah berhasil. Terima kasih!' 
-                            : 'Halo '. $result['userId']. ', Traksaksi sebesar Rp.'. $result['total'].'melalui Qris telah gagal. Terima kasih!',
+            'deskripsi' => $responseData['responseMessage'] === 'TRANSACTION SUCCESS' ?  'Halo ' . $result['namaPeserta']. ', Traksaksi sebesar Rp.' . $result['total'] . 'melalui Qris telah berhasil. Terima kasih!' 
+                            : 'Halo '. $result['namaPeserta']. ', Traksaksi sebesar Rp.'. $result['total'].'melalui Qris telah gagal. Terima kasih!',
         ];
 
         $pesan = $this->pesanService->create($dataPesan);
@@ -95,8 +95,8 @@ class QrisController extends Controller
         $dataPesan = [
             'user_id' => $result['userId'],
             'judul' => 'Pembayaran',
-            'deskripsi' => $responseData['responseMessage'] === 'TRANSACTION SUCCESS' ? 'Halo ' . $result['userId']. ', Traksaksi sebesar Rp.' . $result['total'] . 'melalui Virtual Akun telah berhasil. Terima kasih!' 
-                            : 'Halo '. $result['userId']. ', Traksaksi sebesar Rp.'. $result['total'].'melalui Virtual Akun telah gagal. Terima kasih!',
+            'deskripsi' => $responseData['responseMessage'] === 'TRANSACTION SUCCESS' ? 'Halo ' . $result['namaPeserta']. ', Traksaksi sebesar Rp.' . $result['total'] . 'melalui Virtual Akun telah berhasil. Terima kasih!' 
+                            : 'Halo '. $result['namaPeserta']. ', Traksaksi sebesar Rp.'. $result['total'].'melalui Virtual Akun telah gagal. Terima kasih!',
         ];
 
         $pesan = $this->pesanService->create($dataPesan);

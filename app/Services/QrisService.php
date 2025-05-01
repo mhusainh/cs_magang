@@ -169,6 +169,7 @@ class QrisService
 
             $transaksiData = [
                 'user_id' => $tagihan->user_id,
+                'namaPeserta' => $tagihan->user->peserta->nama,
                 'tagihan_id' => $tagihan->id,
                 'status' => 1,
                 'total' => $transactionData->amount,
