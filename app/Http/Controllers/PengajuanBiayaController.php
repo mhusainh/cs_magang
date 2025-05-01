@@ -149,7 +149,7 @@ class PengajuanBiayaController extends Controller
             'pengajuan_biaya' => $biaya['data']['nominal'],
             'status' => 'diproses'
         ];
-        $result = $this->pesertaService->update(Auth::user()->id, $data);
+        $result = $this->pesertaService->update(Auth::user()->peserta->id, $data);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }
