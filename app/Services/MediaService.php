@@ -146,9 +146,12 @@ class MediaService
         ];
     }
 
-    public function GetPengajuanBiayaByUser(string $nama): array
+    public function GetPengajuanBiayaByUser(): array
     {
-        $media = $this->mediaRepository->findByUser($nama, Auth::user()->peserta->jenjang_sekolah, Auth::user()->peserta->jurusan->nama);
+        $nama = 'pengajuan_biaya';
+        $jurusan = Auth::user()->peserta->jurusan1 ?? null;
+        $jurusanNama = $jurusan ? $jurusan->jurusan : null;
+        $media = $this->mediaRepository->findByUser($nama, Auth::user()->peserta->jenjang_sekolah, $jurusanNama);
         if (!$media) {
             return [
                 'success' => false,
