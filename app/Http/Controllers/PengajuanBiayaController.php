@@ -249,7 +249,7 @@ class PengajuanBiayaController extends Controller
             return $this->error($biaya['message'], 422, null);
         }
 
-        $result = $this->pesertaService->update(Auth::user()->id, ['book_vee' => $biaya['data']['nominal']]);
+        $result = $this->pesertaService->update(Auth::user()->peserta->id, ['book_vee' => $biaya['data']['nominal']]);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }
