@@ -117,7 +117,7 @@ class PengajuanBiayaController extends Controller
         if ($jurusan != 'reguler') {
             $jurusan = 'unggulan';
             $jenjang = null;
-            if (Auth::user()->tagihan()->where('nama_tagihan', 'book_vee')->first()?->status === 1) {
+            if (Auth::user()->tagihan->where('nama_tagihan', 'book_vee')->first()?->status === 1) {
                 return $this->success(['jurusan'=>$jurusan], "peserta sudah membayar book vee", 200);
             }
         }
@@ -210,8 +210,8 @@ class PengajuanBiayaController extends Controller
             return $this->error('Anda tidak dapat mengajukan biaya unggulan', 422, null);
         }
     
-        if (Auth::user()->tagihan()->where('nama_tagihan', 'book_vee')->count() > 0) {
-                $qr_data = Auth::user()->tagihan()
+        if (Auth::user()->tagihan->where('nama_tagihan', 'book_vee')->count() > 0) {
+                $qr_data = Auth::user()->tagihan
                     ->where('nama_tagihan', 'book_vee')
                     ->first()
                     ?->qr_data;
