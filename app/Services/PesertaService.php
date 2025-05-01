@@ -96,6 +96,7 @@ class PesertaService
                 'message' => 'Peserta berhasil diperbarui',
                 'nama_peserta' => $peserta->nama,
                 'jenjang_sekolah' => $peserta->jenjang_sekolah,
+                'user_id' => $peserta->user_id,
             ];
         } catch (\Exception $e) {
             return [

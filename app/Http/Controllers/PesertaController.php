@@ -194,10 +194,10 @@ class PesertaController extends Controller
         }
           
         $dataPesan = [
-            'user_id' => $id,
+            'user_id' => $result['user_id'],
             'judul' => 'Pengumuman Hasil PPDB',
-            'deskripsi' => $request->validated('status') === 'diterima' ? 'Selamat Anda telah di terima menjadi siswa!' 
-                            : 'Maaf anda dinyatakan tidak lolos seleksi ppdb!'
+            'deskripsi' => $request->validated('status') === 'diterima' ? 'Selamat ' . $result['nama_peserta']. ', Anda telah di terima menjadi siswa '. $result['jenjang_sekolah'] .'!' 
+                            : 'Maaf '. $result['nama_peserta']. ', anda dinyatakan tidak lolos seleksi ppdb!'
         ];
 
         $pesan = $this->pesanService->create($dataPesan);
