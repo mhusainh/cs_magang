@@ -58,7 +58,10 @@ class PengajuanBiayaController extends Controller
             'jenjang_sekolah' => $request->validated('jenjang_sekolah'),
             'nominal' => $request->validated('nominal'),
         ];
-
+        $reguler = $this->pengajuanBiayaService->getReguler($data['jenjang_sekolah']);
+        if ($reguler['success']) {
+            return $this->error('Book Vee sudah ada, silahkan edit yang sudah ada', 422, null);
+        }
         $result = $this->pengajuanBiayaService->create($data);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);

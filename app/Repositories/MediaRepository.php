@@ -79,4 +79,10 @@ class MediaRepository
         // Pagination
         return $query->paginate($filters['per_page'] ?? 10);
     }
+    public function validation(array $media): array
+    {
+        return $this->model->where('nama', $media['nama'])
+                            ->where('jenjang_sekolah', $media['jenjang_sekolah'])
+                            ->where('jurusan', $media['jurusan'])->get();
+    }
 }

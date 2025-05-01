@@ -17,6 +17,13 @@ class MediaService
     public function create(array $data): array
     {
         try {
+            $media = $this->mediaRepository->validation($data);
+            if (!$media) {
+                return [
+                   'success' => false,
+                   'message' => 'File yang sudah pernah kamu kirim sebelumnya',
+                ];
+            }
             $result = Cloudinary::upload($data['image']->getRealPath(), [
                 'folder' => 'media',
                 'transformation' => [
@@ -158,6 +165,13 @@ class MediaService
     public function update($image, $data, $id): array
     {
         try {
+            $media = $this->mediaRepository->validation($data);
+            if (!$media) {
+                return [
+                   'success' => false,
+                   'message' => 'File yang sudah pernah kamu kirim sebelumnya',
+                ];
+            }
             $oldmedia = $this->mediaRepository->findById($id);
             if (!$oldmedia) {
                 return [
