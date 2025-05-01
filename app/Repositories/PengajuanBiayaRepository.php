@@ -50,4 +50,12 @@ class PengajuanBiayaRepository
             ->orderBy('created_at', 'desc')
             ->first();
     }
+
+    public function getReguler($data):?PengajuanBiaya
+    {
+        return $this->model
+            ->where('jurusan', 'reguler')
+            ->orderBy('jenjang_sekolah', $data?? null)
+            ->first();
+    }
 }

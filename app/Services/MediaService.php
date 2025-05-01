@@ -17,6 +17,13 @@ class MediaService
     public function create(array $data): array
     {
         try {
+            $media = $this->mediaRepository->validation($data);
+            if (!$media) {
+                return [
+                   'success' => false,
+                   'message' => 'File yang sudah pernah kamu kirim sebelumnya',
+                ];
+            }
             $result = Cloudinary::upload($data['image']->getRealPath(), [
                 'folder' => 'media',
                 'transformation' => [
@@ -139,9 +146,12 @@ class MediaService
         ];
     }
 
-    public function GetPengajuanBiayaByUser(string $nama): array
+    public function GetPengajuanBiayaByUser(): array
     {
-        $media = $this->mediaRepository->findByUser($nama, Auth::user()->peserta->jenjang_sekolah, Auth::user()->peserta->jurusan->nama);
+        $nama = 'pengajuan_biaya';
+        $jurusan = Auth::user()->peserta->jurusan1 ?? null;
+        $jurusanNama = $jurusan ? $jurusan->jurusan : null;
+        $media = $this->mediaRepository->findByUser($nama, Auth::user()->peserta->jenjang_sekolah, $jurusanNama);
         if (!$media) {
             return [
                 'success' => false,
@@ -158,6 +168,13 @@ class MediaService
     public function update($image, $data, $id): array
     {
         try {
+            $media = $this->mediaRepository->validation($data);
+            if (!$media) {
+                return [
+                   'success' => false,
+                   'message' => 'File yang sudah pernah kamu kirim sebelumnya',
+                ];
+            }
             $oldmedia = $this->mediaRepository->findById($id);
             if (!$oldmedia) {
                 return [

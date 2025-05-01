@@ -67,7 +67,7 @@ Route::middleware('auth:api')->group(function () {
 
             // Media Management
             Route::get('media/jadwal', [MediaController::class, 'GetJadwalByUser']);
-            Route::get('media/pengajuan_biaya', [MediaController::class, 'GetPengajuanBiayaByUser']);
+            Route::get('media/pengajuan-biaya', [MediaController::class, 'GetPengajuanBiayaByUser']);
 
             // User profile
             Route::get('profile', [AuthController::class, 'me']);

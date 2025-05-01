@@ -169,7 +169,6 @@ class QrisService
 
             $transaksiData = [
                 'user_id' => $tagihan->user_id,
-                'namaPeserta' => $tagihan->user->peserta->nama,
                 'tagihan_id' => $tagihan->id,
                 'status' => 1,
                 'total' => $transactionData->amount,
@@ -226,7 +225,7 @@ class QrisService
                 'requestData' => $decodedToken,
                 'userId' => $tagihan->user_id,
                 'total' => $transactionData->amount,
-
+                'namaPeserta' => $tagihan->user->peserta->nama,
 
             ];
         } catch (\Exception $e) {

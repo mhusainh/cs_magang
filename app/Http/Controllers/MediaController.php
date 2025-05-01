@@ -58,7 +58,7 @@ class MediaController extends Controller
 
     public function GetPengajuanBiayaByUser(): JsonResponse
     {
-        $result = $this->mediaService->GetPengajuanBiayaByUser('pengajuan_biaya');
+        $result = $this->mediaService->GetPengajuanBiayaByUser();
         if (!$result['success']) {
             return $this->error($result['message'], 404, null);
         }
