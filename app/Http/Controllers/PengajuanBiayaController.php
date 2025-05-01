@@ -238,11 +238,13 @@ class PengajuanBiayaController extends Controller
         }
 
         if (Auth::user()->tagihan->where('nama_tagihan', 'book_vee')->count() > 0) {
-            $qr_data = Auth::user()->tagihan
+            $existingTagihan = Auth::user()->tagihan
                 ->where('nama_tagihan', 'book_vee')
-                ->first()
-                ?->qr_data;
-            return $this->error('Harap Membayar book vee', 200, $qr_data ? ['qr_data' => $qr_data] : null);
+                ->first();
+            return $this->error('Harap Membayar book vee', 200, $existingTagihan ? [
+                'qr_data' => $existingTagihan->qr_data,
+                'va_number' => $existingTagihan->va_number
+            ] : null);
         }
         $biaya = $this->pengajuanBiayaService->getBookVee();
         if (!$biaya['success']) {
