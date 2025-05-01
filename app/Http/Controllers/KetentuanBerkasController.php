@@ -8,6 +8,7 @@ use App\DTO\KetentuanBerkasDTO;
 use Illuminate\Support\Facades\Auth;
 use App\Services\KetentuanBerkasService;
 use App\Http\Requests\Berkas\KetentuanBerkasRequest;
+use App\Http\Requests\KetentuanBerkas\UpdateRequest;
 
 class KetentuanBerkasController extends Controller
 {
@@ -83,6 +84,22 @@ class KetentuanBerkasController extends Controller
         }
 
         return $this->success($result['data'], $result['message'], 201);
+    }
+
+    public function update(UpdateRequest $request, $id)
+    {
+        $data = KetentuanBerkasDTO::createKetentuanBerkasDTO(
+            $request->validated('nama'),
+            $request->validated('jenjang_sekolah'),
+            $request->validated('is_required')
+        );
+        $result = $this->ketentuanBerkasService->updateKetentuanBerkas($id, $data);
+
+        if (!$result['success']) {
+            return $this->error($result['message'], 422, null);
+        }
+
+        return $this->success($data, $result['message'], 200);
     }
 
     /**

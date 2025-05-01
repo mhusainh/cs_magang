@@ -188,7 +188,6 @@ class KetentuanBerkasService
             return [
                 'success' => true,
                 'message' => 'Berhasil mengupdate ketentuan berkas',
-                'data' => $ketentuanBerkas
             ];
         } catch (\Exception $e) {
             return [
