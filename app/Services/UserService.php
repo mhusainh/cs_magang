@@ -5,13 +5,19 @@ namespace App\Services;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\PesertaRepository;
-use App\Http\Resources\User\CardResource;
 use App\Http\Resources\User\GetResource;
+use App\Http\Resources\User\CardResource;
+use App\Repositories\TransaksiRepository;
 
 class UserService
 {
-    public function __construct(private UserRepository $userRepository, private PesertaRepository $pesertaRepository) {}
+    public function __construct(
+        private UserRepository $userRepository,
+        private PesertaRepository $pesertaRepository,
+        private TransaksiRepository $transaksiRepository
+    ) {}
 
 
     public function login(array $data): array
@@ -60,9 +66,9 @@ class UserService
             ]);
             if (!$result) {
                 return [
-                   'success' => false,
-                   'message' => 'Gagal membuat peserta',
-                   'code' => 402
+                    'success' => false,
+                    'message' => 'Gagal membuat peserta',
+                    'code' => 402
                 ];
             }
 
@@ -147,7 +153,7 @@ class UserService
                 'message' => 'User tidak tersedia'
             ];
         }
-        
+
         // Set pagination data
         $pagination = [
             'page' => $users->currentPage(),
@@ -161,7 +167,7 @@ class UserService
             'search' => $filters['search'] ?? '',
             'start_date' => $filters['start_date'] ?? '',
             'end_date' => $filters['end_date'] ?? '',
-            'status' => $filters['status']?? '',
+            'status' => $filters['status'] ?? '',
             'sort_by' => $filters['sort_by'] ?? '',
             'sort_direction' => $filters['sort_direction'] ?? '',
         ];
@@ -209,6 +215,53 @@ class UserService
         ];
     }
 
+    public function progressPayment(int $userId): array
+    {
+        try {
+            $user = $this->userRepository->findById($userId);
+            if (!$user || !$user->peserta || !$user->peserta->jurusan1) {
+                return [
+                    'success' => false,
+                    'message' => 'Data peserta tidak lengkap'
+                ];
+            }
+
+            $isReguler = $user->peserta->jurusan1->jurusan === 'reguler';
+
+            $unpaid = $isReguler ? $user->peserta->pengajuan_biaya : $user->peserta->wakaf;
+            if (!is_numeric($unpaid) || $unpaid <= 0) {
+                return [
+                    'success' => false,
+                    'message' => 'Jumlah tagihan tidak valid'
+                ];
+            }
+
+            $paid = $isReguler
+                ? $this->transaksiRepository->findPengajuanBiayaByUserId($userId)
+                : $this->transaksiRepository->findWakafByUserId($userId);
+
+            $paidSum = $paid ? $paid->sum('total') : 0;
+
+            // Hindari pembagian dengan nol
+            $progress = $unpaid > 0 ? min(($paidSum / $unpaid) * 100, 100) : 0;
+
+            return [
+                'success' => true,
+                'data' => [
+                    'progress' => round($progress, 2),
+                    'paid' => $paidSum,
+                    'unpaid' => $unpaid,
+                ],
+                'message' => 'Progress pembayaran berhasil diambil'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengambil progress pembayaran'
+            ];
+        }
+    }
+
     public function getDeleted($filters = []): array
     {
         $users = $this->userRepository->getTrash($filters);
@@ -218,7 +271,7 @@ class UserService
                 'message' => 'User tidak tersedia'
             ];
         }
-        
+
         // Set pagination data
         $pagination = [
             'page' => $users->currentPage(),
@@ -232,7 +285,7 @@ class UserService
             'search' => $filters['search'] ?? '',
             'start_date' => $filters['start_date'] ?? '',
             'end_date' => $filters['end_date'] ?? '',
-            'status' => $filters['status']?? '',
+            'status' => $filters['status'] ?? '',
             'sort_by' => $filters['sort_by'] ?? '',
             'sort_direction' => $filters['sort_direction'] ?? '',
         ];
@@ -251,23 +304,23 @@ class UserService
         $user = $this->userRepository->findById($id);
         if (!$user) {
             return [
-               'success' => false,
-               'message' => 'User tidak ditemukan'
+                'success' => false,
+                'message' => 'User tidak ditemukan'
             ];
         }
-        
+
         $result = $this->userRepository->restore($user);
         if (!$result) {
             return [
-             'success' => false,
-             'message' => 'User gagal dikembalikan'
+                'success' => false,
+                'message' => 'User gagal dikembalikan'
             ];
         }
 
         return [
-          'success' => true,
-          'data' => $user,
-          'message' => 'User berhasil dikembalikan'
+            'success' => true,
+            'data' => $user,
+            'message' => 'User berhasil dikembalikan'
         ];
     }
 }

@@ -55,6 +55,7 @@ Route::middleware('auth:api')->group(function () {
         route::prefix('user')->group(function () {
             // Home
             Route::get('home', [HomeController::class, 'index']);
+            Route::get('progressPayment', [HomeController::class, 'progressPayment']);
 
             // Berita
             Route::get('berita', [ImageController::class, 'getAllBerita']);

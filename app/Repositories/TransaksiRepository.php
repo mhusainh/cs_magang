@@ -138,6 +138,32 @@ class TransaksiRepository
             ->get();
     }
 
+    public function findWakafByUserId(int $userId)
+    {
+        return $this->model
+            ->where('user_id', $userId)
+            ->whereHas('tagihan', function ($query) {
+                $query->withTrashed()->where('nama_tagihan', 'wakaf');
+            })
+            ->with(['tagihan' => function ($query) {
+                $query->withTrashed();
+            }])
+            ->get();
+    }
+
+    public function findPengajuanBiayaByUserId(int $userId)
+    {
+        return $this->model
+            ->where('user_id', $userId)
+            ->whereHas('tagihan', function ($query) {
+                $query->withTrashed()->where('nama_tagihan', 'pengajuan_biaya');
+            })
+            ->with(['tagihan' => function ($query) {
+                $query->withTrashed();
+            }])
+            ->get();
+    }
+
     public function getTrash(array $filters = [])
     {
         $query = $this->model->query();

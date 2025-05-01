@@ -22,4 +22,15 @@ class HomeController extends Controller
         }
         return $this->success($card['data'], 'Success' , 200);
     }
+
+    public function progressPayment()
+    {
+        $result = $this->userService->progressPayment(Auth::user()->id);
+
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
+
+        return $this->success($result['data'], $result['message'], 200);
+    }
 }
