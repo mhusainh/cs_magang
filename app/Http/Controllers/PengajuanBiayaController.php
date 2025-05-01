@@ -311,6 +311,8 @@ class PengajuanBiayaController extends Controller
 
         // Validasi nominal wakaf
         $nominal = $request->validated('wakaf');
+        if ($nominal > Auth::user()->peserta->wakaf) {
+            return $this->error('Nominal wakaf melebihi batas yang tersedia', 422, null);}
         if ($nominal <= 0) {
             return $this->error('Nominal wakaf harus lebih besar dari 0', 422, null);
         }
@@ -372,6 +374,8 @@ class PengajuanBiayaController extends Controller
 
         // Validasi nominal wakaf
         $nominal = $request->validated('pengajuan_biaya');
+        if ($nominal > Auth::user()->peserta->pengajuan_biaya) {
+            return $this->error('Nominal melebihi batas yang tersedia', 422, null);}
         if ($nominal <= 0) {
             return $this->error('Nominal harus lebih besar dari 0', 422, null);
         }
