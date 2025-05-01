@@ -342,7 +342,7 @@ class PengajuanBiayaController extends Controller
         }
 
         return $this->success(
-            null,
+            $tagihan['data'],
             'Tagihan Wakaf sebesar Rp ' . number_format($nominal, 0, ',', '.') . ' telah berhasil dibuat',
             200
         );
@@ -405,7 +405,7 @@ class PengajuanBiayaController extends Controller
         }
 
         return $this->success(
-            null,
+            $tagihan['data'],
             'Tagihan biaya sebesar Rp ' . number_format($nominal, 0, ',', '.') . ' telah berhasil dibuat',
             200
         );
