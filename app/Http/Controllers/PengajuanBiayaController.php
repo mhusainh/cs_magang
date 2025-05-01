@@ -182,7 +182,7 @@ class PengajuanBiayaController extends Controller
             return $this->error('Anda tidak dapat mengajukan biaya unggulan', 422, null);
         }
 
-        $result = $this->pesertaService->update(Auth::user()->id, ['wakaf' => $request->validated('wakaf')]);
+        $result = $this->pesertaService->update(Auth::user()->peserta->id, ['wakaf' => $request->validated('wakaf')]);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }
@@ -201,7 +201,7 @@ class PengajuanBiayaController extends Controller
             'status' => 'diproses'
         ];
 
-        $result = $this->pesertaService->update(Auth::user()->id, $data);
+        $result = $this->pesertaService->update(Auth::user()->peserta->id, $data);
         if (!$result['success']) {
             return $this->error($result['message'], 422, null);
         }
