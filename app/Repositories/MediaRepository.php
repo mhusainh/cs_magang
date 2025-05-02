@@ -79,10 +79,18 @@ class MediaRepository
         // Pagination
         return $query->paginate($filters['per_page'] ?? 10);
     }
-    public function validation(array $media): array
+    public function validation(array $media): Collection
     {
-        return $this->model->where('nama', $media['nama'])
-                            ->where('jenjang_sekolah', $media['jenjang_sekolah'])
-                            ->where('jurusan', $media['jurusan'])->get();
+        $query = $this->model->where('nama', $media['nama'])
+                            ->where('jenjang_sekolah', $media['jenjang_sekolah']);
+        
+        // Only add jurusan condition if it's specified
+        if (isset($media['jurusan']) && $media['jurusan'] !== null) {
+            $query->where('jurusan', $media['jurusan']);
+        } else {
+            $query->whereNull('jurusan');
+        }
+        
+        return $query->get();
     }
 }

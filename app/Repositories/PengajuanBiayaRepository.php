@@ -55,7 +55,7 @@ class PengajuanBiayaRepository
     {
         return $this->model
             ->where('jurusan', 'reguler')
-            ->orderBy('jenjang_sekolah', $data?? null)
+            ->where('jenjang_sekolah', $data?? null)
             ->first();
     }
 }

@@ -18,7 +18,7 @@ class MediaService
     {
         try {
             $media = $this->mediaRepository->validation($data);
-            if (!$media) {
+            if (!$media->isEmpty()) {
                 return [
                    'success' => false,
                    'message' => 'File yang sudah pernah kamu kirim sebelumnya',
@@ -169,7 +169,7 @@ class MediaService
     {
         try {
             $media = $this->mediaRepository->validation($data);
-            if (!$media) {
+            if (!$media->isEmpty()) {
                 return [
                    'success' => false,
                    'message' => 'File yang sudah pernah kamu kirim sebelumnya',
