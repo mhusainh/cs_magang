@@ -12,6 +12,7 @@ use App\Http\Controllers\BerkasController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\TagihanController;
+use App\Http\Controllers\AngkatanController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\BiodataOrtuController;
 use App\Http\Controllers\PekerjaanOrtuController;
@@ -258,6 +259,12 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('penghasilan-ortu/{id}', [PenghasilanOrtuController::class, 'delete']);
             Route::get('penghasilan-ortus/trash', [PenghasilanOrtuController::class, 'getDeleted']);
             Route::put('penghasilan-ortu/{id}/restore', [PenghasilanOrtuController::class, 'restore']);
+
+            // Angkatan Management
+            Route::get('angkatan', [AngkatanController::class, 'getAll']);
+            Route::post('angkatan', [AngkatanController::class, 'create']);
+            Route::put('angkatan/{id}', [AngkatanController::class, 'update']);
+            Route::delete('angkatan/{id}', [AngkatanController::class, 'delete']);
         });
     });
 });

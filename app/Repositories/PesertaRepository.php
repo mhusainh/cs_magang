@@ -113,6 +113,11 @@ class PesertaRepository
             $query->where('jenjang_sekolah', $filters['jenjang_sekolah']);
         }
 
+        // Filter by angkatan
+        if (isset($filters['angkatan']) && $filters['angkatan']!== '') {
+            $query->where('angkatan', $filters['angkatan']);
+        }
+
         // Sorting functionality
         if (isset($filters['sort_by']) && $filters['sort_by'] !== '') {
             $sortField = $filters['sort_by'];
@@ -185,6 +190,11 @@ class PesertaRepository
         // Filter by jenjang_sekolah
         if (isset($filters['jenjang_sekolah']) && $filters['jenjang_sekolah'] !== '') {
             $query->where('jenjang_sekolah', $filters['jenjang_sekolah']);
+        }
+
+        // Filter by angkatan
+        if (isset($filters['angkatan']) && $filters['angkatan']!== '') {
+            $query->where('angkatan', $filters['angkatan']);
         }
 
         // Sorting functionality

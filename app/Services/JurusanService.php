@@ -58,6 +58,13 @@ class JurusanService
     public function create(array $data): array
     {
         try {
+            $validation = $this->jurusanRepository->validation($data);
+            if ($validation->isNotEmpty()) {
+                return [
+                   'success' => false,
+                   'message' => 'Jurusan sudah ada'
+                ];
+            }
             $jurusan = $this->jurusanRepository->create($data);
             return [
                 'success' => true,

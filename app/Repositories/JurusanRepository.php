@@ -48,4 +48,11 @@ class JurusanRepository
     {
         return $jurusan->restore();
     }
+    
+    public function validation(array $data): Collection
+    {
+        $query = $this->model->where('jurusan', $data['jurusan'])
+                            ->where('jenjang_sekolah', $data['jenjang_sekolah']);
+        return $query->get();
+    }
 } 

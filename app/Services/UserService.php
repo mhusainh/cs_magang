@@ -63,6 +63,7 @@ class UserService
                 'no_telp' => $data['no_telp'],
                 'jenis_kelamin' => $data['jenis_kelamin'],
                 'jenjang_sekolah' => $data['jenjang_sekolah'],
+                'angkatan' => $data['angkatan'],
             ]);
             if (!$result) {
                 return [

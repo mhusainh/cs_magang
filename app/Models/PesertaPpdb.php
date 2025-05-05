@@ -36,7 +36,8 @@ class PesertaPpdb extends Model
         'wakaf',
         'spp',
         'book_vee',
-        'status'
+        'status',
+        'angkatan'
     ];
 
     public function user(): BelongsTo

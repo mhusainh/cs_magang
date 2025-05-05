@@ -14,6 +14,7 @@ use App\Services\BiayaPendaftaranService;
 use App\Http\Requests\Auth\LoginAdminRequest;
 use App\Repositories\BiayaPendaftaranRepository;
 use App\Http\Requests\Peserta\CreatePesertaRequest;
+use App\Services\AngkatanService;
 
 class AuthController extends Controller
 {
@@ -23,7 +24,8 @@ class AuthController extends Controller
         private UserService $userService,
         private PesanService $pesanService,
         private TagihanService $tagihanService,
-        private BiayaPendaftaranService $biayaPendaftaranService
+        private BiayaPendaftaranService $biayaPendaftaranService,
+        private AngkatanService $angkatanService,
     ) {}
 
     public function loginAdmin(LoginAdminRequest $request)
@@ -88,6 +90,13 @@ class AuthController extends Controller
             $request->validated('no_telp'),
             $request->validated('jenjang_sekolah')
         );
+        $angkatan = $this->angkatanService->angkatanAktif();
+        if (!$angkatan['success']) {
+            return $this->error($angkatan['message'], 400, null);
+        }
+
+        $data['angkatan'] = $angkatan['data']->angkatan;
+
         $biayaPendaftaran = $this->biayaPendaftaranService->getOnTop();
         if (!$biayaPendaftaran['success']) {
             return $this->error($biayaPendaftaran['message'], 400, null);

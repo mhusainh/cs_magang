@@ -158,6 +158,7 @@ class PesertaService
                 'start_date' => $filters['start_date'] ?? '',
                 'end_date' => $filters['end_date'] ?? '',
                 'jenjang_sekolah' => $filters['jenjang_sekolah'] ?? '',
+                'angkatan' => $filters['angkatan']?? '',
                 'sort_by' => $filters['sort_by'] ?? '',
                 'sort_direction' => $filters['sort_direction'] ?? ''
             ];
@@ -205,6 +206,7 @@ class PesertaService
                 'start_date' => $filters['start_date'] ?? '',
                 'end_date' => $filters['end_date'] ?? '',
                 'jenjang_sekolah' => $filters['jenjang_sekolah'] ?? '',
+                'angkatan' => $filters['angkatan']?? '',
                 'sort_by' => $filters['sort_by'] ?? '',
                 'sort_direction' => $filters['sort_direction'] ?? ''
             ];

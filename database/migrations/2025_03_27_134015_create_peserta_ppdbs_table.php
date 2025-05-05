@@ -31,6 +31,7 @@ return new class extends Migration
             $table->integer('spp')->nullable();
             $table->integer('book_vee')->nullable();
             $table->string('status', 20)->nullable(); // Menambahkan kolom status dengan tipe data string
+            $table->string('angkatan', 20); // Menambahkan kolom angkatan dengan tipe data string
             $table->timestamps();
             $table->softDeletes();
         });

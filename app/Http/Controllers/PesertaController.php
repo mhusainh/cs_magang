@@ -173,6 +173,7 @@ class PesertaController extends Controller
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'jenjang_sekolah' => $request->jenjang_sekolah,
+            'angkatan' => $request->angkatan,
             'sort_by' => $request->sort_by,
             'sort_direction' => $request->order_by,
             'per_page' => $request->per_page
@@ -217,6 +218,7 @@ class PesertaController extends Controller
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'jenjang_sekolah' => $request->jenjang_sekolah,
+            'angkatan' => $request->angkatan,
             'sort_by' => $request->sort_by,
             'sort_direction' => $request->order_by,
             'per_page' => $request->per_page
