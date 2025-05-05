@@ -109,7 +109,7 @@ class BerkasRepository
     {
         return $this->model->where('peserta_id', $pesertaId)
             ->where('ketentuan_berkas_id', $ketentuanBerkasId)
-            ->first();
+            ->get();
     }
 
     /**
