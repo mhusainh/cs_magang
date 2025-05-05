@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\DTO\UserDTO;
 use App\Models\User;
-use App\Services\BiayaPendaftaranService;
 use App\Traits\ApiResponse;
 use App\Services\UserService;
 use App\Services\PesanService;
 use App\Services\TagihanService;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests\User\LoginRequest;
+use App\Services\BiayaPendaftaranService;
+use App\Http\Requests\Auth\LoginAdminRequest;
 use App\Repositories\BiayaPendaftaranRepository;
 use App\Http\Requests\Peserta\CreatePesertaRequest;
 
@@ -24,6 +25,30 @@ class AuthController extends Controller
         private TagihanService $tagihanService,
         private BiayaPendaftaranService $biayaPendaftaranService
     ) {}
+
+    public function loginAdmin(LoginAdminRequest $request)
+    {
+        try {
+            $credentials = UserDTO::UserLoginDTO(
+                $request->validated('no_telp'),
+                $request->validated('password')
+            );
+
+            if (! $token = auth()->attempt($credentials)) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
+            return $this->success([
+                'token' => $token,
+                'type' => 'bearer',
+            ], 'Login berhasil', 200);
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return $this->error('Gagal membuat token', 500, null);
+        } catch (\Exception $e) {
+            return $this->error('Terjadi kesalahan saat login', 500, null);
+        }
+    }
+
 
     public function login(LoginRequest $request)
     {

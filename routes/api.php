@@ -39,6 +39,7 @@ Route::get('jenjang', [JurusanController::class, 'getUniqueJenjang']);
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
+    Route::post('login-admin', [AuthController::class, 'loginAdmin']);
     Route::post('register', [AuthController::class, 'register']);
     Route::middleware('auth:api')->post('refresh', [AuthController::class, 'refresh']);
     Route::middleware('auth:api')->post('logout', [AuthController::class, 'logout']);

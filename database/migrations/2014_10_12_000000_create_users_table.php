@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('no_telp', 15)->unique();
+            $table->string('password')->nullable();
             $table->enum('role', ['admin', 'user'])->default('user');
             $table->tinyInteger('status')->default(0);
             $table->rememberToken();
