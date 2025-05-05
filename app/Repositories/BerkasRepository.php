@@ -98,9 +98,9 @@ class BerkasRepository
         return $this->model->where('id', $id)->first();
     }
 
-    public function getBerkasByPesertaId($id): ?Berkas
+    public function getBerkasByPesertaId($id): Collection
     {
-        return $this->model->where('peserta_id', $id)->first();
+        return $this->model->where('peserta_id', $id)->get();
     }
     /**
      * Mendapatkan berkas berdasarkan peserta ID dan ketentuan berkas ID
@@ -109,7 +109,7 @@ class BerkasRepository
     {
         return $this->model->where('peserta_id', $pesertaId)
             ->where('ketentuan_berkas_id', $ketentuanBerkasId)
-            ->get();
+            ->first();
     }
 
     /**
