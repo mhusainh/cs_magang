@@ -190,4 +190,13 @@ class BerkasController extends Controller
 
         return $this->success($result['data'], $result['message'], 200);
     }
-}
+
+    public function getBerkasByPesertaId(int $pesertaId)
+    {
+        $result = $this->berkasService->getBerkasByPesertaId($pesertaId);
+        if (!$result['success']) {
+            return $this->error($result['message'], 404, null);
+        }
+        return $this->success($result['data'], $result['message'], 200);
+    }
+}   

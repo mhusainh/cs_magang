@@ -204,6 +204,7 @@ Route::middleware('auth:api')->group(function () {
 
             // Berkas Peserta Management (untuk admin)
             Route::get('berkas', [BerkasController::class, 'getAllBerkas']);
+            Route::get('berkas/peserta/{pesertaId}', [BerkasController::class, 'getBerkasByPesertaId']);
             Route::delete('berkas/{id}', [BerkasController::class, 'deleteBerkas']);
 
             //COBA
