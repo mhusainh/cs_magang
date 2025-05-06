@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\ProgressUserService;
 use App\Http\Requests\Peserta\UpdatePesertaRequest;
 use App\Http\Requests\Peserta\InputFormPesertaRequest;
+use App\Http\Requests\Peserta\UpdateNisRequest;
 use Illuminate\Http\JsonResponse;
 
 class PesertaController extends Controller
@@ -186,7 +187,16 @@ class PesertaController extends Controller
 
         return $this->success($result['data'], $result['message'], $result['code'], $result['pagination'], $result['current_filters']);
     }
+    public function updateNis(int $id, UpdateNisRequest $request)
+    {
+        $result = $this->pesertaService->update($id, ['nis' => $request->validated('nis')]);
+        
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
+        }
 
+        return $this->success(null, $result['message'], 200);
+    }
     public function updateStatus(int $id, UpdateStatusRequest $request)
     {
         $result = $this->pesertaService->update($id, ['status' => $request->validated('status')]);
