@@ -228,7 +228,7 @@ class PesertaRepository
         return $paginator->appends(request()->query());
     }
     
-    public function GetPeringkat(int $jurusan1_id, $jenjang_sekolah): Collection
+    public function GetPeringkat(int $jurusan1_id, $jenjang_sekolah, $angkatan): Collection
     {
         // Dapatkan jurusan dan jenjang sekolah dari user saat ini
 
@@ -238,6 +238,7 @@ class PesertaRepository
                     ->where('tagihans.nama_tagihan', 'book_vee')
                     ->where('tagihans.status', 1 ); // filter langsung saat join
                 })
+                ->where('peserta_ppdbs.angkatan', $angkatan)
                 ->whereNotNull('peserta_ppdbs.wakaf');
             
         // Filter berdasarkan jurusan dan jenjang sekolah

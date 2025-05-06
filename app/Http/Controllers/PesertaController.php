@@ -246,7 +246,8 @@ class PesertaController extends Controller
     public function getPeringkatByUser(): JsonResponse
     {
         $jenjang_sekolah = Auth::user()->peserta->jenjang_sekolah;
-        $result = $this->pesertaService->getPeringkat(Auth::user()->peserta->jurusan1_id, $jenjang_sekolah);
+        $angkatan = Auth::user()->peserta->angkatan;
+        $result = $this->pesertaService->getPeringkat(Auth::user()->peserta->jurusan1_id, $jenjang_sekolah, $angkatan);
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
@@ -255,7 +256,7 @@ class PesertaController extends Controller
 
     public function getPeringkat(Request $request)
     {
-        $result = $this->pesertaService->getPeringkat($request->jurusan_id, $request->jenjang_sekolah);
+        $result = $this->pesertaService->getPeringkat($request->jurusan_id, $request->jenjang_sekolah, $request->angkatan);
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }

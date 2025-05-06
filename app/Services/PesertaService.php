@@ -254,12 +254,12 @@ class PesertaService
         ];
     }
 
-    public function getPeringkat(int $jurusan1_id, string $jenjang_sekolah): array
+    public function getPeringkat(int $jurusan1_id, string $jenjang_sekolah, string $angkatan): array
     {
         try {
             // Gunakan current_user_id untuk mendapatkan peringkat user saat ini
-            $transaksi = $this->pesertaRepository->GetPeringkat($jurusan1_id, $jenjang_sekolah);            
-            if (!$transaksi) {
+            $peringkat = $this->pesertaRepository->GetPeringkat($jurusan1_id, $jenjang_sekolah, $angkatan);            
+            if (!$peringkat) {
                 return [
                     'success' => false,
                     'message' => 'Peringkat tidak ditemukan'
@@ -267,7 +267,7 @@ class PesertaService
             }
             return [
                 'success' => true,
-                'data' => PeringkatResource::collection($transaksi),
+                'data' => PeringkatResource::collection($peringkat),
                 'message' => 'Detail transaksi berhasil diambil',
             ];
         } catch (\Exception $e) {
