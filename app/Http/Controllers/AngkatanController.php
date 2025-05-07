@@ -34,8 +34,8 @@ class AngkatanController extends Controller
     public function update(InputRequest $request, int $id): JsonResponse
     {
         $data = [
-            $id,
-            $request->validated('angkatan')
+            'id' => $id,
+            'angkatan' => $request->validated('angkatan')
         ];
 
         $result = $this->service->update($data);
