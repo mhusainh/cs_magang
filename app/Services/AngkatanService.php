@@ -31,8 +31,8 @@ class AngkatanService
     public function create(array $data): array
     {
         try {
-            $existingAngkatan = $this->angkatanRepository->angkatan();
-            if ($existingAngkatan) {
+            $existingAngkatan = $this->angkatanRepository->getAll();
+            if ($existingAngkatan->count() > 0) {
                 return [
                    'success' => false,
                    'message' => 'angkatan sudah ada'
