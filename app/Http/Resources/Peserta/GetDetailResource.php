@@ -56,6 +56,7 @@ class GetDetailResource extends JsonResource
                     'ketentuan_berkas_id' => $berkas->ketentuan_berkas_id,
                 ];
             }) : null,
+            'angkatan' => $this->angkatan,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
