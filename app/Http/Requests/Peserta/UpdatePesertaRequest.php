@@ -19,7 +19,7 @@ class UpdatePesertaRequest extends FormRequest
             'nama' => 'required|string|max:255',
             'no_telp' => 'required|string|max:15',
             'jenis_kelamin' => 'required|string|in:Laki-laki,Perempuan',
-            'jenjang_sekolah' => 'required|string|in:SD,SMP,SMA',
+            'jenjang_sekolah' => 'required|string',
             'nisn' => 'required|string|max:10',
             'tempat_lahir' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
@@ -42,7 +42,6 @@ class UpdatePesertaRequest extends FormRequest
             'jenis_kelamin.in' => 'Jenis kelamin harus Laki-laki atau Perempuan',
             'jenjang_sekolah.required' => 'Jenjang sekolah harus diisi',
             'jenjang_sekolah.string' => 'Jenjang sekolah harus berupa teks',
-            'jenjang_sekolah.in' => 'Jenjang sekolah harus SD, SMP, atau SMA',
             'nisn.required' => 'NISN harus diisi',
             'nisn.string' => 'NISN harus berupa teks',
             'nisn.max' => 'NISN maksimal 10 karakter',
@@ -56,8 +55,6 @@ class UpdatePesertaRequest extends FormRequest
             'alamat.max' => 'Alamat maksimal 255 karakter',
             'jurusan1_id.integer' => 'ID jurusan 1 harus berupa angka',
             'jurusan1_id.exists' => 'jurusan tidak ditemukan',
-            'jurusan2_id.integer' => 'ID jurusan 2 harus berupa angka',
-            'jurusan2_id.exists' => 'jurusan tidak ditemukan'
         ];
     }
 }

@@ -31,13 +31,25 @@ class AuthController extends Controller
     public function loginAdmin(LoginAdminRequest $request)
     {
         try {
-            $credentials = UserDTO::UserLoginDTO(
-                $request->validated('no_telp'),
-                $request->validated('password')
-            );
+            $credentials = [
+                'no_telp' => $request->validated('no_telp'),
+                'password' => $request->validated('password')
+            ];
 
-            if (! $token = auth()->attempt($credentials)) {
-                return response()->json(['error' => 'Unauthorized'], 401);
+            // Cek apakah user dengan nomor telepon tersebut ada
+            $user = User::where('no_telp', $credentials['no_telp'])->first();
+            if (!$user) {
+                return $this->error('Nomor telepon tidak terdaftar', 401, null);
+            }
+
+            // Coba melakukan autentikasi
+            if (!$token = auth()->attempt($credentials)) {
+                return $this->error('Password yang anda masukkan salah', 401, null);
+            }
+
+            // Cek role user (opsional, sesuai kebutuhan)
+            if ($user->role !== 'admin') {
+                return $this->error('Akses ditolak. Anda bukan admin', 403, null);
             }
 
             return $this->success([

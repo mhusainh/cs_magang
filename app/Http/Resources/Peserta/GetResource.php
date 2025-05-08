@@ -52,6 +52,7 @@ class GetResource extends JsonResource
                     'penghasilan' => $this->biodataOrtu->penghasilanOrtu->penghasilan_ortu
                 ] : null
             ] : null,
+            'angkatan' => $this->angkatan,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

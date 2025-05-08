@@ -24,7 +24,7 @@ class AngkatanController extends Controller
 
     public function create(InputRequest $request): JsonResponse
     {
-        $result = $this->service->create($request->validated('angkatan'));
+        $result = $this->service->create(['angkatan' => $request->validated('angkatan')]);
         if (!$result['success']) {
             return $this->error($result['message'], 400, null);
         }
@@ -34,8 +34,8 @@ class AngkatanController extends Controller
     public function update(InputRequest $request, int $id): JsonResponse
     {
         $data = [
-            $id,
-            $request->validated('angkatan')
+            'id' => $id,
+            'angkatan' => $request->validated('angkatan')
         ];
 
         $result = $this->service->update($data);
