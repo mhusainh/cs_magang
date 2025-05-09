@@ -3,12 +3,13 @@
 namespace App\Repositories;
 
 use App\Models\PesertaPpdb as Peserta;
+use App\Models\Jurusan as Jurusan;
 use Illuminate\Database\Eloquent\Collection;
 
 
 class PesertaRepository
 {
-    public function __construct(private Peserta $model) {}
+    public function __construct(private Peserta $model, private Jurusan $jurusan) {}
 
     public function create(array $data): Peserta
     {
@@ -228,39 +229,56 @@ class PesertaRepository
         return $paginator->appends(request()->query());
     }
     
-    public function GetPeringkat(int $jurusan1_id, $jenjang_sekolah, $angkatan): Collection
+    public function GetPeringkatReguler(int $jurusan1_id, $jenjang_sekolah, $angkatan): Collection
     {
-        // Dapatkan jurusan dan jenjang sekolah dari user saat ini
-
         $query = $this->model
-            ->leftJoin('tagihans', function ($join) {
-                $join->on('peserta_ppdbs.user_id', '=', 'tagihans.user_id')
-                    ->where('tagihans.nama_tagihan', 'book_vee')
-                    ->where('tagihans.status', 1 ); // filter langsung saat join
-                })
-                ->where('peserta_ppdbs.angkatan', $angkatan)
-                ->whereNotNull('peserta_ppdbs.wakaf');
-            
-        // Filter berdasarkan jurusan dan jenjang sekolah
+            ->leftJoin('progress_users', function ($join) {
+                $join->on('peserta_ppdbs.user_id', '=', 'progress_users.user_id');
+            })
+                ->where('progress_users.progress', '3') // filter langsung saat join
+                ->where('peserta_ppdbs.angkatan', $angkatan);
+
         if ($jurusan1_id !== null) {
             $query->where('peserta_ppdbs.jurusan1_id', $jurusan1_id)
                 ->where('peserta_ppdbs.jenjang_sekolah', $jenjang_sekolah);
         }
-
         $selectColumns = [
-            'tagihans.*',
+            'progress_users.*',
             'peserta_ppdbs.id as peserta_id',
             'peserta_ppdbs.nama as peserta_nama',
             'peserta_ppdbs.wakaf as wakaf',
-            'peserta_ppdbs.book_vee as book_vee'
         ];
-
         return $query->select($selectColumns)
-            // Urutkan peserta dengan book_vee di tagihan terlebih dahulu (tidak null)
-            ->orderByRaw('CASE WHEN tagihans.id IS NOT NULL THEN 1 ELSE 0 END DESC')
-            // Kemudian urutkan berdasarkan book_vee, wakaf, dan created_at
-            ->orderBy('wakaf', 'desc')
-            ->orderBy('tagihans.created_at', 'asc')
+            ->orderBy('progress_users.updated_at', 'asc')
+            ->get();
+
+    }
+    public function GetPeringkat(int $jurusan1_id, $jenjang_sekolah, $angkatan): Collection
+    {
+        $query = $this->model->leftJoin('progress_users', function ($join) {
+            $join->on('peserta_ppdbs.user_id', '=', 'progress_users.user_id');
+        })
+        ->where('progress_users.progress', '3')
+        ->where('peserta_ppdbs.angkatan', $angkatan)
+        ->where('peserta_ppdbs.jurusan1_id', $jurusan1_id)
+        ->where('peserta_ppdbs.jenjang_sekolah', $jenjang_sekolah);
+
+        $jurusan = $this->jurusan->where('id', $jurusan1_id)->first();
+        $selectColumns = [
+            'progress_users.*',
+            'peserta_ppdbs.id as peserta_id',
+            'peserta_ppdbs.nama as peserta_nama',
+            'peserta_ppdbs.wakaf as wakaf',
+        ];
+        if ($jurusan && $jurusan->jurusan !== 'reguler') {
+            $query->whereNotNull('peserta_ppdbs.wakaf');
+            return $query->select($selectColumns)
+                ->orderBy('wakaf', 'desc')
+                ->orderBy('progress_users.updated_at', 'asc')
+                ->get();
+        }
+        return $query->select($selectColumns)
+            ->orderBy('progress_users.updated_at', 'asc')
             ->get();
     }
 
