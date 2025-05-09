@@ -16,8 +16,9 @@ class PeringkatResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'total' => $this->total,
-            'created_at' => $this->created_at,
+            'progress_user'=>[
+                'updated_at' => $this->updated_at,
+            ],
             'peserta' => [
                 'id' => $this->peserta_id,
                 'nama' => $this->peserta_nama,
