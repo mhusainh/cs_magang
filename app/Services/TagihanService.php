@@ -39,6 +39,7 @@ class TagihanService
     public function create(array $data): array
     {
         try {
+            $data['total'] = str_replace('-', '', $data['total']);
             $data = [
                 'user_id' => $data['user_id'],
                 'nama_tagihan' => $data['nama_tagihan'],

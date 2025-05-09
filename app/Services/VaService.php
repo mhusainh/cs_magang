@@ -22,24 +22,9 @@ class VaService
 
     public function inquiry(array $data): array
     {
-        $payload = [];
         try {
-            // Validasi data yang diterima
-            if (empty($data['VANO'])) {
-                return [
-                    'ERR' => '15',
-                    'METHOD' => 'INQUIRY',
-                    'CCY' => $data['CCY'] ?? '360',
-                    'BILL' => '0',
-                    'DESCRIPTION' => 'VA NUMBER TIDAK DITEMUKAN',
-                    'DESCRIPTION2' => '',
-                    'CUSTNAME' => ''
-                ];
-            }
-
-            // Cari tagihan berdasarkan VA number
-            $tagihan = $this->tagihanRepository->getByVaNumber($data['VANO']);
-            if (!$tagihan) {
+            // Validasi VA number dan cari tagihan
+            if (empty($data['VANO']) || !($tagihan = $this->tagihanRepository->getByVaNumber($data['VANO']))) {
                 return [
                     'ERR' => '15',
                     'METHOD' => 'INQUIRY',
@@ -130,6 +115,4 @@ class VaService
             ];
         }
     }
-
-    pub
 }

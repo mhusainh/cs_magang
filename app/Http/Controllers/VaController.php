@@ -23,24 +23,37 @@ class VaController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function inquiry(Request $request): JsonResponse
+    public function paymentVA(Request $request): JsonResponse
     {
         try {
             $token = $request->query('token');
             if (empty($token)) {
-                return response()->json([
-                    'responseCode' => '01',
-                    'responseMessage' => 'TOKEN INVALID',
-                    'responseTimestamp' => now()->format('Y-m-d H:i:s.u'),
-                    'transactionId' => $request->input('transactionId', '')
-                ], 400);
+                $payload = [
+                    'CCY' => '360',
+                    'ERR' => '30',
+                    'BILL' => '0',
+                    'DESCRIPTION' => 'TOKEN INVALID',
+                    'DESCRIPTION2' => '',
+                    'METHOD' => '',
+                    'CUSTNAME' => ''
+                ];
+                Logger::log('payment_va', $payload, null, 'Token tidak  valid', time());
+
+                $token = JWT::encode($payload, $_ENV['QRIS_JWT_SECRET'], 'HS256');
+                return response()->json([$token]);
             }
             try {
                 $decodedToken = JWT::decode($token, $_ENV['QRIS_JWT_SECRET'], ['HS256']);
             } catch (\Exception $e) {
-                Logger::log('webhook_qris', ['token' => $token], null, 'Token tidak valid: ' . $e->getMessage(), time());
-                return ['success' => false, 'message' => 'Token tidak valid'];
+                Logger::log('payment_va', ['token' => $token], null, 'Token tidak valid: ' . $e->getMessage(), time());
             }
+
+            if ($decodedToken['METHOD'] == 'INQUIRY') {
+                $payload = [
+                    
+                ];
+            }
+            
             // Validasi request
             $validated = $request->validate([
                 'CCY' => 'nullable|string',

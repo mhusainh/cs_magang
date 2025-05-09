@@ -72,41 +72,6 @@ class QrisController extends Controller
         }
         return response()->json($responseData, $result['success'] ? 200 : 400);
     }
-    public function webhookVaNumber(Request $request): JsonResponse
-    {
-        $token = $request->query('token');
-        if (empty($token)) {
-            return response()->json([
-                'responseCode' => '01',
-                'responseMessage' => 'TOKEN INVALID',
-                'responseTimestamp' => now()->format('Y-m-d H:i:s.u'),
-                'transactionId' => $request->input('transactionId', '')
-            ], 400);
-        }
-
-        $result = $this->qrisService->processWebhook($token, 'VA_NUMBER');
-        $responseData = [
-            'responseCode' => $result['success'] ? '00' : '01',
-            'responseMessage' => $result['success'] ? 'TRANSACTION SUCCESS' : 'TRANSACTION FAILED',
-            'responseTimestamp' => now()->format('Y-m-d H:i:s.u'),
-            'transactionId' => $result['transactionId']
-        ];
-        Logger::log('webhook_qris', $result['requestData'], $responseData, null, $result['transactionId']);
-        $dataPesan = [
-            'user_id' => $result['userId'],
-            'judul' => 'Pembayaran',
-            'deskripsi' => $responseData['responseMessage'] === 'TRANSACTION SUCCESS' ? 'Halo ' . $result['namaPeserta']. ', Traksaksi sebesar Rp.' . $result['total'] . 'melalui Virtual Akun telah berhasil. Terima kasih!' 
-                            : 'Halo '. $result['namaPeserta']. ', Traksaksi sebesar Rp.'. $result['total'].'melalui Virtual Akun telah gagal. Terima kasih!',
-        ];
-
-        $pesan = $this->pesanService->create($dataPesan);
-        
-        if (!$pesan['success']) {
-            // Tetap kembalikan sukses meskipun pesan gagal dibuat
-            return $this->success($result, 'Semua file berhasil diupload, tetapi notifikasi gagal dibuat', 200);
-        }
-        return response()->json($responseData, $result['success'] ? 200 : 400);
-    }
 }
 
 
