@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QrisController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VaController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PesanController;
@@ -36,6 +37,7 @@ Route::get('home', [ImageController::class, 'getAllHomepage']);
 Route::post('check-status', [QrisController::class, 'checkStatus']);
 Route::post('qris/pushNotification', [QrisController::class, 'webhookQris']);
 Route::post('va/pushNotification', [QrisController::class, 'webhookvaNumber']);
+Route::post('va/inquiry', [VaController::class, 'inquiry']);
 Route::get('jenjang', [JurusanController::class, 'getUniqueJenjang']);
 
 Route::prefix('auth')->group(function () {
@@ -138,7 +140,7 @@ Route::middleware('auth:api')->group(function () {
             Route::put('/peserta/{id}', [PesertaController::class, 'updateStatus']);
             Route::get('/pesertas/trash', [PesertaController::class, 'getDeleted']);
             Route::put('/peserta/{id}/restore', [PesertaController::class, 'restore']);
-            Route::put('peserta/nis/{id}', [PesertaController::class,'updateNis']);
+            Route::put('peserta/nis/{id}', [PesertaController::class, 'updateNis']);
             Route::get('peringkat', [PesertaController::class, 'getPeringkat']);
 
             // Tagihan Management

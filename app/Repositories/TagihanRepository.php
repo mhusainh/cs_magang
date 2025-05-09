@@ -112,6 +112,11 @@ class TagihanRepository
         return $this->model->where('transaction_qr_id', $qrId)->first();
     }
 
+    public function getByVaNumber(string $vaNumber): ?Tagihan
+    {
+        return $this->model->where('va_number', $vaNumber)->first();
+    }
+
     public function getTrash(array $filters)
     {
         $query = $this->model->query();

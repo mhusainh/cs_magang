@@ -266,6 +266,49 @@ class TagihanService
         }
     }
 
+    public function getByVaNumber(string $qrData): array
+    {
+        try {
+            // Get the tagihan from the repository
+            $tagihan = $this->tagihanRepository->getByVaNumber($qrData);
+
+            // Debug the raw data from repository if needed
+            // dd(['repository_returns' => $tagihan]);
+
+            if (!$tagihan) {
+                return [
+                    'success' => false,
+                    'message' => 'Tagihan tidak ditemukan'
+                ];
+            }
+
+            // Convert the Eloquent model to an array
+            $tagihanArray = $tagihan->toArray();
+
+            // Make sure we have all the required fields for VA Number check
+            if (!isset($tagihanArray['total']) || !isset($tagihanArray['created_time'])) {
+                // Debug the missing fields
+                // dd(['missing_fields' => true, 'tagihan_data' => $tagihanArray]);
+
+                return [
+                    'success' => false,
+                    'message' => 'Data tagihan tidak lengkap untuk VA Number'
+                ];
+            }
+
+            return [
+                'success' => true,
+                'data' => $tagihanArray,
+                'message' => 'Tagihan berhasil diambil'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal mengambil tagihan: ' . $e->getMessage()
+            ];
+        }
+    }
+
     public function getDeleted($filters = []): array
     {
         try {
