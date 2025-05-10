@@ -36,8 +36,7 @@ use App\Http\Controllers\BiayaPendaftaranController;
 Route::get('home', [ImageController::class, 'getAllHomepage']);
 Route::post('check-status', [QrisController::class, 'checkStatus']);
 Route::post('qris/pushNotification', [QrisController::class, 'webhookQris']);
-Route::post('va/pushNotification', [QrisController::class, 'webhookvaNumber']);
-Route::post('va/inquiry', [VaController::class, 'inquiry']);
+Route::post('va/paymentVA', [VaController::class, 'paymentVA']);
 Route::get('jenjang', [JurusanController::class, 'getUniqueJenjang']);
 
 Route::prefix('auth')->group(function () {
