@@ -49,7 +49,7 @@ class VaController extends Controller
         }
         if ($decodedToken['METHOD'] == 'PAYMENT') {
             $feature = 'va_payment';
-            // $response = $this->vaService->payment($decodedToken);
+            $response = $this->vaService->payment($decodedToken);
         }
 
         Logger::log($feature, $decodedToken, $response, null, time());

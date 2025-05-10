@@ -176,7 +176,6 @@ class QrisService
                 'va_number' => $transactionData->vano ?? $transactionData->vano1,
                 'transaction_qr_id' => $transactionData->transactionQrId,
                 'method' => $method,
-                'ref_no' => $transactionData->transactionId,
             ];
             $transaksi = $this->transaksiRepository->create($transaksiData);
             if (!$transaksi) {
