@@ -82,14 +82,6 @@ class VaService
             }
             $description2 = substr($description2, 0, 256);
 
-            // Log aktivitas inquiry
-            Logger::log('va_inquiry', $data, [
-                'tagihan_id' => $tagihan->id,
-                'user_id' => $tagihan->user_id,
-                'bill_amount' => $billAmount,
-                'va_number' => $data['VANO']
-            ], null, time());
-
             // Kembalikan response sukses
             return [
                 'ERR' => '00',
@@ -102,10 +94,10 @@ class VaService
             ];
         } catch (\Exception $e) {
             $errorMessage = 'Error sistem pada inquiry VA: ' . $e->getMessage();
-            Logger::log('va_inquiry', $data, null, $errorMessage, time());
+            Logger::log('va_inquiry_service', $data, null, $errorMessage, time());
 
             return [
-                'ERR' => '99',
+                'ERR' => '12',
                 'METHOD' => 'INQUIRY',
                 'CCY' => $data['CCY'] ?? '360',
                 'BILL' => '0',
@@ -115,4 +107,6 @@ class VaService
             ];
         }
     }
+
+    
 }
