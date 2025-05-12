@@ -40,7 +40,8 @@ class VaController extends Controller
             ];
             $token = JWT::encode($payload, $_ENV['QRIS_JWT_SECRET'], 'HS256');
             Logger::log('va', $payload, null, 'Token tidak valid: ' . $e->getMessage(), time());
-            return response()->json([$token]);
+            // Mengembalikan token tanpa tanda petik dalam format yang sama dengan respons asli
+            return response($token)->header('Content-Type', 'application/json');
         }
         $data = (array) $decodedToken;
         $feature = '';
@@ -57,7 +58,7 @@ class VaController extends Controller
 
         $token = JWT::encode($response, $_ENV['QRIS_JWT_SECRET'], 'HS256');
 
-        // Kembalikan response
-        return response()->json($token);
+        // Kembalikan response tanpa tanda petik
+        return response($token)->header('Content-Type', 'application/json');
     }
 }
