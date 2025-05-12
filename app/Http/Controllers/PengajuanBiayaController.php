@@ -303,7 +303,6 @@ class PengajuanBiayaController extends Controller
                 'Harap Membayar tagihan wakaf yang belum terbayar terlebih dahulu',
                 200,
                 $existingTagihan->qr_data ? [
-                    'qr_data' => $existingTagihan->qr_data,
                     'va_number' => $existingTagihan->va_number,
                 ] : null
             );
@@ -325,7 +324,7 @@ class PengajuanBiayaController extends Controller
         ];
 
         // Menyimpan tagihan
-        $tagihan = $this->tagihanService->create($dataTagihan);
+        $tagihan = $this->tagihanService->createPengajuanBiaya($dataTagihan);
         if (!$tagihan['success']) {
             return $this->error($tagihan['message'], 400, null);
         }
@@ -366,7 +365,6 @@ class PengajuanBiayaController extends Controller
                 'Harap Membayar tagihan yang belum terbayar terlebih dahulu',
                 200,
                 $existingTagihan->qr_data ? [
-                    'qr_data' => $existingTagihan->qr_data,
                     'va_number' => $existingTagihan->va_number,
                 ] : null
             );
@@ -388,7 +386,7 @@ class PengajuanBiayaController extends Controller
         ];
 
         // Menyimpan tagihan
-        $tagihan = $this->tagihanService->create($dataTagihan);
+        $tagihan = $this->tagihanService->createPengajuanBiaya($dataTagihan);
         if (!$tagihan['success']) {
             return $this->error($tagihan['message'], 400, null);
         }

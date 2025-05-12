@@ -90,6 +90,41 @@ class TagihanService
         }
     }
 
+    public function createPengajuanBiaya(array $data): array
+    {
+        try {
+            $data['total'] = str_replace('-', '', $data['total']);
+            $data = [
+                'user_id' => $data['user_id'],
+                'nama_tagihan' => $data['nama_tagihan'],
+                'total' => $data['total'],
+                'created_time' => now()->format('s') . substr(now()->format('u'), 0, 6),
+                'va_number' => $_ENV['QRIS_VA_NUMBER'] . str_pad(random_int(1000000000, 9999999999), 10, '0', STR_PAD_LEFT),
+            ];
+
+            $tagihan = $this->tagihanRepository->create($data);
+            if (!$tagihan) {
+                return [
+                    'success' => false,
+                    'message' => 'Gagal membuat tagihan'
+                ];
+            }
+
+            return [
+                'success' => true,
+                'data' => [
+                    'va_number' => $data['va_number'],
+                ],
+                'message' => 'Tagihan berhasil dibuat'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal membuat tagihan: ' . $e->getMessage()
+            ];
+        }
+    }
+
     public function update(array $data): array
     {
         try {
