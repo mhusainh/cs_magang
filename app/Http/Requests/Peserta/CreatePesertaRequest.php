@@ -31,7 +31,7 @@ class CreatePesertaRequest extends FormRequest
             'nama.max' => 'Nama maksimal 255 karakter',
             'no_telp.required' => 'Nomor telepon harus diisi',
             'no_telp.string' => 'Nomor telepon harus berupa teks',
-            'no_telp.unique' => 'Nomor telepon sudah digunakan',
+            'no_telp.unique' => 'Nomor telepon sudah terdaftar, silahkan lakukan pembayaran biaya pendaftaran di halaman login',
             'no_telp.max' => 'Nomor telepon maksimal 15 karakter',
             'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
             'jenis_kelamin.string' => 'Jenis kelamin harus berupa teks',
