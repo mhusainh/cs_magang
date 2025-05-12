@@ -23,7 +23,7 @@ class VaController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function paymentVA(Request $request): JsonResponse
+    public function paymentVA(Request $request)
     {
         $token = $request->query('token');
         try {
@@ -40,8 +40,8 @@ class VaController extends Controller
             ];
             $token = JWT::encode($payload, $_ENV['QRIS_JWT_SECRET'], 'HS256');
             Logger::log('va', $payload, null, 'Token tidak valid: ' . $e->getMessage(), time());
-            // Mengembalikan token tanpa tanda petik dalam format yang sama dengan respons asli
-            return response($token)->header('Content-Type', 'application/json');
+            // Mengembalikan response dalam format JSON yang valid
+            return response()->setContent($token);
         }
         $data = (array) $decodedToken;
         $feature = '';
@@ -56,9 +56,11 @@ class VaController extends Controller
 
         Logger::log($feature, $data, $response, null, time());
 
-        $token = JWT::encode($response, $_ENV['QRIS_JWT_SECRET'], 'HS256');
+        $responseJson = json_encode($response);
+        // Encode response menjadi token JWT
+        $token = JWT::encode($responseJson, $_ENV['QRIS_JWT_SECRET'], 'HS256');
 
-        // Kembalikan response tanpa tanda petik
-        return response($token)->header('Content-Type', 'application/json');
+        // Kembalikan response sebagai plain text
+        return response()->setContent($token);
     }
 }
