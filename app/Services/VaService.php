@@ -198,7 +198,7 @@ class VaService
                     'user_id' => $tagihan->user_id,
                     'tagihan_id' => $tagihan->id,
                     'status' => 1,
-                    'total' => $data['PAYMENT'],
+                    'total' => $data['PAYMENT']/100,
                     'created_time' => time(),
                     'va_number' => $data['VANO'],
                     'method' => $data['METHOD'],
