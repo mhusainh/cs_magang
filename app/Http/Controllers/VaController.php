@@ -56,9 +56,8 @@ class VaController extends Controller
 
         Logger::log($feature, $data, $response, null, time());
 
-        $responseJson = json_encode($response, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         // Encode response menjadi token JWT
-        $token = JWT::encode($responseJson, $_ENV['QRIS_JWT_SECRET'], 'HS256');
+        $token = JWT::encode($response, $_ENV['QRIS_JWT_SECRET'], 'HS256');
 
         // Kembalikan response sebagai plain text
         return response($token)->header('Content-Type', 'text/plain');
