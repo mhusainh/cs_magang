@@ -135,7 +135,7 @@ class VaService
                     'DESCRIPTION2' => '',
                     'CUSTNAME' => ''
                 ];
-            }            
+            }
 
             // Ambil data user dan peserta
             $user = $this->userRepository->findById($tagihan->user_id);
@@ -159,13 +159,13 @@ class VaService
             // Kalikan dengan 100 untuk format decimal
             $billAmount = (int)($billAmount * 100);
 
-            if ($data['PAYMENT'] != $billAmount) {
+            if ($data['PAYMENT'] != $data['BILL']) {
                 return [
                     'ERR' => '16',
                     'METHOD' => 'PAYMENT',
-                    'CCY' => $data['CCY']?? '360',
+                    'CCY' => $data['CCY'] ?? '360',
                     'BILL' => $billAmount,
-                    'DESCRIPTION' => 'Jumlah pembayaran tidak sesuai',
+                    'DESCRIPTION' => 'JUMLAH PEMBAYARAN TIDAK SESUAI',
                     'DESCRIPTION2' => '',
                     'CUSTNAME' => $custName
                 ];
@@ -174,41 +174,38 @@ class VaService
             // Persiapkan deskripsi
             $description = 'TAGIHAN ' . strtoupper($tagihan->nama_tagihan);
             $description = substr($description, 0, 40);
+            try {
+                // Update status tagihan menjadi lunas
+                $updateTagihan = $this->tagihanRepository->update($tagihan, [
+                    'status' => 1,
+                ]);
+                if (!$updateTagihan) {
+                    // Jika gagal update tagihan, kembalikan error
+                    Logger::log('va_payment_error', $data, null, 'Gagal update tagihan', time());
+                    return [
+                        'ERR' => '12',
+                        'METHOD' => 'PAYMENT',
+                        'CCY' => $data['CCY'] ?? '360',
+                        'BILL' => '0',
+                        'DESCRIPTION' => 'SISTEM ERROR',
+                        'DESCRIPTION2' => '',
+                        'CUSTNAME' => ''
+                    ];
+                }
 
-            // Update status tagihan menjadi lunas
-            $updateTagihan = $this->tagihanRepository->update($tagihan, [
-                'status' => 1,
-            ]);
-            if (!$updateTagihan) {
-                // Jika gagal update tagihan, kembalikan error
-                Logger::log('va_payment_error', $data, null, 'Gagal update tagihan', time());
-                return [
-                    'ERR' => '12',
-                    'METHOD' => 'PAYMENT',
-                    'CCY' => $data['CCY'] ?? '360',
-                    'BILL' => '0',
-                    'DESCRIPTION' => 'SISTEM ERROR',
-                    'DESCRIPTION2' => '',
-                    'CUSTNAME' => ''
+                // Buat data transaksi dari data pembayaran
+                $transaksiData = [
+                    'user_id' => $tagihan->user_id,
+                    'tagihan_id' => $tagihan->id,
+                    'status' => 1,
+                    'total' => $data['PAYMENT'],
+                    'created_time' => time(),
+                    'va_number' => $data['VANO'],
+                    'method' => $data['METHOD'],
+                    'ref_no' => $data['REFNO'],
                 ];
-            }
-
-            // Buat data transaksi dari data pembayaran
-            $transaksiData = [
-                'user_id' => $tagihan->user_id,
-                'tagihan_id' => $tagihan->id,
-                'status' => 1,
-                'total' => $data['PAYMENT'],
-                'created_time' => time(),
-                'va_number' => $data['VANO'],
-                'method' => $data['METHOD'],
-                'ref_no' => $data['REFNO'],
-            ];
-
-            // Simpan transaksi ke database
-            $transaksi = $this->transaksiRepository->create($transaksiData);
-            if (!$transaksi) {
-                // Jika gagal menyimpan transaksi, kembalikan error
+                $this->transaksiRepository->create($transaksiData);
+            } catch (\Exception $e) {
                 Logger::log('va_payment_error', $data, null, 'Gagal menyimpan transaksi', time());
                 return [
                     'ERR' => '99',
@@ -220,8 +217,6 @@ class VaService
                     'CUSTNAME' => ''
                 ];
             }
-
-            // Kembalikan response sukses
             return [
                 'ERR' => '00',
                 'METHOD' => 'PAYMENT',

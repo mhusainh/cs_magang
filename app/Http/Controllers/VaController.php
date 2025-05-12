@@ -42,17 +42,18 @@ class VaController extends Controller
             Logger::log('va', $payload, null, 'Token tidak valid: ' . $e->getMessage(), time());
             return response()->json([$token]);
         }
+        $data = (array) $decodedToken;
+        $feature = '';
 
-        if ($decodedToken['METHOD'] == 'INQUIRY') {
+        if ($data['METHOD'] == 'INQUIRY') {
             $feature = 'va_inquiry';
-            $response = $this->vaService->inquiry($decodedToken);
-        }
-        if ($decodedToken['METHOD'] == 'PAYMENT') {
+            $response = $this->vaService->inquiry($data);
+        } elseif ($data['METHOD'] == 'PAYMENT') {
             $feature = 'va_payment';
-            $response = $this->vaService->payment($decodedToken);
+            $response = $this->vaService->payment($data);
         }
 
-        Logger::log($feature, $decodedToken, $response, null, time());
+        Logger::log($feature, $data, $response, null, time());
 
         $token = JWT::encode($response, $_ENV['QRIS_JWT_SECRET'], 'HS256');
 
