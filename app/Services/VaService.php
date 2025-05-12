@@ -200,9 +200,8 @@ class VaService
                     'tagihan_id' => $tagihan->id,
                     'status' => 1,
                     'total' => (string)$amount,
-                    'created_time' => time(),
                     'va_number' => $data['VANO'],
-                    'method' => $data['METHOD'],
+                    'method' => 'VA',
                     'ref_no' => $data['REFNO'],
                 ];
                 $this->transaksiRepository->create($transaksiData);
