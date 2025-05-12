@@ -192,13 +192,14 @@ class VaService
                         'CUSTNAME' => ''
                     ];
                 }
-
+                // Persiapkan jumlah tagihan
+                $amount = (int)($data['PAYMENT']/100);
                 // Buat data transaksi dari data pembayaran
                 $transaksiData = [
                     'user_id' => $tagihan->user_id,
                     'tagihan_id' => $tagihan->id,
                     'status' => 1,
-                    'total' => $data['PAYMENT']/100,
+                    'total' => (string)$amount,
                     'created_time' => time(),
                     'va_number' => $data['VANO'],
                     'method' => $data['METHOD'],
