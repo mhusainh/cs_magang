@@ -79,11 +79,6 @@ class AuthController extends Controller
             }
             if ($user->status !== 1) {
                 
-                $qr_data = $user->tagihan()
-                    ->where('nama_tagihan', 'Registrasi')
-                    ->first()
-                    ?->qr_data;
-                return $this->error('Harap Membayar biaya pendaftaran akun', 200, $qr_data ? ['qr_data' => $qr_data] : null);
                 $tagihan = $user->tagihan()->where('nama_tagihan', 'Registrasi')->first();
                 $data = [
                     'user_id' => $tagihan['user_id'],
@@ -92,6 +87,7 @@ class AuthController extends Controller
                     'created_time' => now()->format('s') . substr(now()->format('u'), 0, 6),
                     'va_number' => $tagihan['va_number'],
                 ];
+                
                 // Generate QRIS terlebih dahulu
                 $qrisResult = $this->qrisService->generateQris($data);
                 if (!$qrisResult['success']) {
