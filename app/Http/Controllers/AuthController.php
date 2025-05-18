@@ -74,6 +74,7 @@ class AuthController extends Controller
                 return $this->error('Pengguna tidak ditemukan', 200);
             }
             if ($user->status !== 1) {
+                
                 $qr_data = $user->tagihan()
                     ->where('nama_tagihan', 'Registrasi')
                     ->first()
@@ -172,6 +173,7 @@ class AuthController extends Controller
         $userData = [
             'id' => $user->id,
             'no_telp' => $user->no_telp,
+            'jenjang_sekolah' => $user->jenjang_sekolah ?? null,
         ];
         return $this->success($userData, 'Data user berhasil diambil', 200);
     }
