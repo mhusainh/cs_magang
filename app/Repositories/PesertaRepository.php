@@ -119,6 +119,11 @@ class PesertaRepository
             $query->where('angkatan', $filters['angkatan']);
         }
 
+        // Fileter by status
+        if (isset($filters['status']) && $filters['status']!== '') {
+            $query->where('status', $filters['status']);
+        }
+
         // Sorting functionality
         if (isset($filters['sort_by']) && $filters['sort_by'] !== '') {
             $sortField = $filters['sort_by'];
