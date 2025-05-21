@@ -91,12 +91,39 @@ class PesertaController extends Controller
             $request->validated('jurusan1_id'),
         );
 
-        $peserta = $this->pesertaService->getByUserId(Auth::user()->id);
-        if (!$peserta['success']) {
-            return $this->error($peserta['message'], 400);
+        $result = $this->pesertaService->update(Auth::user()->id, $data);
+        if (!$result['success']) {
+            return $this->error($result['message'], 400);
         }
 
-        $result = $this->pesertaService->update($peserta['data']->id, $data);
+        $dataPesan = [
+            'user_id' => Auth::user()->id,
+            'judul' => 'Formulir Pendaftaran Peserta',
+            'deskripsi' => 'Data pendaftaran PPDB Anda telah diperbarui. Mohon periksa kembali kebenaran data yang telah diubah.'
+        ];
+        $pesan = $this->pesanService->create($dataPesan);
+        if (!$pesan['success']) {
+            return $this->error($pesan['message'], 400, null);
+        }
+
+        return $this->success($data, $result['message'], 200);
+    }
+
+    public function update(UpdatePesertaRequest $request, int $id)
+    {
+        $data = PesertaDTO::updatePesertaByUserDTO(
+            $request->validated('nama'),
+            $request->validated('no_telp'),
+            $request->validated('jenis_kelamin'),
+            $request->validated('jenjang_sekolah'),
+            $request->validated('nisn'),
+            $request->validated('tempat_lahir'),
+            $request->validated('tanggal_lahir'),
+            $request->validated('alamat'),
+            $request->validated('jurusan1_id'),
+        );
+
+        $result = $this->pesertaService->update($id, $data);
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
