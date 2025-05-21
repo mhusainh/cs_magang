@@ -88,6 +88,7 @@ class PesertaController extends Controller
             $request->validated('tempat_lahir'),
             $request->validated('tanggal_lahir'),
             $request->validated('alamat'),
+            $request->validated('asal_sekolah'),
             $request->validated('jurusan1_id'),
         );
 
@@ -120,6 +121,7 @@ class PesertaController extends Controller
             $request->validated('tempat_lahir'),
             $request->validated('tanggal_lahir'),
             $request->validated('alamat'),
+            $request->validated('asal_sekolah'),
             $request->validated('jurusan1_id'),
         );
 
@@ -148,6 +150,7 @@ class PesertaController extends Controller
             $request->validated('tempat_lahir'),
             $request->validated('tanggal_lahir'),
             $request->validated('alamat'),
+            $request->validated('asal_sekolah'),
             $request->validated('jurusan1_id'),
         );
         $progressData = ProgressUserDTO::createProgressUserDTO(

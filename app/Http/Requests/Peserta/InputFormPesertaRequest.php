@@ -21,6 +21,7 @@ class InputFormPesertaRequest extends FormRequest
             'tanggal_lahir' => 'required|date',
             'alamat' => 'required|string|max:255',
             'jurusan1_id' => 'nullable|integer|exists:jurusan,id',
+            'asal_sekolah' => 'nullable|string|max:255',
         ];
     }
 
@@ -40,8 +41,8 @@ class InputFormPesertaRequest extends FormRequest
             'alamat.max' => 'Alamat maksimal 255 karakter',
             'jurusan1_id.integer' => 'ID jurusan 1 harus berupa angka',
             'jurusan1_id.exists' => 'jurusan tidak ditemukan',
-            'jurusan2_id.integer' => 'ID jurusan 2 harus berupa angka',
-            'jurusan2_id.exists' => 'jurusan tidak ditemukan'
+            'asal_sekolah.string' => 'Asal sekolah harus berupa teks',
+            'asal_sekolah.max' => 'Asal sekolah maksimal 255 karakter',
         ];
     }
 }

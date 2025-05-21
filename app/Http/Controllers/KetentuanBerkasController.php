@@ -35,7 +35,7 @@ class KetentuanBerkasController extends Controller
             return $this->error($result['message'], 404, null);
         }
 
-        return $this->success($result['data'], $result['message'], 200, $result['pagination']);
+        return $this->success($result['data'], $result['message'], 200, $result['pagination'], $result['current_filters']);
     }
 
     /**

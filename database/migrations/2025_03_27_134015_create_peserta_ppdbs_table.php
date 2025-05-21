@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('no_telp', 15)->nullable();
             $table->string('jenjang_sekolah')->nullable();
             $table->text('alamat')->nullable();
+            $table->string('asal_sekolah')->nullable();
             $table->foreignId('jurusan1_id')->nullable()->constrained('jurusan');
             $table->integer('pengajuan_biaya')->nullable();
             $table->integer('wakaf')->nullable();

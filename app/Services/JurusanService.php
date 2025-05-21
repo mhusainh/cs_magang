@@ -11,16 +11,45 @@ class JurusanService
         private JurusanRepository $jurusanRepository
     ) {}
 
-    public function getAll(): array
+    public function getAll(array $filters = []): array
     {
         try {
-            $jurusan = $this->jurusanRepository->getAll();
+            $jurusan = $this->jurusanRepository->getAll($filters);
+            if(!$jurusan){
+                return [
+                   'success' => true,
+                    'data' => null,
+                   'message' => 'Tidak ada jurusan ditemukan'
+                ];
+            }
+
+            
+            $totalItems = $jurusan->total();
+            $totalPages = $jurusan->lastPage();
+            $currentPage = $jurusan->currentPage();
+            $perPage = $jurusan->perPage();
+
+            $currentFilters = [
+                'search' => $filters['search'] ?? '',
+                'jenjang_sekolah' => $filters['jenjang'] ?? '',
+                'sort_by' => $filters['sort_by'] ?? '',
+                'sort_direction' => $filters['sort_direction'] ?? ''
+            ];
+
+            // Set pagination data
+            $pagination = [
+                'page' => $currentPage,
+                'per_page' => $perPage,
+                'total_items' => $totalItems,
+                'total_pages' => $totalPages
+            ];
+
             return [
                 'success' => true,
-                'data' => $jurusan->map(function ($item) {
-                    return new GetDetailResource($item);
-                }),
-                'message' => 'Daftar jurusan berhasil diambil'
+                'data' => GetDetailResource::collection($jurusan),
+                'current_filters' => $currentFilters,
+                'message' => 'Daftar jurusan berhasil diambil',
+                'pagination' => $pagination
             ];
         } catch (\Exception $e) {
             return [
