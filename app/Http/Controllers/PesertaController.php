@@ -202,6 +202,7 @@ class PesertaController extends Controller
             'end_date' => $request->end_date,
             'jenjang_sekolah' => $request->jenjang_sekolah,
             'angkatan' => $request->angkatan,
+            'status' => $request->status, // Tambahkan filter 'status'
             'sort_by' => $request->sort_by,
             'sort_direction' => $request->order_by,
             'per_page' => $request->per_page
@@ -217,7 +218,7 @@ class PesertaController extends Controller
     public function updateNis(int $id, UpdateNisRequest $request)
     {
         $result = $this->pesertaService->update($id, ['nis' => $request->validated('nis')]);
-        
+
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
@@ -230,16 +231,16 @@ class PesertaController extends Controller
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
-          
+
         $dataPesan = [
             'user_id' => $result['user_id'],
-            'judul' => 'Pengumuman Hasil PPDB',
-            'deskripsi' => $request->validated('status') === 'diterima' ? 'Selamat ' . $result['nama_peserta']. ', Anda telah di terima menjadi siswa '. $result['jenjang_sekolah'] .'!' 
-                            : 'Maaf '. $result['nama_peserta']. ', anda dinyatakan tidak lolos seleksi ppdb!'
+            'judul' => 'Pengumuman Hasil Verifikasi Berkas',
+            'deskripsi' => $request->validated('status') === 'diterima' ? 'Selamat ' . $result['nama_peserta'] . '! Berkas pendaftaran PPDB Anda telah diterima dan diverifikasi dengan baik.'
+                : 'Maaf ' . $result['nama_peserta'] . ', anda dinyatakan tidak lolos seleksi ppdb!'
         ];
 
         $pesan = $this->pesanService->create($dataPesan);
-        
+
         if (!$pesan['success']) {
             // Tetap kembalikan sukses meskipun pesan gagal dibuat
             return $this->success($result, 'Semua file berhasil diupload, tetapi notifikasi gagal dibuat', 200);

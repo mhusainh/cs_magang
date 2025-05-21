@@ -5,16 +5,18 @@ namespace App\Http\Controllers;
 use App\DTO\UserDTO;
 use App\Models\User;
 use App\Traits\ApiResponse;
+use App\Services\QrisService;
 use App\Services\UserService;
 use App\Services\PesanService;
 use App\Services\TagihanService;
+use App\Services\AngkatanService;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Repositories\TagihanRepository;
 use App\Http\Requests\User\LoginRequest;
 use App\Services\BiayaPendaftaranService;
 use App\Http\Requests\Auth\LoginAdminRequest;
 use App\Repositories\BiayaPendaftaranRepository;
 use App\Http\Requests\Peserta\CreatePesertaRequest;
-use App\Services\AngkatanService;
 
 class AuthController extends Controller
 {
@@ -26,7 +28,9 @@ class AuthController extends Controller
         private TagihanService $tagihanService,
         private BiayaPendaftaranService $biayaPendaftaranService,
         private AngkatanService $angkatanService,
-    ) {}
+        private QrisService $qrisService,
+        private TagihanRepository $tagihanRepository,
+        ) {}
 
     public function loginAdmin(LoginAdminRequest $request)
     {
@@ -74,11 +78,34 @@ class AuthController extends Controller
                 return $this->error('Pengguna tidak ditemukan', 200);
             }
             if ($user->status !== 1) {
-                $qr_data = $user->tagihan()
-                    ->where('nama_tagihan', 'Registrasi')
-                    ->first()
-                    ?->qr_data;
-                return $this->error('Harap Membayar biaya pendaftaran akun', 200, $qr_data ? ['qr_data' => $qr_data] : null);
+                
+                $tagihan = $user->tagihan()->where('nama_tagihan', 'Registrasi')->first();
+                $data = [
+                    'user_id' => $tagihan['user_id'],
+                    'nama_tagihan' => $tagihan['nama_tagihan'],
+                    'total' => $tagihan['total'],
+                    'created_time' => now()->format('s') . substr(now()->format('u'), 0, 6),
+                    'va_number' => $tagihan['va_number'],
+                ];
+                
+                // Generate QRIS terlebih dahulu
+                $qrisResult = $this->qrisService->generateQris($data);
+                if (!$qrisResult['success']) {
+                    return $qrisResult;
+                }
+
+                // Tambahkan data QRIS ke data transaksi
+                $data['transaction_qr_id'] = $qrisResult['data']['transactionQrId'];
+                $data['qr_data'] = $qrisResult['data']['rawQrData'];
+
+                $tagihan = $this->tagihanRepository->update($tagihan, $data);
+                if (!$tagihan) {
+                    return [
+                        'success' => false,
+                        'message' => 'Gagal memperbarui tagihan'
+                    ];
+                }
+                    return $this->error('Harap Membayar biaya pendaftaran akun', 200, $data['qr_data'] ? ['qr_data' => $data['qr_data']] : null);
             }
 
             $token = JWTAuth::fromUser($user);
@@ -172,6 +199,7 @@ class AuthController extends Controller
         $userData = [
             'id' => $user->id,
             'no_telp' => $user->no_telp,
+            'jenjang_sekolah' => $user->jenjang_sekolah ?? null,
         ];
         return $this->success($userData, 'Data user berhasil diambil', 200);
     }

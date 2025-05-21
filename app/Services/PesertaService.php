@@ -160,7 +160,8 @@ class PesertaService
                 'jenjang_sekolah' => $filters['jenjang_sekolah'] ?? '',
                 'angkatan' => $filters['angkatan']?? '',
                 'sort_by' => $filters['sort_by'] ?? '',
-                'sort_direction' => $filters['sort_direction'] ?? ''
+                'sort_direction' => $filters['sort_direction'] ?? '',
+                'status' => $filters['status']?? ''
             ];
 
             return [
