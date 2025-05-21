@@ -23,7 +23,7 @@ class KetentuanBerkasController extends Controller
     {
         $filters = [
             'search' => $request->search,
-            'jenjang' => $request->jenjang,
+            'jenjang' => $request->jenjang_sekolah,
             'is_required' => $request->is_required,
             'sort_by' => $request->sort_by,
             'sort_direction' => $request->order_by,
