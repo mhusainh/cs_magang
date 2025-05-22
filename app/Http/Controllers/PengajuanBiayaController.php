@@ -300,9 +300,9 @@ class PengajuanBiayaController extends Controller
 
         if ($existingTagihan) {
             return $this->error(
-                'Harap Membayar tagihan wakaf yang belum terbayar terlebih dahulu',
+                'Harap Membayar tagihan jariah yang belum terbayar terlebih dahulu',
                 200,
-                $existingTagihan->qr_data ? [
+                $existingTagihan->va_number ? [
                     'va_number' => $existingTagihan->va_number,
                 ] : null
             );
@@ -311,9 +311,9 @@ class PengajuanBiayaController extends Controller
         // Validasi nominal wakaf
         $nominal = $request->validated('wakaf');
         if ($nominal > Auth::user()->peserta->wakaf) {
-            return $this->error('Nominal wakaf melebihi batas yang tersedia', 422, null);}
+            return $this->error('Nominal jariah melebihi batas yang tersedia', 422, null);}
         if ($nominal <= 0) {
-            return $this->error('Nominal wakaf harus lebih besar dari 0', 422, null);
+            return $this->error('Nominal jariah harus lebih besar dari 0', 422, null);
         }
 
         // Membuat data tagihan baru
@@ -332,7 +332,7 @@ class PengajuanBiayaController extends Controller
         $dataPesan = [
             'user_id' => Auth::user()->id,
             'judul' => 'Tagihan Wakaf',
-            'deskripsi' => "Anda telah mengajukan tagihan wakaf sebesar Rp " . number_format($nominal, 0, ',', '.') . " terimakasih atas partisipasi anda, harap segera melakukan pembayaran berikut ini",
+            'deskripsi' => "Anda telah mengajukan tagihan jariah sebesar Rp " . number_format($nominal, 0, ',', '.') . " terimakasih atas partisipasi anda, harap segera melakukan pembayaran berikut ini",
         ];
 
         $pesan = $this->pesanService->create($dataPesan);
@@ -364,7 +364,7 @@ class PengajuanBiayaController extends Controller
             return $this->error(
                 'Harap Membayar tagihan yang belum terbayar terlebih dahulu',
                 200,
-                $existingTagihan->qr_data ? [
+                $existingTagihan->va_number ? [
                     'va_number' => $existingTagihan->va_number,
                 ] : null
             );

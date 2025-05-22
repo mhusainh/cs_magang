@@ -23,7 +23,7 @@ class KetentuanBerkasController extends Controller
     {
         $filters = [
             'search' => $request->search,
-            'jenjang' => $request->jenjang,
+            'jenjang' => $request->jenjang_sekolah,
             'is_required' => $request->is_required,
             'sort_by' => $request->sort_by,
             'sort_direction' => $request->order_by,
@@ -35,7 +35,7 @@ class KetentuanBerkasController extends Controller
             return $this->error($result['message'], 404, null);
         }
 
-        return $this->success($result['data'], $result['message'], 200, $result['pagination']);
+        return $this->success($result['data'], $result['message'], 200, $result['pagination'], $result['current_filters']);
     }
 
     /**

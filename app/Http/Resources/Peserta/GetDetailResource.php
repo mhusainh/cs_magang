@@ -17,6 +17,7 @@ class GetDetailResource extends JsonResource
             'jenis_kelamin' => $this->jenis_kelamin,
             'jenjang_sekolah' => $this->jenjang_sekolah,
             'nisn' => $this->nisn,
+            'nis' => $this->nis,
             'tempat_lahir' => $this->tempat_lahir,
             'tanggal_lahir' => $this->tanggal_lahir,
             'alamat' => $this->alamat,

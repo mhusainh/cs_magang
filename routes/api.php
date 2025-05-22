@@ -141,6 +141,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/pesertas/trash', [PesertaController::class, 'getDeleted']);
             Route::put('/peserta/{id}/restore', [PesertaController::class, 'restore']);
             Route::put('peserta/nis/{id}', [PesertaController::class, 'updateNis']);
+            Route::put('peserta', [PesertaController::class, 'update']);
             Route::get('peringkat', [PesertaController::class, 'getPeringkat']);
 
             // Tagihan Management
