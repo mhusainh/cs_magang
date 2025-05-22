@@ -35,6 +35,7 @@ class GetDetailResource extends JsonResource
                 'id' => $this->biodataOrtu->id,
                 'nama_ayah' => $this->biodataOrtu->nama_ayah,
                 'nama_ibu' => $this->biodataOrtu->nama_ibu,
+                'no_telp' => $this->biodataOrtu->no_telp,
                 'pekerjaan_ayah' => $this->biodataOrtu->pekerjaanAyah ? [
                     'id' => $this->biodataOrtu->pekerjaanAyah->id,
                     'pekerjaan' => $this->biodataOrtu->pekerjaanAyah->nama_pekerjaan
