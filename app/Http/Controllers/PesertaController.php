@@ -81,7 +81,6 @@ class PesertaController extends Controller
     {
         $data = PesertaDTO::updatePesertaByUserDTO(
             $request->validated('nama'),
-            $request->validated('no_telp'),
             $request->validated('jenis_kelamin'),
             $request->validated('jenjang_sekolah'),
             $request->validated('nisn'),
@@ -114,7 +113,6 @@ class PesertaController extends Controller
     {
         $data = PesertaDTO::updatePesertaByUserDTO(
             $request->validated('nama'),
-            $request->validated('no_telp'),
             $request->validated('jenis_kelamin'),
             $request->validated('jenjang_sekolah'),
             $request->validated('nisn'),

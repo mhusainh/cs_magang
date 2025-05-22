@@ -24,7 +24,6 @@ class PesertaDTO
         int $id,
         int $user_id,
         string $nama,
-        string $no_telp,
         string $jenis_kelamin,
         string $jenjang_sekolah,
         string $nisn,
@@ -38,7 +37,6 @@ class PesertaDTO
             'id' => $id,
             'user_id' => $user_id,
             'nama' => $nama,
-            'no_telp' => $no_telp,
             'jenis_kelamin' => $jenis_kelamin,
             'jenjang_sekolah' => $jenjang_sekolah,
             'nisn' => $nisn,
@@ -68,7 +66,6 @@ class PesertaDTO
     }
     public static function updatePesertaByUserDTO(
         string $nama,
-        string $no_telp,
         string $jenis_kelamin,
         string $jenjang_sekolah,
         string $nisn,
@@ -80,7 +77,6 @@ class PesertaDTO
     ): array {
         return [
             'nama' => $nama,
-            'no_telp' => $no_telp,
             'jenis_kelamin' => $jenis_kelamin,
             'jenjang_sekolah' => $jenjang_sekolah,
             'nisn' => $nisn,

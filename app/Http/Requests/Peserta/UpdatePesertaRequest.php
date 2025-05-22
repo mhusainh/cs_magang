@@ -17,7 +17,6 @@ class UpdatePesertaRequest extends FormRequest
     {
         return [
             'nama' => 'required|string|max:255',
-            'no_telp' => 'required|string|max:15',
             'jenis_kelamin' => 'required|string|in:Laki-laki,Perempuan',
             'jenjang_sekolah' => 'required|string',
             'nisn' => 'required|string|max:10',
@@ -35,9 +34,6 @@ class UpdatePesertaRequest extends FormRequest
             'nama.required' => 'Nama harus diisi',
             'nama.string' => 'Nama harus berupa teks',
             'nama.max' => 'Nama maksimal 255 karakter',
-            'no_telp.required' => 'Nomor telepon harus diisi',
-            'no_telp.string' => 'Nomor telepon harus berupa teks',
-            'no_telp.max' => 'Nomor telepon maksimal 15 karakter',
             'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
             'jenis_kelamin.string' => 'Jenis kelamin harus berupa teks',
             'jenis_kelamin.in' => 'Jenis kelamin harus Laki-laki atau Perempuan',
