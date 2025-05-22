@@ -31,8 +31,8 @@ class PesertaDTO
         string $tempat_lahir,
         string $tanggal_lahir,
         string $alamat,
+        string $asal_sekolah,
         ?int $jurusan1_id = null,
-        ?int $jurusan2_id = null
     ): array {
         return [
             'id' => $id,
@@ -45,8 +45,8 @@ class PesertaDTO
             'tempat_lahir' => $tempat_lahir,
             'tanggal_lahir' => $tanggal_lahir,
             'alamat' => $alamat,
+            'asal_sekolah' => $asal_sekolah,
             'jurusan1_id' => $jurusan1_id,
-            'jurusan2_id' => $jurusan2_id
         ];
     }
     public static function inputFormPesertaDTO(
@@ -54,16 +54,16 @@ class PesertaDTO
         string $tempat_lahir,
         string $tanggal_lahir,
         string $alamat,
+        string $asal_sekolah,
         ?int $jurusan1_id = null,
-        ?int $jurusan2_id = null
     ): array {
         return [
             'nisn' => $nisn,
             'tempat_lahir' => $tempat_lahir,
             'tanggal_lahir' => $tanggal_lahir,
             'alamat' => $alamat,
+            'asal_sekolah' => $asal_sekolah,
             'jurusan1_id' => $jurusan1_id,
-            'jurusan2_id' => $jurusan2_id
         ];
     }
     public static function updatePesertaByUserDTO(
@@ -75,8 +75,8 @@ class PesertaDTO
         string $tempat_lahir,
         string $tanggal_lahir,
         string $alamat,
+        string $asal_sekolah,
         ?int $jurusan1_id = null,
-        ?int $jurusan2_id = null
     ): array {
         return [
             'nama' => $nama,
@@ -87,8 +87,8 @@ class PesertaDTO
             'tempat_lahir' => $tempat_lahir,
             'tanggal_lahir' => $tanggal_lahir,
             'alamat' => $alamat,
+            'asal_sekolah' => $asal_sekolah,
             'jurusan1_id' => $jurusan1_id,
-            'jurusan2_id' => $jurusan2_id
         ];
     }
 }
