@@ -24,29 +24,27 @@ class PesertaDTO
         int $id,
         int $user_id,
         string $nama,
-        string $no_telp,
         string $jenis_kelamin,
         string $jenjang_sekolah,
         string $nisn,
         string $tempat_lahir,
         string $tanggal_lahir,
         string $alamat,
+        string $asal_sekolah,
         ?int $jurusan1_id = null,
-        ?int $jurusan2_id = null
     ): array {
         return [
             'id' => $id,
             'user_id' => $user_id,
             'nama' => $nama,
-            'no_telp' => $no_telp,
             'jenis_kelamin' => $jenis_kelamin,
             'jenjang_sekolah' => $jenjang_sekolah,
             'nisn' => $nisn,
             'tempat_lahir' => $tempat_lahir,
             'tanggal_lahir' => $tanggal_lahir,
             'alamat' => $alamat,
+            'asal_sekolah' => $asal_sekolah,
             'jurusan1_id' => $jurusan1_id,
-            'jurusan2_id' => $jurusan2_id
         ];
     }
     public static function inputFormPesertaDTO(
@@ -54,41 +52,39 @@ class PesertaDTO
         string $tempat_lahir,
         string $tanggal_lahir,
         string $alamat,
+        string $asal_sekolah,
         ?int $jurusan1_id = null,
-        ?int $jurusan2_id = null
     ): array {
         return [
             'nisn' => $nisn,
             'tempat_lahir' => $tempat_lahir,
             'tanggal_lahir' => $tanggal_lahir,
             'alamat' => $alamat,
+            'asal_sekolah' => $asal_sekolah,
             'jurusan1_id' => $jurusan1_id,
-            'jurusan2_id' => $jurusan2_id
         ];
     }
     public static function updatePesertaByUserDTO(
         string $nama,
-        string $no_telp,
         string $jenis_kelamin,
         string $jenjang_sekolah,
         string $nisn,
         string $tempat_lahir,
         string $tanggal_lahir,
         string $alamat,
+        string $asal_sekolah,
         ?int $jurusan1_id = null,
-        ?int $jurusan2_id = null
     ): array {
         return [
             'nama' => $nama,
-            'no_telp' => $no_telp,
             'jenis_kelamin' => $jenis_kelamin,
             'jenjang_sekolah' => $jenjang_sekolah,
             'nisn' => $nisn,
             'tempat_lahir' => $tempat_lahir,
             'tanggal_lahir' => $tanggal_lahir,
             'alamat' => $alamat,
+            'asal_sekolah' => $asal_sekolah,
             'jurusan1_id' => $jurusan1_id,
-            'jurusan2_id' => $jurusan2_id
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTO\JurusanDTO;
+use Illuminate\Http\Request;
 use App\Traits\ApiResponse;
 use App\Services\JurusanService;
 use Illuminate\Http\JsonResponse;
@@ -17,13 +18,21 @@ class JurusanController extends Controller
 
     public function __construct(private JurusanService $jurusanService) {}
 
-    public function getAll(): JsonResponse
+    public function getAll(Request $request): JsonResponse
     {
-        $result = $this->jurusanService->getAll();
+        $filters = [
+            'search' => $request->search,
+            'jenjang' => $request->jenjang_sekolah,
+            'sort_by' => $request->sort_by,
+            'sort_direction' => $request->order_by,
+            'per_page' => $request->per_page
+        ];
+
+        $result = $this->jurusanService->getAll($filters);
         if (!$result['success']) {
             return $this->error($result['message'], 400, null);
         }
-        return $this->success($result['data'], $result['message'], 200);
+        return $this->success($result['data'], $result['message'], 200, $result['pagination'], $result['current_filters']);
     }
 
     public function getById(int $id): JsonResponse

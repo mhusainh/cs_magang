@@ -73,10 +73,8 @@ class KetentuanBerkasService
             return [
                 'success' => true,
                 'message' => 'Berhasil mendapatkan semua ketentuan berkas',
-                'data' => [
-                    'ketentuan_berkas' => GetAllKetentuanBerkasResource::collection($result),
-                    'current_filters' => $currentFilters
-                ],
+                'data' => GetAllKetentuanBerkasResource::collection($result),
+                'current_filters' => $currentFilters,
                 'pagination' => $pagination
             ];
         } catch (\Exception $e) {

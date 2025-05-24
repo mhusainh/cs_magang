@@ -34,9 +34,44 @@ class JurusanRepository
         return $jurusan->delete();
     }
 
-    public function getAll(): Collection
+    public function getAll(array $filters = [])
     {
-        return $this->model->all();
+        $query = $this->model->query();
+
+        // Search functionality
+        if (isset($filters['search']) && $filters['search'] !== '') {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('jurusan', 'like', "%{$search}%")
+                    ->orWhere('jenjang_sekolah', 'like', "%{$search}%");
+            });
+        }
+
+        // Jenjang sekolah filter
+        if (isset($filters['jenjang']) && $filters['jenjang'] !== '') {
+            $query->where('jenjang_sekolah', $filters['jenjang']);
+        }
+        
+        // Sorting functionality
+        if (isset($filters['sort_by']) && $filters['sort_by'] !== '') {
+            $sortField = $filters['sort_by'];
+            $sortDirection = isset($filters['sort_direction']) && strtolower($filters['sort_direction']) === 'desc' ? 'desc' : 'asc';
+
+            // Handle sorting for related field
+            if (strpos($sortField, '.') !== false) {
+                [$relation, $field] = explode('.', $sortField);
+                $query->join($relation, $relation . '.id', '=', 'ketentuan_berkas.' . $relation . '_id')
+                    ->orderBy($relation . '.' . $field, $sortDirection);
+            } else {
+                $query->orderBy($sortField, $sortDirection);
+            }
+        } else {
+            // Default sorting by created_at in descending order
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $paginator = $query->paginate($filters['per_page'] ?? 10);
+        return $paginator->appends(request()->query());
     }
 
     public function getTrash(): Collection

@@ -58,6 +58,7 @@ class AuthController extends Controller
 
             return $this->success([
                 'token' => $token,
+                'jenjang_sekolah' => $user->jenjang_sekolah,
                 'type' => 'bearer',
             ], 'Login berhasil', 200);
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
