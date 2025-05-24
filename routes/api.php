@@ -137,11 +137,11 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/peserta/{id}', [PesertaController::class, 'delete']);
             Route::get('/peserta/user/{userId}', [PesertaController::class, 'getByUserId']);
             Route::post('/peserta', [PesertaController::class, 'create']);
-            Route::put('/peserta/{id}', [PesertaController::class, 'updateStatus']);
+            Route::put('/peserta/status/{id}', [PesertaController::class, 'updateStatus']);
             Route::get('/pesertas/trash', [PesertaController::class, 'getDeleted']);
             Route::put('/peserta/{id}/restore', [PesertaController::class, 'restore']);
             Route::put('peserta/nis/{id}', [PesertaController::class, 'updateNis']);
-            Route::put('peserta', [PesertaController::class, 'update']);
+            Route::put('peserta/{id}', [PesertaController::class, 'update']);
             Route::get('peringkat', [PesertaController::class, 'getPeringkat']);
 
             // Tagihan Management
