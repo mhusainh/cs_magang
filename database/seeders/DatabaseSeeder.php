@@ -17,6 +17,13 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'no_telp' => '081234567890',
             'password' => bcrypt('password'),
+            'jenjang_sekolah' => 'SMA'
+        ]);
+
+        User::factory()->create([
+            'no_telp' => '081234567891',
+            'password' => bcrypt('password'),
+            'jenjang_sekolah' => 'SMP'
         ]);
 
         // Membuat beberapa user dummy

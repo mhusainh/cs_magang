@@ -20,6 +20,7 @@ class UserFactory extends Factory
         return [
             'no_telp' => fake()->numerify('08##########'), // Format nomor telepon Indonesia
             'password' => bcrypt('password'),
+            'jenjang_sekolah' => fake()->string,
             'remember_token' => Str::random(10),
         ];
     }
