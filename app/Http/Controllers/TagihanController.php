@@ -83,7 +83,6 @@ class TagihanController extends Controller
     public function update(UpdateRequest $request, int $id): JsonResponse
     {
         $data = TagihanDTO::updateTagihanDTO(
-            $id,
             $request->validated('nama_tagihan'),
             $request->validated('total'),
             $request->validated('status'),
@@ -92,7 +91,7 @@ class TagihanController extends Controller
             $request->validated('created_time')
         );
 
-        $result = $this->tagihanService->update($data);
+        $result = $this->tagihanService->update($id, $data);
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }

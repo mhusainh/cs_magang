@@ -114,6 +114,7 @@ class TagihanService
                 'success' => true,
                 'data' => [
                     'va_number' => $data['va_number'],
+                    'nominal' => $data['total'],
                 ],
                 'message' => 'Tagihan berhasil dibuat'
             ];
@@ -125,10 +126,10 @@ class TagihanService
         }
     }
 
-    public function update(array $data): array
+    public function update(int $id, array $data): array
     {
         try {
-            $tagihan = $this->tagihanRepository->findById($data['id']);
+            $tagihan = $this->tagihanRepository->findById($id);
 
             if (!$tagihan) {
                 return [
@@ -138,7 +139,7 @@ class TagihanService
             }
 
             // Validasi VA number unik kecuali untuk record yang sama
-            if ($this->tagihanRepository->vaNumberExists($data['va_number'], $data['id'])) {
+            if ($this->tagihanRepository->vaNumberExists($data['va_number'], $id)) {
                 return [
                     'success' => false,
                     'message' => 'VA Number sudah digunakan'

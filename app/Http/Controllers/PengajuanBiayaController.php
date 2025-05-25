@@ -17,6 +17,7 @@ use App\Http\Requests\PengajuanBiaya\UpdateRequest;
 use App\Http\Requests\PengajuanBiaya\CreateBookVeeRequest;
 use App\Http\Requests\PengajuanBiaya\CreateRegulerRequest;
 use App\Http\Requests\PengajuanBiaya\PengajuanBiayaRequest;
+use App\Repositories\TagihanRepository;
 
 class PengajuanBiayaController extends Controller
 {
@@ -28,7 +29,8 @@ class PengajuanBiayaController extends Controller
         private TransaksiService $transaksiService,
         private TagihanService $tagihanService,
         private ProgressUserService $progressUserService,
-        private PesanService $pesanService
+        private PesanService $pesanService,
+        private TagihanRepository $tagihanRepository
     ) {}
 
     public function createBookVee(CreateBookVeeRequest $request)
@@ -292,6 +294,15 @@ class PengajuanBiayaController extends Controller
             return $this->error('Anda belum menyelesaikan tahapan pendaftaran', 422, null);
         }
 
+        // Validasi nominal wakaf
+        $nominal = $request->validated('wakaf');
+        if ($nominal > Auth::user()->peserta->wakaf) {
+            return $this->error('Nominal jariah melebihi batas yang tersedia', 422, null);
+        }
+        if ($nominal <= 0) {
+            return $this->error('Nominal jariah harus lebih besar dari 0', 422, null);
+        }
+
         // Validasi tagihan wakaf yang belum dibayar
         $existingTagihan = Auth::user()->tagihan
             ->where('nama_tagihan', 'wakaf')
@@ -299,21 +310,18 @@ class PengajuanBiayaController extends Controller
             ->first();
 
         if ($existingTagihan) {
-            return $this->error(
-                'Harap Membayar tagihan jariah yang belum terbayar terlebih dahulu',
-                200,
+            $tagihan = $this->tagihanRepository->update($existingTagihan, ['total' => $nominal]);
+            if (!$tagihan) {
+                return $this->error('Gagal memperbarui tagihan', 400, null);
+            };
+            return $this->success(
                 $existingTagihan->va_number ? [
                     'va_number' => $existingTagihan->va_number,
-                ] : null
+                    'nominal' => $nominal,
+                ] : null,
+                'Tagihan Jatiyah sebesar Rp ' . number_format($nominal, 0, ',', '.') . ' telah berhasil dibuat',
+                200
             );
-        }
-
-        // Validasi nominal wakaf
-        $nominal = $request->validated('wakaf');
-        if ($nominal > Auth::user()->peserta->wakaf) {
-            return $this->error('Nominal jariah melebihi batas yang tersedia', 422, null);}
-        if ($nominal <= 0) {
-            return $this->error('Nominal jariah harus lebih besar dari 0', 422, null);
         }
 
         // Membuat data tagihan baru
@@ -331,7 +339,7 @@ class PengajuanBiayaController extends Controller
 
         $dataPesan = [
             'user_id' => Auth::user()->id,
-            'judul' => 'Tagihan Wakaf',
+            'judul' => 'Tagihan Jariyah',
             'deskripsi' => "Anda telah mengajukan tagihan jariah sebesar Rp " . number_format($nominal, 0, ',', '.') . " terimakasih atas partisipasi anda, harap segera melakukan pembayaran berikut ini",
         ];
 
@@ -346,12 +354,21 @@ class PengajuanBiayaController extends Controller
             200
         );
     }
-
+    
     public function createTagihanPengajuanBiaya(PengajuanBiayaRequest $request)
     {
         // Validasi progress pendaftaran
         if (Auth::user()->progressUser->progress < 3) {
             return $this->error('Anda belum menyelesaikan tahapan pendaftaran', 422, null);
+        }
+        
+        // Validasi nominal wakaf
+        $nominal = $request->validated('pengajuan_biaya');
+        if ($nominal > Auth::user()->peserta->pengajuan_biaya) {
+            return $this->error('Nominal melebihi batas yang tersedia', 422, null);
+        }
+        if ($nominal <= 0) {
+            return $this->error('Nominal harus lebih besar dari 0', 422, null);
         }
 
         // Validasi tagihan pengajuan biaya yang belum dibayar
@@ -361,21 +378,18 @@ class PengajuanBiayaController extends Controller
             ->first();
 
         if ($existingTagihan) {
-            return $this->error(
-                'Harap Membayar tagihan yang belum terbayar terlebih dahulu',
-                200,
+            $tagihan = $this->tagihanRepository->update($existingTagihan, ['total' => $nominal]);
+            if (!$tagihan) {
+                return $this->error('Gagal memperbarui tagihan', 400, null);
+            };
+            return $this->success(
                 $existingTagihan->va_number ? [
                     'va_number' => $existingTagihan->va_number,
-                ] : null
+                    'nominal' => $nominal,
+                ] : null,
+                'Tagihan sebesar Rp ' . number_format($nominal, 0, ',', '.') . ' telah berhasil dibuat',
+                200
             );
-        }
-
-        // Validasi nominal wakaf
-        $nominal = $request->validated('pengajuan_biaya');
-        if ($nominal > Auth::user()->peserta->pengajuan_biaya) {
-            return $this->error('Nominal melebihi batas yang tersedia', 422, null);}
-        if ($nominal <= 0) {
-            return $this->error('Nominal harus lebih besar dari 0', 422, null);
         }
 
         // Membuat data tagihan baru

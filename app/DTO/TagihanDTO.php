@@ -23,7 +23,6 @@ class TagihanDTO
      * Membuat DTO untuk update tagihan
      */
     public static function updateTagihanDTO(
-        int $id,
         string $nama_tagihan,
         int $total,
         string $status,
@@ -32,7 +31,6 @@ class TagihanDTO
         string $created_time
     ): array {
         return [
-            'id' => $id,
             'nama_tagihan' => $nama_tagihan,
             'total' => $total,
             'status' => $status,
