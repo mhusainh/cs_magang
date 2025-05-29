@@ -122,12 +122,10 @@ class PesertaController extends Controller
             $request->validated('asal_sekolah'),
             $request->validated('jurusan1_id'),
         );
-
         $result = $this->pesertaService->update($id, $data);
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
-
         $dataPesan = [
             'user_id' => Auth::user()->id,
             'judul' => 'Formulir Pendaftaran Peserta',
