@@ -37,7 +37,8 @@ class PesertaPpdb extends Model
         'spp',
         'book_vee',
         'status',
-        'angkatan'
+        'angkatan',
+        'asal_sekolah',
     ];
 
     public function user(): BelongsTo
