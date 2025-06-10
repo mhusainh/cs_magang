@@ -226,16 +226,22 @@ class PesertaController extends Controller
     }
     public function updateStatus(int $id, UpdateStatusRequest $request)
     {
+        $peserta = $this->pesertaService->getById($id);
+
+        if (!$peserta['success']) {
+            return $this->error($peserta['message'], $peserta['code']);
+        }
+
         $result = $this->pesertaService->update($id, ['status' => $request->validated('status')]);
         if (!$result['success']) {
             return $this->error($result['message'], 400);
         }
 
         $dataPesan = [
-            'user_id' => $result['user_id'],
+            'user_id' => $peserta['data']->user_id,
             'judul' => 'Pengumuman Hasil Verifikasi Berkas',
-            'deskripsi' => $request->validated('status') === 'diterima' ? 'Selamat ' . $result['nama_peserta'] . '! Berkas pendaftaran PPDB Anda telah diterima dan diverifikasi dengan baik.'
-                : 'Maaf ' . $result['nama_peserta'] . ', anda dinyatakan tidak lolos seleksi ppdb!'
+            'deskripsi' => $request->validated('status') === 'diterima' ? 'Selamat ' . $peserta['data']->nama . '! Berkas pendaftaran PPDB Anda telah diterima dan diverifikasi dengan baik.'
+                : 'Maaf ' . $peserta['data']->nama . ', anda dinyatakan tidak lolos seleksi ppdb!'
         ];
 
         $pesan = $this->pesanService->create($dataPesan);
